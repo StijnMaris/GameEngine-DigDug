@@ -2,12 +2,15 @@
 #include "GameObject.h"
 #include "Renderer.h"
 #include "RenderComponent.h"
+#include "TextComponent.h"
+#include "TextureComponent.h"
 //#include "BaseComponent.h"
 
 dae::GameObject::~GameObject() = default;
 
 dae::GameObject::GameObject(const std::string& name) :m_Name(name)
 {
+	AddComponent(std::make_shared<Transform>());
 }
 
 void dae::GameObject::AddComponent(const std::shared_ptr<BaseComponent>& component)
@@ -16,40 +19,42 @@ void dae::GameObject::AddComponent(const std::shared_ptr<BaseComponent>& compone
 }
 
 template <class T>
-T dae::GameObject::GetComponent() const
+std::shared_ptr<T>  dae::GameObject::GetComponent() const
 {
 	for (auto component : m_pComponents)
 	{
 		auto test = std::dynamic_pointer_cast<T>(component);
-		if (test)
+		if (test && typeid(*component) == typeid(T))
 		{
-			return *test;
+			return test;
 		}
 	}
-	return RenderComponent{};
+	return nullptr;
 }
 
 void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		component->Update();
+		component.get()->Update();
 	}
 }
 
 void dae::GameObject::Render() const
 {
-	const auto pos = mTransform.GetPosition();
+	const auto pos = GetComponent<Transform>().get()->GetPosition();
 	if (HasRenderComponent())
 	{
 		auto rendr = GetComponent<RenderComponent>();
-		rendr.Render(pos.x, pos.y);
+		rendr.get()->Render(pos.x, pos.y);
 	}
+	auto rend3 = GetComponent<TextureComponent>();
+	auto rend4 = GetComponent<TextComponent>();
 }
 
 void dae::GameObject::SetPosition(float x, float y)
 {
-	mTransform.SetPosition(x, y, 0.0f);
+	GetComponent<Transform>().get()->SetPosition(x, y, 0.0f);
 }
 
 bool dae::GameObject::HasRenderComponent()const

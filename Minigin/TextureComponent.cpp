@@ -1,18 +1,25 @@
 #include "MiniginPCH.h"
 #include "TextureComponent.h"
 #include "ResourceManager.h"
+#include "TextComponent.h"
 
 dae::TextureComponent::TextureComponent(const std::string& filename) :BaseComponent("TextureComponent")
 {
 	SetTexture(filename);
 }
 
-void dae::TextureComponent::SetTexture(const std::string& filename)
+dae::TextureComponent::TextureComponent(const std::shared_ptr<TextComponent> textComponent) :
+	BaseComponent("TextureComponent")
 {
-	m_Texture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_pTexture = textComponent.get()->GetTextTexture();
 }
 
-std::shared_ptr<dae::Texture2D> dae::TextureComponent::GetTexture()
+void dae::TextureComponent::SetTexture(const std::string& filename)
 {
-	return m_Texture;
+	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
+}
+
+std::shared_ptr<dae::Texture2D> dae::TextureComponent::GetTexture()const
+{
+	return m_pTexture;
 }

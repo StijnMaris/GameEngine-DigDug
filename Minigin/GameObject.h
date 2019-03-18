@@ -6,14 +6,14 @@
 namespace dae
 {
 	class BaseComponent;
-	class GameObject
+	class GameObject final
 	{
 	public:
 		void AddComponent(const std::shared_ptr<BaseComponent>& component);
 
 		template <class T>
 		//std::is_base_of<dae::BaseComponent, T>
-		T GetComponent()const;
+		std::shared_ptr<T> GetComponent()const;
 
 		void Update();
 		void Render() const;
@@ -31,7 +31,6 @@ namespace dae
 		bool HasRenderComponent()const;
 
 		std::string m_Name{};
-		Transform mTransform;
 		std::vector < std::shared_ptr<BaseComponent>> m_pComponents{};
 	};
 }

@@ -16,8 +16,8 @@ namespace dae
 	private:
 		void SetDeltaTime(float deltaTime);
 
-		int m_FrameCounter, m_Fps;
-		float m_DeltaTime;
+		int m_FrameCounter, m_Fps, m_TotalFrames;
+		float m_DeltaTime, m_TotalTime, m_TimeCounter;
 		std::chrono::time_point<std::chrono::steady_clock> m_LastTime, m_CurrentTime;
 	};
 }

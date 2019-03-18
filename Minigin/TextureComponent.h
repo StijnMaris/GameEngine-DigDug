@@ -1,19 +1,21 @@
 #pragma once
 #include "BaseComponent.h"
-#include "Texture2D.h"
 
 namespace dae {
-	class TextureComponent : public BaseComponent
+	class TextComponent;
+	class Texture2D;
+	class TextureComponent final : public BaseComponent
 	{
 	public:
 		TextureComponent(const std::string& filename);
+		TextureComponent(const std::shared_ptr<TextComponent> textComponent);
 		virtual ~TextureComponent() = default;
 
-		void Update() {};
+		void Update()override {};
 
 		void SetTexture(const std::string& filename);
-		std::shared_ptr<Texture2D>  GetTexture();
+		std::shared_ptr<Texture2D>  GetTexture()const;
 	private:
-		std::shared_ptr<Texture2D> m_Texture;
+		std::shared_ptr<Texture2D> m_pTexture;
 	};
 }

@@ -4,13 +4,16 @@
 void dae::Time::Update()
 {
 	m_FrameCounter++;
+	m_TotalFrames++;
 	m_CurrentTime = GetTheCurrentTime();
 	SetDeltaTime(std::chrono::duration<float>(m_CurrentTime - m_LastTime).count());
-
-	if (m_DeltaTime > 1)
+	m_TimeCounter += GetDeltaTime();
+	m_TotalTime += GetDeltaTime();
+	if (m_TimeCounter > 1)
 	{
 		m_Fps = m_FrameCounter;
 		m_FrameCounter = 0;
+		m_TimeCounter = 0;
 	}
 	m_LastTime = m_CurrentTime;
 }

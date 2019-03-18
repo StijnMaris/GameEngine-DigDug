@@ -3,16 +3,16 @@
 #include "TextureComponent.h"
 
 namespace dae {
-	class RenderComponent : public BaseComponent
+	class RenderComponent final : public BaseComponent
 	{
 	public:
-		RenderComponent();
+		RenderComponent(std::shared_ptr<TextureComponent> textureComponent);
 		virtual ~RenderComponent() = default;
 
-		void Update() {};
+		void Update()override {};
 
 		void Render(float posX, float posY)const;
 	private:
-		std::shared_ptr<TextureComponent> m_Texture;
+		std::shared_ptr<TextureComponent> m_pTextureComponent;
 	};
 }
