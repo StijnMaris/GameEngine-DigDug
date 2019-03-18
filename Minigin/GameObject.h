@@ -2,7 +2,6 @@
 #include <memory>
 
 #include "Transform.h"
-#include "Texture2D.h"
 
 namespace dae
 {
@@ -13,12 +12,12 @@ namespace dae
 		void AddComponent(const std::shared_ptr<BaseComponent>& component);
 
 		template <class T>
-		std::shared_ptr<std::is_base_of<BaseComponent, T>>& GetComponent();
+		//std::is_base_of<dae::BaseComponent, T>
+		T GetComponent()const;
 
 		void Update();
 		void Render() const;
 
-		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
 
 		GameObject(const std::string& name);
@@ -29,10 +28,10 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
+		bool HasRenderComponent()const;
 
 		std::string m_Name{};
 		Transform mTransform;
-		std::shared_ptr<Texture2D> mTexture;
 		std::vector < std::shared_ptr<BaseComponent>> m_pComponents{};
 	};
 }

@@ -11,6 +11,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "Time.h"
+#include "TextureComponent.h"
 
 void dae::Minigin::Initialize()
 {
@@ -42,11 +43,11 @@ void dae::Minigin::LoadGame() const
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 	auto go = std::make_shared<GameObject>("BackGround");
-	go->SetTexture("background.jpg");
+	go->AddComponent(std::make_shared<TextureComponent>("background.jpg"));
 	scene.AddGameObject(go);
 
 	go = std::make_shared<GameObject>("DAELogo");
-	go->SetTexture("logo.png");
+	go->AddComponent(std::make_shared<TextureComponent>("logo.png"));
 	go->SetPosition(216, 180);
 	scene.AddGameObject(go);
 

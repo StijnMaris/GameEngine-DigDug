@@ -1,10 +1,12 @@
 #include "MiniginPCH.h"
 #include "RenderComponent.h"
+#include "Renderer.h"
 
-RenderComponent::RenderComponent()
+dae::RenderComponent::RenderComponent() :BaseComponent("RenderComponent")
 {
 }
 
-RenderComponent::~RenderComponent()
+void dae::RenderComponent::Render(float posX, float posY)const
 {
+	Renderer::GetInstance().RenderTexture(*m_Texture.get()->GetTexture(), posX, posY);
 }

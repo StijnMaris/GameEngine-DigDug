@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "GameObject.h"
-#include "ResourceManager.h"
 #include "Renderer.h"
+#include "RenderComponent.h"
 //#include "BaseComponent.h"
 
 dae::GameObject::~GameObject() = default;
@@ -16,38 +16,51 @@ void dae::GameObject::AddComponent(const std::shared_ptr<BaseComponent>& compone
 }
 
 template <class T>
-std::shared_ptr<std::is_base_of<dae::BaseComponent, T>>& dae::GameObject::GetComponent()
+T dae::GameObject::GetComponent() const
 {
 	for (auto component : m_pComponents)
 	{
-		if (dynamic_cast<T>(component))
+		auto test = std::dynamic_pointer_cast<T>(component);
+		if (test)
 		{
-			return component;
+			return *test;
 		}
 	}
-	return nullptr;
+	return RenderComponent{};
 }
 
 void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		//component->Update();
+		component->Update();
 	}
 }
 
 void dae::GameObject::Render() const
 {
 	const auto pos = mTransform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*mTexture, pos.x, pos.y);
-}
-
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	mTexture = ResourceManager::GetInstance().LoadTexture(filename);
+	if (HasRenderComponent())
+	{
+		auto rendr = GetComponent<RenderComponent>();
+		rendr.Render(pos.x, pos.y);
+	}
 }
 
 void dae::GameObject::SetPosition(float x, float y)
 {
 	mTransform.SetPosition(x, y, 0.0f);
+}
+
+bool dae::GameObject::HasRenderComponent()const
+{
+	for (auto component : m_pComponents)
+	{
+		auto test = std::dynamic_pointer_cast<RenderComponent>(component);
+		if (test)
+		{
+			return true;
+		}
+	}
+	return false;
 }
