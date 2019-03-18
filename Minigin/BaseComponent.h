@@ -4,8 +4,8 @@ namespace dae {
 	class BaseComponent
 	{
 	public:
-		virtual BaseComponent() = 0;
-		~BaseComponent();
+		BaseComponent() = default;
+		virtual ~BaseComponent() = default;
 
 		virtual void Update() = 0;
 
