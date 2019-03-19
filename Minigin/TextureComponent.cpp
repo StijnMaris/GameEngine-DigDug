@@ -11,7 +11,15 @@ dae::TextureComponent::TextureComponent(const std::string& filename) :BaseCompon
 dae::TextureComponent::TextureComponent(const std::shared_ptr<TextComponent> textComponent) :
 	BaseComponent("TextureComponent")
 {
-	m_pTexture = textComponent.get()->GetTextTexture();
+	m_pTextComponent = textComponent;
+}
+
+void dae::TextureComponent::Update()
+{
+	if (m_pTextComponent)
+	{
+		m_pTexture = m_pTextComponent.get()->GetTextTexture();
+	}
 }
 
 void dae::TextureComponent::SetTexture(const std::string& filename)

@@ -2,9 +2,9 @@
 #include "RenderComponent.h"
 #include "Renderer.h"
 
-dae::RenderComponent::RenderComponent(std::shared_ptr<TextureComponent> textureComponent) :BaseComponent("RenderComponent")
+dae::RenderComponent::RenderComponent(std::shared_ptr<TextureComponent> textureComponent) :
+	BaseComponent("RenderComponent"), m_pTextureComponent(textureComponent)
 {
-	m_pTextureComponent = textureComponent;
 }
 
 void dae::RenderComponent::Render(float posX, float posY)const
