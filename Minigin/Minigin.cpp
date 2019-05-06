@@ -60,24 +60,21 @@ void dae::Minigin::LoadGame() const
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");
 	to->AddComponent(std::make_shared<TextComponent>("Programming 4 Assignment", font));
-	to->AddComponent(std::make_shared<TextureComponent>(to->GetComponent<TextComponent>()));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextureComponent>()));
+	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(80, 20);
 	scene.AddGameObject(to);
 
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 	to = std::make_shared<GameObject>("FPSText");
 	to->AddComponent(std::make_shared<TextComponent>("FPS:", font));
-	to->AddComponent(std::make_shared<TextureComponent>(to->GetComponent<TextComponent>()));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextureComponent>()));
+	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(570, 10);
 	scene.AddGameObject(to);
 
 	to = std::make_shared<GameObject>("FPS");
 	to->AddComponent(std::make_shared<TextComponent>(std::to_string(time.GetFps()), font));
-	to->AddComponent(std::make_shared<TextureComponent>(to->GetComponent<TextComponent>()));
 	to->AddComponent(std::make_shared<FPSComponent>(to->GetComponent<TextComponent>()));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextureComponent>()));
+	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(610, 10);
 	scene.AddGameObject(to);
 }

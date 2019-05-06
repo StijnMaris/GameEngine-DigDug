@@ -4,7 +4,7 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "TextureComponent.h"
-//#include "BaseComponent.h"
+#include "BaseComponent.h"
 
 dae::GameObject::~GameObject() = default;
 
@@ -36,17 +36,17 @@ void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		component.get()->Update();
+		component->Update();
 	}
 }
 
 void dae::GameObject::Render() const
 {
-	const auto pos = GetComponent<Transform>().get()->GetPosition();
+	const auto pos = GetComponent<Transform>()->GetPosition();
 	if (HasRenderComponent())
 	{
 		auto rendr = GetComponent<RenderComponent>();
-		rendr.get()->Render(pos.x, pos.y);
+		rendr->Render(pos.x, pos.y);
 	}
 	auto rend3 = GetComponent<TextureComponent>();
 	auto rend4 = GetComponent<TextComponent>();
@@ -54,7 +54,7 @@ void dae::GameObject::Render() const
 
 void dae::GameObject::SetPosition(float x, float y)
 {
-	GetComponent<Transform>().get()->SetPosition(x, y, 0.0f);
+	GetComponent<Transform>()->SetPosition(x, y, 0.0f);
 }
 
 bool dae::GameObject::HasRenderComponent()const

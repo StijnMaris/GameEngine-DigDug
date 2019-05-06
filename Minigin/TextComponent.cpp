@@ -5,10 +5,9 @@
 #include "TextComponent.h"
 #include "Renderer.h"
 #include "Font.h"
-#include "Texture2D.h"
 
 dae::TextComponent::TextComponent(const std::string& text, std::shared_ptr<Font> font) :
-	BaseComponent("TextComponent"), m_NeedsUpdate(true), m_Text(text), m_pFont(font), m_pTexture(nullptr)
+	BaseComponent("TextComponent"), m_NeedsUpdate(true), m_Text(text), m_pFont(font), m_pTextureComponent(nullptr)
 {
 	CreateTextTexture();
 }
@@ -29,7 +28,7 @@ void dae::TextComponent::Update()
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 		}
 		SDL_FreeSurface(surf);
-		m_pTexture = std::make_shared<Texture2D>(texture);
+		m_pTextureComponent->SetTexture(texture);
 		m_NeedsUpdate = false;
 	}
 }
@@ -54,10 +53,10 @@ void dae::TextComponent::CreateTextTexture()
 		throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 	}
 	SDL_FreeSurface(surf);
-	m_pTexture = std::make_shared<Texture2D>(texture);
+	m_pTextureComponent = std::make_unique<TextureComponent>(texture);
 }
 
-std::shared_ptr<dae::Texture2D> dae::TextComponent::GetTextTexture()
+std::shared_ptr<dae::TextureComponent> dae::TextComponent::GetTextureComponent() const
 {
-	return m_pTexture;
+	return m_pTextureComponent;
 }

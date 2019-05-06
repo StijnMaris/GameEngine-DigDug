@@ -6,6 +6,7 @@
 namespace dae
 {
 	class BaseComponent;
+	//class TextureComponent;
 	class GameObject final
 	{
 	public:

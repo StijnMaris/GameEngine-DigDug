@@ -9,5 +9,5 @@ dae::RenderComponent::RenderComponent(std::shared_ptr<TextureComponent> textureC
 
 void dae::RenderComponent::Render(float posX, float posY)const
 {
-	Renderer::GetInstance().RenderTexture(*m_pTextureComponent.get()->GetTexture(), posX, posY);
+	Renderer::GetInstance().RenderTexture(*m_pTextureComponent->GetTexture(), posX, posY);
 }

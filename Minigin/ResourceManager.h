@@ -1,5 +1,6 @@
 #pragma once
 #include "Singleton.h"
+#include <SDL.h>
 
 namespace dae
 {
@@ -14,7 +15,7 @@ namespace dae
 		void Init(std::string&& data);
 
 		std::shared_ptr<Texture2D> LoadTexture(const std::string& file);
+		std::shared_ptr<Texture2D> LoadTexture(SDL_Texture* texture);
 		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size);
 	};
-
 }
