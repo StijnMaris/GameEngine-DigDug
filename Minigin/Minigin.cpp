@@ -108,7 +108,7 @@ void dae::Minigin::Run()
 		{
 			time.Update();
 
-			doContinue = input.ProcessInput();
+			doContinue = input.HandleInput();
 
 			sceneManager.Update();
 			renderer.Render();
