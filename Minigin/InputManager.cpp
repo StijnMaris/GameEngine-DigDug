@@ -4,11 +4,11 @@
 
 dae::InputManager::InputManager()
 {
-	m_pButtons.insert_or_assign(ControllerButton::ButtonX, std::make_shared<FartCommand>());
-	m_pButtons.insert_or_assign(ControllerButton::DpadUp, std::make_shared<FireCommand>());
-	m_pButtons.insert_or_assign(ControllerButton::R1, std::make_shared<JumpCommand>());
-	m_pButtons.insert_or_assign(ControllerButton::DpadDown, std::make_shared<DuckCommand>());
-	m_pButtons.insert_or_assign(ControllerButton::L1, std::make_shared<DuckCommand>());
+	m_pButtons.insert_or_assign(ControllerButton::DpadRight, std::make_shared<RunRightCommand>());
+	m_pButtons.insert_or_assign(ControllerButton::DpadUp, std::make_shared<RunUpCommand>());
+	m_pButtons.insert_or_assign(ControllerButton::DpadLeft, std::make_shared<RunLeftCommand>());
+	m_pButtons.insert_or_assign(ControllerButton::DpadDown, std::make_shared<RunDownCommand>());
+	//m_pButtons.insert_or_assign(ControllerButton::L1, std::make_shared<ExitCommand>());
 	m_pButtons.insert_or_assign(ControllerButton::Exit, std::make_shared<ExitCommand>());
 }
 
@@ -24,8 +24,8 @@ bool dae::InputManager::HandleInput()
 			cont = element.second->execute();
 			if (cont)
 			{
-				
-			}else
+			}
+			else
 			{
 				return false;
 			}

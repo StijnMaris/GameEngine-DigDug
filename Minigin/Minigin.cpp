@@ -1,6 +1,5 @@
 #include "MiniginPCH.h"
 #include "Minigin.h"
-//#include <chrono>
 #include <thread>
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -27,7 +26,7 @@ void dae::Minigin::Initialize()
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		640,
-		480,
+		860,
 		SDL_WINDOW_OPENGL
 	);
 	if (window == nullptr)
@@ -114,6 +113,6 @@ void dae::Minigin::Run()
 			renderer.Render();
 		}
 	}
-
+	std::cin.get();
 	Cleanup();
 }

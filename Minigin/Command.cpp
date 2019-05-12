@@ -1,37 +1,38 @@
 #include "MiniginPCH.h"
 #include "Command.h"
 #include <iostream>
+#include  "GameObject.h"
 //#include "Locator.h"
 
-bool JumpCommand::execute()
+bool dae::RunLeftCommand::execute(GameObject actor)
 {
 	std::cout << "jump" << "\n";
 	return true;
 	//Locator::getAudio().playSound(0);
 }
 
-bool FireCommand::execute()
+bool dae::RunRightCommand::execute(GameObject actor)
 {
 	std::cout << "Fire" << "\n";
 	return true;
 	//Locator::getAudio().playSound(1);
 }
 
-bool FartCommand::execute()
+bool dae::RunUpCommand::execute(GameObject actor)
 {
 	std::cout << "Fart" << "\n";
 	return true;
 	//Locator::getAudio().playSound(2);
 }
 
-bool DuckCommand::execute()
+bool dae::RunDownCommand::execute(GameObject actor)
 {
 	std::cout << "Duck" << "\n";
 	return true;
 	//Locator::getAudio().playSound(3);
 }
 
-bool ExitCommand::execute()
+bool dae::ExitCommand::execute(GameObject actor)
 {
 	std::cout << "Exit" << "\n";
 	return false;

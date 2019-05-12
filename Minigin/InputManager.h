@@ -27,7 +27,7 @@ namespace dae
 	{
 	public:
 		InputManager();
-		bool HandleInput();
+		std::shared_ptr<Command> HandleInput();
 		bool IsPressed(ControllerButton button) const;
 
 		void MapInput(ControllerButton button, std::shared_ptr<Command> command);

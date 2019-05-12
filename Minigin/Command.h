@@ -1,37 +1,41 @@
 #pragma once
-class Command
-{
-public:
-	virtual ~Command() {}
-	virtual bool execute() = 0;
-};
+namespace dae {
+	class GameObject;
 
-class JumpCommand : public Command
-{
-public:
-	bool execute() override;
-};
+	class Command
+	{
+	public:
+		virtual ~Command() {}
+		virtual bool execute(GameObject actor) = 0;
+	};
 
-class FireCommand : public Command
-{
-public:
-	bool execute() override;
-};
+	class RunLeftCommand : public Command
+	{
+	public:
+		bool execute(GameObject actor) override;
+	};
 
-class FartCommand : public Command
-{
-public:
-	bool execute() override;
-};
+	class RunRightCommand : public Command
+	{
+	public:
+		bool execute(GameObject actor) override;
+	};
 
-class DuckCommand : public Command
-{
-public:
-	bool execute() override;
-};
+	class RunUpCommand : public Command
+	{
+	public:
+		bool execute(GameObject actor) override;
+	};
 
-class ExitCommand : public Command
-{
-public:
-	bool execute() override;
-};
+	class RunDownCommand : public Command
+	{
+	public:
+		bool execute(GameObject actor) override;
+	};
+
+	class ExitCommand : public Command
+	{
+	public:
+		bool execute(GameObject actor) override;
+	};
+}

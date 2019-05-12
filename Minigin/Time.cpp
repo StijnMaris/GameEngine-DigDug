@@ -1,20 +1,21 @@
 #include "MiniginPCH.h"
 #include "Time.h"
 
+using namespace std::chrono;
+
 void dae::Time::Update()
 {
-	m_FrameCounter++;
-	m_TotalFrames++;
 	m_CurrentTime = GetTheCurrentTime();
-	SetDeltaTime(std::chrono::duration<float>(m_CurrentTime - m_LastTime).count());
-	m_TimeCounter += GetDeltaTime();
+	SetDeltaTime(duration<float>(m_CurrentTime - m_LastTime).count());
 	m_TotalTime += GetDeltaTime();
-	if (m_TimeCounter > 1)
+
+	m_TotalFrames++;
+	if (static_cast<int>(m_TotalTime) % 1 != 0) {}
+	else
 	{
-		m_Fps = m_FrameCounter;
-		m_FrameCounter = 0;
-		m_TimeCounter = 0;
+		m_Fps = static_cast<int>(1.f / GetDeltaTime());
 	}
+
 	m_LastTime = m_CurrentTime;
 }
 
@@ -23,9 +24,9 @@ float dae::Time::GetDeltaTime()const
 	return m_DeltaTime;
 }
 
-std::chrono::time_point<std::chrono::steady_clock> dae::Time::GetTheCurrentTime()const
+time_point<high_resolution_clock> dae::Time::GetTheCurrentTime()const
 {
-	return std::chrono::high_resolution_clock::now();
+	return high_resolution_clock::now();
 }
 
 int dae::Time::GetFps()const

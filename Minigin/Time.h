@@ -10,14 +10,14 @@ namespace dae
 		void Update();
 
 		float GetDeltaTime()const;
-		std::chrono::time_point<std::chrono::steady_clock> GetTheCurrentTime()const;
+		std::chrono::time_point<std::chrono::high_resolution_clock> GetTheCurrentTime()const;
 		int GetFps()const;
 
 	private:
 		void SetDeltaTime(float deltaTime);
 
-		int m_FrameCounter, m_Fps, m_TotalFrames;
-		float m_DeltaTime, m_TotalTime, m_TimeCounter;
-		std::chrono::time_point<std::chrono::steady_clock> m_LastTime, m_CurrentTime;
+		int m_Fps, m_TotalFrames;
+		float m_DeltaTime, m_TotalTime;
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_LastTime, m_CurrentTime;
 	};
 }
