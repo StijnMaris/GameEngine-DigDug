@@ -1,10 +1,14 @@
 #include "MiniginPCH.h"
 #include "MovementComponent.h"
 
-MovementComponent::MovementComponent()
+dae::MovementComponent::MovementComponent() :BaseComponent("MovementComponent")
 {
 }
 
-MovementComponent::~MovementComponent()
+dae::MovementComponent::~MovementComponent()
+{
+}
+
+void dae::MovementComponent::Update()
 {
 }
