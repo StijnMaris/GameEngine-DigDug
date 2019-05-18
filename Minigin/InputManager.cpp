@@ -21,22 +21,28 @@ bool InputManager::m_IsInitialized = false;
 
 dae::InputManager::InputManager()
 {
-	m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_RIGHT, std::make_shared<RunRightCommand>());
-	m_pButtons.insert_or_assign(VK_UP, std::make_shared<RunUpCommand>());
-	m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_LEFT, std::make_shared<RunLeftCommand>());
-	m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_UP, std::make_shared<RunDownCommand>());
+	InputAction LeftRun = { VK_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	//InputAction RightRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Down,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	//InputAction UpRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Released,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	MapInput(LeftRun, std::make_shared<RunLeftCommand>());
+	//MapInput(RightRun, std::make_shared<RunLeftCommand>());
+	//MapInput(UpRun, std::make_shared<RunLeftCommand>());
+	//m_pButtons.insert_or_assign(VK_UP, std::make_shared<RunUpCommand>());
+	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_LEFT, std::make_shared<RunLeftCommand>());
+	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_UP, std::make_shared<RunDownCommand>());
 	//m_pButtons.insert_or_assign(ControllerButton::L1, std::make_shared<ExitCommand>());
-	m_pButtons.insert_or_assign(XINPUT_GAMEPAD_START, std::make_shared<ExitCommand>());
+	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_START, std::make_shared<ExitCommand>());
 }
 
 void  dae::InputManager::HandleInput()
 {
+	Update();
 	for (std::pair<int, std::pair<InputAction, std::shared_ptr<Command>>> element : m_pButtons)
 	{
-		if (!IsPressed(element.second.first)) {
+		if (!IsActionTriggered(element.first)) {
 		}
 		else {
-			element.second.second;
+			element.second.second->execute();
 		}
 	}
 
@@ -44,14 +50,121 @@ void  dae::InputManager::HandleInput()
 	XInputGetState(0, m_CurrGamepadState);
 }
 
-bool dae::InputManager::IsPressed(InputAction button) const
+void InputManager::Init()
 {
-	return m_CurrGamepadState->Gamepad.wButtons & static_cast<InputAction>(button);
+	if (m_IsInitialized)
+		return;
+
+	m_pKeyboardState0 = new BYTE[256];
+	m_pKeyboardState1 = new BYTE[256];
+
+	GetKeyboardState(m_pKeyboardState0);
+	GetKeyboardState(m_pKeyboardState1);
+
+	RefreshControllerConnections();
+	m_IsInitialized = true;
+}
+
+void InputManager::Update()
+{
+	if (!m_Enabled)
+		return;
+
+	UpdateKeyboardStates();
+	UpdateGamepadStates();
+	UpdateMouse();
+
+	//Reset previous InputAction States
+	for (auto it = m_pButtons.begin(); it != m_pButtons.end(); ++it)
+	{
+		auto currAction = &(it->second.first);
+
+		//Reset the previous state before updating/checking the new state
+		currAction->IsTriggered = false;
+
+		switch (currAction->TriggerState)
+		{
+		case InputTriggerState::Pressed:
+			//KEYBOARD
+			if (currAction->KeyboardCode > 0x07 && currAction->KeyboardCode <= 0xFE)
+				if (!IsKeyboardKeyDown_unsafe(currAction->KeyboardCode, true) && IsKeyboardKeyDown_unsafe(currAction->KeyboardCode))
+					currAction->IsTriggered = true;
+
+			//MOUSE
+			if (!currAction->IsTriggered && currAction->MouseButtonCode > 0x0 && currAction->MouseButtonCode <= 0x06)
+				if (!IsMouseButtonDown_unsafe(currAction->MouseButtonCode, true) && IsMouseButtonDown_unsafe(currAction->MouseButtonCode))
+					currAction->IsTriggered = true;
+
+			//GAMEPADS
+			if (!currAction->IsTriggered && currAction->GamepadButtonCode != 0)
+				if (!IsGamepadButtonDown_unsafe(currAction->GamepadButtonCode, currAction->PlayerIndex, true) && IsGamepadButtonDown_unsafe(currAction->GamepadButtonCode, currAction->PlayerIndex))
+					currAction->IsTriggered = true;
+
+			break;
+
+		case InputTriggerState::Down:
+			//KEYBOARD
+			if (currAction->KeyboardCode > 0x07 && currAction->KeyboardCode <= 0xFE)
+				if (IsKeyboardKeyDown_unsafe(currAction->KeyboardCode, true) && IsKeyboardKeyDown_unsafe(currAction->KeyboardCode))
+					currAction->IsTriggered = true;
+
+			//MOUSE
+			if (!currAction->IsTriggered && currAction->MouseButtonCode > 0x0 && currAction->MouseButtonCode <= 0x06)
+				if (IsMouseButtonDown_unsafe(currAction->MouseButtonCode, true) && IsMouseButtonDown_unsafe(currAction->MouseButtonCode))
+					currAction->IsTriggered = true;
+
+			//GAMEPADS
+			if (!currAction->IsTriggered && currAction->GamepadButtonCode != 0)
+				if (IsGamepadButtonDown_unsafe(currAction->GamepadButtonCode, currAction->PlayerIndex, true) && IsGamepadButtonDown_unsafe(currAction->GamepadButtonCode, currAction->PlayerIndex))
+					currAction->IsTriggered = true;
+			break;
+
+		case InputTriggerState::Released:
+			//KEYBOARD
+			if (currAction->KeyboardCode > 0x07 && currAction->KeyboardCode <= 0xFE)
+				if (IsKeyboardKeyDown_unsafe(currAction->KeyboardCode, true) && !IsKeyboardKeyDown_unsafe(currAction->KeyboardCode))
+					currAction->IsTriggered = true;
+
+			//MOUSE
+			if (!currAction->IsTriggered && currAction->MouseButtonCode > 0x0 && currAction->MouseButtonCode <= 0x06)
+				if (IsMouseButtonDown_unsafe(currAction->MouseButtonCode, true) && !IsMouseButtonDown_unsafe(currAction->MouseButtonCode))
+					currAction->IsTriggered = true;
+
+			//GAMEPADS
+			if (!currAction->IsTriggered && currAction->GamepadButtonCode > 0x0 && currAction->GamepadButtonCode <= 0x8000)
+				if (IsGamepadButtonDown_unsafe(currAction->GamepadButtonCode, currAction->PlayerIndex, true) && !IsGamepadButtonDown_unsafe(currAction->GamepadButtonCode, currAction->PlayerIndex))
+					currAction->IsTriggered = true;
+			break;
+		}
+	}
+}
+
+//bool InputManager::AddInputAction(InputAction action)
+//{
+//	auto it = m_pButtons.find(action.ActionID);
+//	if (it != m_pButtons.end()) return false;
+//
+//	m_pButtons[action.ActionID].first = action;
+//
+//	return true;
+//}
+
+void InputManager::UpdateMouse()
+{
+	m_OldMousePosition = m_CurrMousePosition;
+	GetCursorPos(&m_CurrMousePosition);
+
+	m_MouseMovement.x = m_CurrMousePosition.x - m_OldMousePosition.x;
+	m_MouseMovement.y = m_CurrMousePosition.y - m_OldMousePosition.y;
 }
 
 void dae::InputManager::MapInput(InputAction button, std::shared_ptr<Command> command)
 {
-	m_pButtons.at(button) = command;
+	auto it = m_pButtons.find(button.ActionID);
+	if (it != m_pButtons.end())
+		m_pButtons.at(button.ActionID) = std::make_pair(button, command);
+
+	m_pButtons[button.ActionID] = std::make_pair(button, command);
 }
 
 bool InputManager::IsActionTriggered(int actionID)
@@ -66,17 +179,25 @@ bool InputManager::IsKeyboardKeyDown(int key, bool previousFrame)
 
 	if (key > 0x07 && key <= 0xFE)
 		if (previousFrame)
-			return (m_pOldKeyboardState[key] & 0xF0) != 0;
+			return IsKeyboardKeyDown_unsafe(key, previousFrame);
 
 	return false;
 }
 
 bool InputManager::IsMouseButtonDown(int button, bool previousFrame)
 {
+	if (button > 0x00 && button <= 0x06)
+		return IsMouseButtonDown_unsafe(button, previousFrame);
+
+	return false;
 }
 
 bool InputManager::IsGamepadButtonDown(WORD button, GamepadIndex playerIndex, bool previousFrame)
 {
+	if (button > 0x0000 && button <= 0x8000)
+		return IsGamepadButtonDown_unsafe(button, playerIndex, previousFrame);
+
+	return false;
 }
 
 glm::vec2 InputManager::GetThumbstickPosition(bool leftThumbstick, GamepadIndex playerIndex)
@@ -169,6 +290,33 @@ bool InputManager::UpdateKeyboardStates()
 	m_KeyboardState0Active = !m_KeyboardState0Active;
 
 	return getKeyboardResult > 0 ? true : false;
+}
+
+bool InputManager::IsKeyboardKeyDown_unsafe(int key, bool previousFrame)
+{
+	if (previousFrame)
+		return (m_pOldKeyboardState[key] & 0xF0) != 0;
+
+	return (m_pCurrKeyboardState[key] & 0xF0) != 0;
+}
+
+bool InputManager::IsMouseButtonDown_unsafe(int button, bool previousFrame)
+{
+	if (previousFrame)
+		return (m_pOldKeyboardState[button] & 0xF0) != 0;
+
+	return (m_pCurrKeyboardState[button] & 0xF0) != 0;
+}
+
+bool InputManager::IsGamepadButtonDown_unsafe(WORD button, GamepadIndex playerIndex, bool previousFrame)
+{
+	if (!m_ConnectedGamepads[playerIndex])
+		return false;
+
+	if (previousFrame)
+		return (m_OldGamepadState[playerIndex].Gamepad.wButtons&button) != 0;
+
+	return (m_CurrGamepadState[playerIndex].Gamepad.wButtons&button) != 0;
 }
 
 void dae::InputManager::RefreshControllerConnections()

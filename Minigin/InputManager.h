@@ -16,9 +16,10 @@ namespace dae
 
 	enum InputTriggerState
 	{
-		Pressed,
-		Released,
-		Down
+		Pressed = 0,
+		Down = 1,
+		Released = 2,
+		Idle = 3
 	};
 	struct InputAction
 	{
@@ -49,46 +50,81 @@ namespace dae
 		bool IsTriggered;
 	};
 
+	class Gamepad
+	{
+	public:
+		Gamepad(const unsigned int playerId);
+		~Gamepad() = default;
+
+		friend class InputManager;
+
+		//BUTTONS
+		const InputTriggerState GetButtonState(WORD button) const;
+		bool WasPressed(WORD button) const;
+		bool IsPressed(WORD button) const;
+
+	private:
+		XINPUT_STATE currentState;		// the state of the gamepad in the current frame
+		XINPUT_STATE previousState;		// the state of the game in the previous frame
+		const unsigned int playerID;	// player number (0-3)
+
+		glm::vec2 m_ThumbStickL;
+		glm::vec2 m_ThumbStickR;
+
+		bool checkConnection();
+		void GetState();
+		void GetFixedThumbStick(glm::vec2& thumbStick, bool isLeft = true);
+	};
+
 	class InputManager : public Singleton<InputManager>
 	{
 	public:
 		InputManager();
 		void HandleInput();
-		bool IsPressed(InputAction button) const;
+		void Init();
+
+		//bool AddInputAction(InputAction action);
+
+		//bool IsPressed(InputAction button) const;
 
 		void MapInput(InputAction button, std::shared_ptr<Command> command);
 
 	private:
+		void ProcessKeyboardInput();
+		void ProcessGamePadInput();
+
 		bool IsActionTriggered(int actionID);
-		static void SetEnabled(bool enabled) { m_Enabled = enabled; }
 
 		void RefreshControllerConnections();
-		POINT GetMousePosition(bool previousFrame = false) const { return (previousFrame) ? m_OldMousePosition : m_CurrMousePosition; }
-		POINT GetMouseMovement() const { return m_MouseMovement; }
-		bool IsKeyboardKeyDown(int key, bool previousFrame = false);
-		bool IsMouseButtonDown(int button, bool previousFrame = false);
-		bool IsGamepadButtonDown(WORD button, GamepadIndex playerIndex = GamepadIndex::PlayerOne, bool previousFrame = false);
 
 		glm::vec2 GetThumbstickPosition(bool leftThumbstick = true, GamepadIndex playerIndex = GamepadIndex::PlayerOne);
 		float GetTriggerPressure(bool leftTrigger = true, GamepadIndex playerIndex = GamepadIndex::PlayerOne);
 		void SetVibration(float leftVibration, float rightVibration, GamepadIndex playerIndex = GamepadIndex::PlayerOne);
 
-		void CursorVisible(bool visible) { ShowCursor(visible); }
-		bool IsGamepadConnected(GamepadIndex index) const { return m_ConnectedGamepads[(DWORD)index]; }
+		bool IsGamepadConnected(GamepadIndex index) const { return m_pGamePads[(DWORD)index]; }
 
 		void UpdateGamepadStates();
 		bool UpdateKeyboardStates();
+		void UpdateMouse();
 		//varuiables
 		std::map<int, std::pair<InputAction, std::shared_ptr<Command>> > m_pButtons;
 
-		static BYTE *m_pCurrKeyboardState, *m_pOldKeyboardState, *m_pKeyboardState0, *m_pKeyboardState1;
-		static bool m_KeyboardState0Active;
-		static POINT m_CurrMousePosition, m_OldMousePosition, m_MouseMovement;
-		static bool m_IsInitialized;
-		static bool m_Enabled;
+		bool m_UseGamepad = false;
+		bool m_UseKeyboard = true;
 
-		static XINPUT_STATE m_OldGamepadState[XUSER_MAX_COUNT], m_CurrGamepadState[XUSER_MAX_COUNT];
-		static bool m_ConnectedGamepads[XUSER_MAX_COUNT];
+		//Keyboad and mouse
+		std::vector<bool> KBcurrentState, KBpreviousState;
+		bool KBstate0InUse = false;
+		POINT mouseXY;
+
+		//GAMEPADS
+		std::vector<Gamepad*> m_pGamePads;
+		Gamepad* m_pCurrentGamePad;
+		unsigned int currentlyActivePlayer;
+		unsigned int nGamepads;
+		unsigned int nPlayers = 1;
+
+		XINPUT_STATE currentState{}, previousState{};
 
 		// -------------------------
 		// Disabling default copy constructor and default

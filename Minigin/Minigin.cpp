@@ -35,6 +35,7 @@ void dae::Minigin::Initialize()
 	}
 
 	Renderer::GetInstance().Init(window);
+	InputManager::GetInstance().Init();
 }
 
 /**
@@ -48,6 +49,7 @@ void dae::Minigin::LoadGame() const
 	auto go = std::make_shared<GameObject>("BackGround");
 	go->AddComponent(std::make_shared<TextureComponent>("background.jpg"));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
+	go->SetPosition(0, 0);
 	scene.AddGameObject(go);
 
 	go = std::make_shared<GameObject>("DAELogo");
@@ -107,7 +109,8 @@ void dae::Minigin::Run()
 		{
 			time.Update();
 
-			doContinue = input.HandleInput();
+			//doContinue;
+			input.HandleInput();
 
 			sceneManager.Update();
 			renderer.Render();
