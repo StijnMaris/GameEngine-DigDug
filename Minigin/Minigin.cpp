@@ -14,6 +14,8 @@
 #include "TextComponent.h"
 #include "FPSComponent.h"
 
+bool dae::Minigin::m_DoContinue = true;
+
 void dae::Minigin::Initialize()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -104,18 +106,16 @@ void dae::Minigin::Run()
 		auto& sceneManager = SceneManager::GetInstance();
 		auto& input = InputManager::GetInstance();
 
-		bool doContinue = true;
-		while (doContinue)
+		while (m_DoContinue)
 		{
 			time.Update();
 
 			//doContinue;
-			input.HandleInput();
+			input.ProcessInput();
 
 			sceneManager.Update();
 			renderer.Render();
 		}
 	}
-	std::cin.get();
 	Cleanup();
 }

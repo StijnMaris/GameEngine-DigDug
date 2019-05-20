@@ -80,6 +80,8 @@ namespace dae
 	{
 	public:
 		InputManager();
+		~InputManager();
+		void ProcessInput();
 		void HandleInput();
 		void Init();
 
@@ -90,24 +92,32 @@ namespace dae
 		void MapInput(InputAction button, std::shared_ptr<Command> command);
 
 	private:
+		bool InitGamepads();
 		void ProcessKeyboardInput();
 		void ProcessGamePadInput();
 
+		void RefreshInput();
+
 		bool IsActionTriggered(int actionID);
 
+		const InputTriggerState GetKeystrokeState(int key) const;
+		bool IsKeyPressed(int key, bool prevFrame = false) const;
+
 		void RefreshControllerConnections();
+
+		const glm::vec2 getLStick() const;
+		const glm::vec2 getRStick() const;
 
 		glm::vec2 GetThumbstickPosition(bool leftThumbstick = true, GamepadIndex playerIndex = GamepadIndex::PlayerOne);
 		float GetTriggerPressure(bool leftTrigger = true, GamepadIndex playerIndex = GamepadIndex::PlayerOne);
 		void SetVibration(float leftVibration, float rightVibration, GamepadIndex playerIndex = GamepadIndex::PlayerOne);
 
-		bool IsGamepadConnected(GamepadIndex index) const { return m_pGamePads[(DWORD)index]; }
+		bool IsGamepadConnected(GamepadIndex index) const;
 
-		void UpdateGamepadStates();
-		bool UpdateKeyboardStates();
-		void UpdateMouse();
-		//varuiables
+		//variables
 		std::map<int, std::pair<InputAction, std::shared_ptr<Command>> > m_pButtons;
+
+		bool m_IsInitialized = false;
 
 		bool m_UseGamepad = false;
 		bool m_UseKeyboard = true;
@@ -118,8 +128,8 @@ namespace dae
 		POINT mouseXY;
 
 		//GAMEPADS
-		std::vector<Gamepad*> m_pGamePads;
-		Gamepad* m_pCurrentGamePad;
+		std::vector<std::shared_ptr<Gamepad>> m_pGamePads;
+		std::shared_ptr<Gamepad> m_pCurrentGamePad;
 		unsigned int currentlyActivePlayer;
 		unsigned int nGamepads;
 		unsigned int nPlayers = 1;

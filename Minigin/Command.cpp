@@ -2,6 +2,7 @@
 #include "Command.h"
 #include <iostream>
 #include  "GameObject.h"
+#include "Minigin.h"
 //#include "Locator.h"
 
 bool dae::RunLeftCommand::execute()
@@ -34,6 +35,7 @@ bool dae::RunDownCommand::execute()
 
 bool dae::ExitCommand::execute()
 {
+	Minigin::m_DoContinue = false;
 	std::cout << "Exit" << "\n";
 	return false;
 }
