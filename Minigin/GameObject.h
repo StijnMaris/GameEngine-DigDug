@@ -6,11 +6,10 @@
 namespace dae
 {
 	class BaseComponent;
-	//class TextureComponent;
-	class GameObject final
+	class GameObject final : std::enable_shared_from_this<GameObject>
 	{
 	public:
-		void AddComponent(const std::shared_ptr<BaseComponent>& component);
+		void AddComponent(const std::shared_ptr<BaseComponent> component);
 
 		template <class T>
 		//std::is_base_of<dae::BaseComponent, T>
@@ -32,6 +31,6 @@ namespace dae
 		bool HasRenderComponent()const;
 
 		std::string m_Name{};
-		std::vector < std::shared_ptr<BaseComponent>> m_pComponents{};
+		std::vector < std::weak_ptr<BaseComponent>> m_pComponents{};
 	};
 }

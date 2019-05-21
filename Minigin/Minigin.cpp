@@ -48,7 +48,7 @@ void dae::Minigin::LoadGame() const
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 	auto& time = Time::GetInstance();
 
-	auto go = std::make_shared<GameObject>("BackGround");
+	std::shared_ptr<GameObject> go = std::make_shared<GameObject>("BackGround");
 	go->AddComponent(std::make_shared<TextureComponent>("background.jpg"));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
 	go->SetPosition(0, 0);
@@ -72,6 +72,7 @@ void dae::Minigin::LoadGame() const
 	to->AddComponent(std::make_shared<TextComponent>("FPS:", font));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(570, 10);
+
 	scene.AddGameObject(to);
 
 	to = std::make_shared<GameObject>("FPS");

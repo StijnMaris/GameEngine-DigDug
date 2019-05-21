@@ -1,6 +1,6 @@
 #include "MiniginPCH.h"
 #include "GameObject.h"
-#include "Renderer.h"
+#include <memory>
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "TextureComponent.h"
@@ -10,12 +10,13 @@ dae::GameObject::~GameObject() = default;
 
 dae::GameObject::GameObject(const std::string& name) :m_Name(name)
 {
-	AddComponent(std::make_shared<Transform>());
+	//AddComponent(std::make_shared<Transform>());
 }
 
-void dae::GameObject::AddComponent(const std::shared_ptr<BaseComponent>& component)
+void dae::GameObject::AddComponent(const std::shared_ptr<BaseComponent> component)
 {
 	m_pComponents.push_back(component);
+	component->SetOwner(shared_from_this());
 }
 
 template <class T>
@@ -23,10 +24,14 @@ std::shared_ptr<T>  dae::GameObject::GetComponent() const
 {
 	for (auto component : m_pComponents)
 	{
-		auto test = std::dynamic_pointer_cast<T>(component);
-		if (test && typeid(*component) == typeid(T))
+		std::shared_ptr<BaseComponent> comp = component.lock();
+		if (comp)
 		{
-			return test;
+			auto test = std::dynamic_pointer_cast<T>(comp);
+			if (test && typeid(*comp) == typeid(T))
+			{
+				return test;
+			}
 		}
 	}
 	return nullptr;
@@ -36,7 +41,11 @@ void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		component->Update();
+		std::shared_ptr<BaseComponent> comp = component.lock();
+		if (comp)
+		{
+			comp->Update();
+		}
 	}
 }
 
@@ -61,10 +70,14 @@ bool dae::GameObject::HasRenderComponent()const
 {
 	for (auto component : m_pComponents)
 	{
-		auto test = std::dynamic_pointer_cast<RenderComponent>(component);
-		if (test)
+		std::shared_ptr<BaseComponent> comp = component.lock();
+		if (comp)
 		{
-			return true;
+			auto Rendr = std::dynamic_pointer_cast<RenderComponent>(comp);
+			if (Rendr)
+			{
+				return true;
+			}
 		}
 	}
 	return false;
