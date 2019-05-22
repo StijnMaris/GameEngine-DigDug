@@ -13,6 +13,6 @@ namespace dae {
 		void SetOwner(std::shared_ptr<GameObject> owner);
 	private:
 		std::string m_Name{};
-		std::shared_ptr<GameObject> m_pOwner;
+		std::weak_ptr<GameObject> m_pOwner;
 	};
 }

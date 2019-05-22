@@ -10,7 +10,6 @@ dae::GameObject::~GameObject() = default;
 
 dae::GameObject::GameObject(const std::string& name) :m_Name(name)
 {
-	//AddComponent(std::make_shared<Transform>());
 }
 
 void dae::GameObject::AddComponent(const std::shared_ptr<BaseComponent> component)
@@ -24,28 +23,35 @@ std::shared_ptr<T>  dae::GameObject::GetComponent() const
 {
 	for (auto component : m_pComponents)
 	{
-		std::shared_ptr<BaseComponent> comp = component.lock();
+		/*std::shared_ptr<BaseComponent> comp = component.lock();
 		if (comp)
+		{*/
+		auto test = std::dynamic_pointer_cast<T>(component);
+		if (test && typeid(*component) == typeid(T))
 		{
-			auto test = std::dynamic_pointer_cast<T>(comp);
-			if (test && typeid(*comp) == typeid(T))
-			{
-				return test;
-			}
+			return test;
 		}
+		/*}*/
 	}
 	return nullptr;
+}
+
+void dae::GameObject::Init()
+{
+	AddComponent(std::make_shared<Transform>());
 }
 
 void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		std::shared_ptr<BaseComponent> comp = component.lock();
+		/*std::shared_ptr<BaseComponent> comp = component.lock();
 		if (comp)
 		{
 			comp->Update();
-		}
+		}*/
+
+		component->Update();
 	}
 }
 
@@ -70,7 +76,7 @@ bool dae::GameObject::HasRenderComponent()const
 {
 	for (auto component : m_pComponents)
 	{
-		std::shared_ptr<BaseComponent> comp = component.lock();
+		/*std::shared_ptr<BaseComponent> comp = component.lock();
 		if (comp)
 		{
 			auto Rendr = std::dynamic_pointer_cast<RenderComponent>(comp);
@@ -78,6 +84,12 @@ bool dae::GameObject::HasRenderComponent()const
 			{
 				return true;
 			}
+		}*/
+
+		auto Rendr = std::dynamic_pointer_cast<RenderComponent>(component);
+		if (Rendr)
+		{
+			return true;
 		}
 	}
 	return false;
