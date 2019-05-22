@@ -5,6 +5,7 @@
 #include "TextComponent.h"
 #include "TextureComponent.h"
 #include "BaseComponent.h"
+#include "CommandComponent.h"
 
 dae::GameObject::~GameObject() = default;
 
@@ -65,11 +66,22 @@ void dae::GameObject::Render() const
 	}
 	auto rend3 = GetComponent<TextureComponent>();
 	auto rend4 = GetComponent<TextComponent>();
+	auto rend5 = GetComponent<CommandComponent>();
 }
 
-void dae::GameObject::SetPosition(float x, float y)
+glm::vec3 dae::GameObject::GetPosition() const
 {
-	GetComponent<Transform>()->SetPosition(x, y, 0.0f);
+	return  GetComponent<Transform>()->GetPosition();
+}
+
+void dae::GameObject::SetPosition(float x, float y, float z)
+{
+	GetComponent<Transform>()->SetPosition(x, y, z);
+}
+
+void dae::GameObject::SetPosition(glm::vec3 pos)
+{
+	GetComponent<Transform>()->SetPosition(pos);
 }
 
 bool dae::GameObject::HasRenderComponent()const

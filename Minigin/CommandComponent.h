@@ -5,7 +5,7 @@
 
 namespace dae
 {
-	class CommandComponent final : public dae::BaseComponent
+	class CommandComponent final : public BaseComponent
 	{
 	public:
 		CommandComponent();

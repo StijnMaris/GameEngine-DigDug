@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "Transform.h"
+#include <glm/vec2.hpp>
 
 namespace dae
 {
@@ -19,7 +20,9 @@ namespace dae
 		void Update();
 		void Render() const;
 
-		void SetPosition(float x, float y);
+		glm::vec3 GetPosition() const;
+		void SetPosition(float x, float y, float z = 0);
+		void SetPosition(glm::vec3 pos = { 0,0,0 });
 
 		GameObject(const std::string& name);
 		virtual ~GameObject();

@@ -9,7 +9,7 @@ void dae::CommandComponent::Update()
 {
 	while (m_Commands.size() > 0)
 	{
-		m_Commands.front()->execute(GetOwner());
+		m_Commands.front()->execute();
 		m_Commands.pop();
 	}
 }

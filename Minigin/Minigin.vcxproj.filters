@@ -114,6 +114,9 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files\Main</Filter>
     </ClInclude>
+    <ClInclude Include="LevelScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Log.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>Source Files\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelScene.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

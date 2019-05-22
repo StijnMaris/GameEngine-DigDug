@@ -2,26 +2,15 @@
 #include "InputManager.h"
 #include <minwinbase.h>
 #include <iostream>
+#include "GameObject.h"
 
 //*******************//
 //***INPUTMANAGER***//
 //*******************//
 dae::InputManager::InputManager()
 {
-	InputAction LeftRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-	//InputAction RightRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Down,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-	//InputAction UpRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Released,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
 	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
-
-	MapInput(LeftRun, std::make_shared<RunLeftCommand>());
 	MapInput(Exit, std::make_shared<ExitCommand>());
-	//MapInput(RightRun, std::make_shared<RunLeftCommand>());
-	//MapInput(UpRun, std::make_shared<RunLeftCommand>());
-	//m_pButtons.insert_or_assign(VK_UP, std::make_shared<RunUpCommand>());
-	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_LEFT, std::make_shared<RunLeftCommand>());
-	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_UP, std::make_shared<RunDownCommand>());
-	//m_pButtons.insert_or_assign(ControllerButton::L1, std::make_shared<ExitCommand>());
-	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_START, std::make_shared<ExitCommand>());
 }
 
 dae::InputManager::~InputManager()
@@ -161,8 +150,7 @@ void dae::InputManager::HandleInput()
 		{
 			if (currAction->ActionID == 16)
 				it->second.second->execute();
-			//it->second.second->AddToCommandStream();
-			//it->second.second->execute();
+			it->second.second->AddToCommandStream();
 			//std::cout << it->second.first.PlayerIndex << std::endl;
 		}
 	}

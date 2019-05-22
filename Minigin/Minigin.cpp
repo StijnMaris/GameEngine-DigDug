@@ -13,6 +13,7 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "FPSComponent.h"
+#include "LevelScene.h"
 
 bool dae::Minigin::m_DoContinue = true;
 
@@ -45,46 +46,8 @@ void dae::Minigin::Initialize()
  */
 void dae::Minigin::LoadGame() const
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
-	auto& time = Time::GetInstance();
-
-	std::shared_ptr<GameObject> go = std::make_shared<GameObject>("BackGround");
-	go->Init();
-	go->AddComponent(std::make_shared<TextureComponent>("background.jpg"));
-	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
-	go->SetPosition(0, 0);
-	scene.AddGameObject(go);
-
-	go = std::make_shared<GameObject>("DAELogo");
-	go->Init();
-	go->AddComponent(std::make_shared<TextureComponent>("logo.png"));
-	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
-	go->SetPosition(216, 180);
-	scene.AddGameObject(go);
-
-	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<GameObject>("TitleText");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("Programming 4 Assignment", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(80, 20);
-	scene.AddGameObject(to);
-
-	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
-	to = std::make_shared<GameObject>("FPSText");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("FPS:", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(570, 10);
-	scene.AddGameObject(to);
-
-	to = std::make_shared<GameObject>("FPS");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>(std::to_string(time.GetFps()), font));
-	to->AddComponent(std::make_shared<FPSComponent>(to->GetComponent<TextComponent>()));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(610, 10);
-	scene.AddGameObject(to);
+	LevelScene levelScene{};
+	levelScene.Init();
 }
 
 void dae::Minigin::Cleanup()
