@@ -6,7 +6,7 @@ namespace dae {
 	{
 	public:
 		Command() = default;
-		Command(std::shared_ptr<GameObject> character);
+		Command(std::shared_ptr<GameObject> character) :m_pOwner(character) {}
 		virtual ~Command() {}
 		virtual bool execute() = 0;
 		void AddToCommandStream();
@@ -18,40 +18,50 @@ namespace dae {
 	class CharacterCommand : public Command
 	{
 	public:
-		CharacterCommand(std::shared_ptr<GameObject> character);
+		CharacterCommand(std::shared_ptr<GameObject> character) : Command(character) {}
 		virtual bool execute() = 0;
 	};
 
 	class RunLeftCommand : public CharacterCommand
 	{
 	public:
-		RunLeftCommand(std::shared_ptr<GameObject> character);
+		RunLeftCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
-	class RunRightCommand : public Command
+	class RunRightCommand : public CharacterCommand
 	{
 	public:
+		RunRightCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
-	class RunUpCommand : public Command
+	class RunUpCommand : public CharacterCommand
 	{
 	public:
+		RunUpCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
-	class RunDownCommand : public Command
+	class RunDownCommand : public CharacterCommand
 	{
 	public:
+		RunDownCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		bool execute() override;
+	};
+
+	class ActionCommand : public CharacterCommand
+	{
+	public:
+		ActionCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
 	//misc
-	class ExitCommand : public Command
+	class ExitCommand : public CharacterCommand
 	{
 	public:
+		ExitCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
 		bool execute() override;
-		//void AddToCommandStream() override {}
 	};
 }

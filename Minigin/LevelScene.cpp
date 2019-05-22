@@ -39,6 +39,14 @@ void dae::LevelScene::Init()
 	auto& input = InputManager::GetInstance();
 	InputAction LeftRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
 	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(go));
+	InputAction RightRun = { XINPUT_GAMEPAD_DPAD_RIGHT,InputTriggerState::Pressed,VK_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
+	input.MapInput(RightRun, std::make_shared<RunRightCommand>(go));
+	InputAction UpRun = { XINPUT_GAMEPAD_DPAD_UP,InputTriggerState::Pressed,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
+	input.MapInput(UpRun, std::make_shared<RunUpCommand>(go));
+	InputAction DownRun = { XINPUT_GAMEPAD_DPAD_DOWN,InputTriggerState::Pressed,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
+	input.MapInput(DownRun, std::make_shared<RunDownCommand>(go));
+	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
+	input.MapInput(Exit, std::make_shared<ExitCommand>(go));
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");

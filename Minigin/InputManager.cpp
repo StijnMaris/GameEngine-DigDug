@@ -9,8 +9,6 @@
 //*******************//
 dae::InputManager::InputManager()
 {
-	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
-	MapInput(Exit, std::make_shared<ExitCommand>());
 }
 
 dae::InputManager::~InputManager()

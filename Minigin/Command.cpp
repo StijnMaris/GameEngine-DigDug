@@ -6,30 +6,17 @@
 #include "CommandComponent.h"
 //#include "Locator.h"
 
-dae::Command::Command(std::shared_ptr<GameObject> character)
-{
-	m_pOwner = character;
-}
-
-dae::CharacterCommand::CharacterCommand(std::shared_ptr<GameObject> character) : Command(character)
-{
-}
-
 void dae::Command::AddToCommandStream()
 {
 	//m_pOwner->GetPosition();
 	m_pOwner->GetComponent<CommandComponent>()->AddCommand(shared_from_this());
 }
 
-dae::RunLeftCommand::RunLeftCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character)
-{
-}
-
 bool dae::RunLeftCommand::execute()
 {
-	std::cout << "jump" << "\n";
+	std::cout << "Left" << "\n";
 
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x + 10, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x - 10, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
 
 	return true;
 	//Locator::getAudio().playSound(0);
@@ -37,23 +24,33 @@ bool dae::RunLeftCommand::execute()
 
 bool dae::RunRightCommand::execute()
 {
-	std::cout << "Fire" << "\n";
+	std::cout << "Right" << "\n";
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x + 10, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
 	return true;
 	//Locator::getAudio().playSound(1);
 }
 
 bool dae::RunUpCommand::execute()
 {
-	std::cout << "Fart" << "\n";
+	std::cout << "Up" << "\n";
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y - 10, m_pOwner->GetPosition().z);
 	return true;
 	//Locator::getAudio().playSound(2);
 }
 
 bool dae::RunDownCommand::execute()
 {
-	std::cout << "Duck" << "\n";
+	std::cout << "Down" << "\n";
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y + 10, m_pOwner->GetPosition().z);
 	return true;
 	//Locator::getAudio().playSound(3);
+}
+
+bool dae::ActionCommand::execute()
+{
+	std::cout << "Action" << "\n";
+
+	return true;
 }
 
 //misc
