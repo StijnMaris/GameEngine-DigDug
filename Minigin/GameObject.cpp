@@ -58,15 +58,15 @@ void dae::GameObject::Update()
 
 void dae::GameObject::Render() const
 {
-	const auto pos = GetComponent<Transform>()->GetPosition();
 	if (HasRenderComponent())
 	{
-		auto rendr = GetComponent<RenderComponent>();
-		rendr->Render(pos.x, pos.y);
+		GetComponent<RenderComponent>()->Render();
 	}
 	auto rend3 = GetComponent<TextureComponent>();
 	auto rend4 = GetComponent<TextComponent>();
 	auto rend5 = GetComponent<CommandComponent>();
+	auto rend6 = GetComponent<SpriteComponent>();
+	auto pos = GetComponent<Transform>();
 }
 
 glm::vec3 dae::GameObject::GetPosition() const
@@ -82,6 +82,21 @@ void dae::GameObject::SetPosition(float x, float y, float z)
 void dae::GameObject::SetPosition(glm::vec3 pos)
 {
 	GetComponent<Transform>()->SetPosition(pos);
+}
+
+const glm::vec3& dae::GameObject::GetScale() const
+{
+	return  GetComponent<Transform>()->GetScale();
+}
+
+void dae::GameObject::SetScale(float x, float y, float z)
+{
+	GetComponent<Transform>()->SetScale(x, y, z);
+}
+
+void dae::GameObject::SetScale(glm::vec3 scale)
+{
+	GetComponent<Transform>()->SetScale(scale);
 }
 
 bool dae::GameObject::HasRenderComponent()const

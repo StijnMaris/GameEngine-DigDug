@@ -6,13 +6,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <SDL.h>
-#include "GameObject.h"
-#include "Scene.h"
 #include "Time.h"
-#include "TextureComponent.h"
-#include "RenderComponent.h"
-#include "TextComponent.h"
-#include "FPSComponent.h"
 #include "LevelScene.h"
 
 bool dae::Minigin::m_DoContinue = true;

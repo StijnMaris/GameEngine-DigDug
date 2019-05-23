@@ -19,7 +19,7 @@ dae::LevelScene::LevelScene()
 void dae::LevelScene::Init()
 {
 	InitControles();
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = SceneManager::GetInstance().CreateScene("Level");
 	auto& time = Time::GetInstance();
 
 	std::shared_ptr<GameObject> go = std::make_shared<GameObject>("BackGround");
@@ -31,10 +31,12 @@ void dae::LevelScene::Init()
 
 	go = std::make_shared<GameObject>("DAELogo");
 	go->Init();
-	go->AddComponent(std::make_shared<TextureComponent>("logo.png"));
-	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
-	go->AddComponent(std::make_shared<CommandComponent>());
 	go->SetPosition(216, 180);
+	go->AddComponent(std::make_shared<TextureComponent>("logo.png"));
+	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), glm::vec2{ 100,100 }));
+	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<SpriteComponent>()));
+	go->AddComponent(std::make_shared<CommandComponent>());
+
 	scene.AddGameObject(go);
 	auto& input = InputManager::GetInstance();
 	InputAction LeftRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };

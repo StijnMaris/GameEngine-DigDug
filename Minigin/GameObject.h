@@ -24,6 +24,10 @@ namespace dae
 		void SetPosition(float x, float y, float z = 0);
 		void SetPosition(glm::vec3 pos = { 0,0,0 });
 
+		const glm::vec3& GetScale() const;
+		void SetScale(float x, float y, float z);
+		void SetScale(glm::vec3 scale = { 1,1,1 });
+
 		GameObject(const std::string& name);
 		virtual ~GameObject();
 		GameObject(const GameObject& other) = delete;
