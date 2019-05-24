@@ -38,7 +38,7 @@ void dae::LevelScene::Init()
 	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, true, 0, 200));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<SpriteComponent>()));
 	go->AddComponent(std::make_shared<CommandComponent>());
-	go->AddComponent(std::make_shared<ColliderComponent>(go->GetComponent<Transform>(), go->GetComponent<SpriteComponent>()->GetSpriteWidth(), go->GetComponent<SpriteComponent>()->GetSpriteHeight()));
+	go->AddComponent(std::make_shared<ColliderComponent>(go->GetComponent<Transform>(), go->GetComponent<SpriteComponent>()->GetRectToDraw()));
 
 	scene.AddGameObject(go);
 	auto& input = InputManager::GetInstance();

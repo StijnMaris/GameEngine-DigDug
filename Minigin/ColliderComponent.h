@@ -8,11 +8,11 @@ namespace  dae {
 	class ColliderComponent final : public BaseComponent
 	{
 	public:
-		ColliderComponent(std::shared_ptr<Transform> transform, int width, int height);
+		ColliderComponent(std::shared_ptr<Transform> transform, SDL_Rect rect);
 		virtual ~ColliderComponent();
 
 		void Update() override;
-		void SetColliderRect(glm::vec3 pos, int width, int height);
+		void SetColliderRect(SDL_Rect rect);
 
 	private:
 		SDL_Rect m_Collider;
