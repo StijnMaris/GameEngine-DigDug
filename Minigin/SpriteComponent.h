@@ -8,7 +8,7 @@ namespace dae {
 	class SpriteComponent final : public dae::BaseComponent
 	{
 	public:
-		SpriteComponent(std::shared_ptr<TextureComponent>  textureComp, int rows, int cols, int totalFrames);
+		SpriteComponent(std::shared_ptr<TextureComponent>  textureComp, int rows, int cols, bool isAnimated = false, int startRow = 0, int speed = 0);
 		virtual ~SpriteComponent();
 
 		void Update() override;
@@ -50,11 +50,28 @@ namespace dae {
 		{
 			return m_pTextureComp;
 		}
+
+		const int& GetSpriteWidth()const
+		{
+			return m_SpriteWidth;
+		}
+		const int& GetSpriteHeight()const
+		{
+			return m_SpriteHeight;
+		}
+
+		void SetStartRow(int startRow)
+		{
+			m_StartRow = startRow;
+			m_RectToDraw.y = m_StartRow * m_SpriteHeight;
+		}
 	private:
 		std::shared_ptr<TextureComponent> m_pTextureComp;
 		bool m_FlipHorizontal = false;
 		bool m_FlipVertical = false;
 		glm::vec2 m_Offset;
 		SDL_Rect m_RectToDraw;
+		int m_Rows, m_Cols, m_AnimSpeed, m_SpriteWidth, m_SpriteHeight, m_TextureWidth, m_TextureHeight, m_StartRow;
+		bool m_IsAnimated;
 	};
 };

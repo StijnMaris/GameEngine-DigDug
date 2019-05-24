@@ -10,6 +10,7 @@ std::shared_ptr<dae::GameObject> dae::BaseComponent::GetOwner() const
 	std::shared_ptr<GameObject> owner = m_pOwner.lock();
 	if (owner)
 		return  owner;
+	std::cout << "owner not found" << std::endl;
 	return nullptr;
 }
 

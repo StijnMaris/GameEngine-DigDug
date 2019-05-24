@@ -11,6 +11,7 @@
 #include "FPSComponent.h"
 #include "InputManager.h"
 #include "CommandComponent.h"
+#include "ColliderComponent.h"
 
 dae::LevelScene::LevelScene()
 {
@@ -32,10 +33,12 @@ void dae::LevelScene::Init()
 	go = std::make_shared<GameObject>("DAELogo");
 	go->Init();
 	go->SetPosition(216, 180);
-	go->AddComponent(std::make_shared<TextureComponent>("logo.png"));
-	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), glm::vec2{ 100,100 }));
+	go->SetScale(2, 2);
+	go->AddComponent(std::make_shared<TextureComponent>("DigDug.png"));
+	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, true, 0, 200));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<SpriteComponent>()));
 	go->AddComponent(std::make_shared<CommandComponent>());
+	go->AddComponent(std::make_shared<ColliderComponent>(go->GetComponent<Transform>(), go->GetComponent<SpriteComponent>()->GetSpriteWidth(), go->GetComponent<SpriteComponent>()->GetSpriteHeight()));
 
 	scene.AddGameObject(go);
 	auto& input = InputManager::GetInstance();

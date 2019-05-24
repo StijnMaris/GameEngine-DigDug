@@ -24,6 +24,11 @@ float dae::Time::GetDeltaTime()const
 	return m_DeltaTime;
 }
 
+float dae::Time::GetTotalTime() const
+{
+	return m_TotalTime;
+}
+
 time_point<high_resolution_clock> dae::Time::GetTheCurrentTime()const
 {
 	return high_resolution_clock::now();

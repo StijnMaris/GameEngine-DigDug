@@ -10,6 +10,7 @@ namespace dae
 		void Update();
 
 		float GetDeltaTime()const;
+		float GetTotalTime()const;
 		std::chrono::time_point<std::chrono::high_resolution_clock> GetTheCurrentTime()const;
 		int GetFps()const;
 

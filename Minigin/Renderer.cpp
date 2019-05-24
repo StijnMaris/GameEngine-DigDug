@@ -69,12 +69,8 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, std::shared_ptr<Spri
 {
 	SDL_Rect dst;
 
-	int TextureWidth = 0;
-	int TextureHeight = 0;
-	//Get The Sprite Dimension Data
-	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &TextureWidth, &TextureHeight);
-	dst.w = int((float)TextureWidth * spriteComp->GetOwner()->GetScale().x);
-	dst.h = int((float)TextureHeight * spriteComp->GetOwner()->GetScale().y);
+	dst.w = int(static_cast<float>(spriteComp->GetSpriteWidth()) * spriteComp->GetOwner()->GetScale().x);
+	dst.h = int(static_cast<float>(spriteComp->GetSpriteHeight()) * spriteComp->GetOwner()->GetScale().y);
 
 	//Rotation Center
 	SDL_Point center;

@@ -2,10 +2,9 @@
 #include "ColliderComponent.h"
 #include "GameObject.h"
 
-dae::ColliderComponent::ColliderComponent(glm::vec2 pos, int width, int height) :BaseComponent("ColliderComponent")
+dae::ColliderComponent::ColliderComponent(std::shared_ptr<Transform> transform, int width, int height) :BaseComponent("ColliderComponent"), m_pTransformComponent(transform)
 {
-	SetColliderRect(pos, width, height);
-	m_pTransformComponent = GetOwner()->GetComponent<Transform>();
+	SetColliderRect(m_pTransformComponent->GetPosition(), width, height);
 }
 
 dae::ColliderComponent::~ColliderComponent()
@@ -17,7 +16,7 @@ void dae::ColliderComponent::Update()
 	m_PrevPosition = m_pTransformComponent->GetPosition();
 }
 
-void dae::ColliderComponent::SetColliderRect(glm::vec2 pos, int width, int height)
+void dae::ColliderComponent::SetColliderRect(glm::vec3 pos, int width, int height)
 {
 	m_Collider.w = width;
 	m_Collider.h = height;
