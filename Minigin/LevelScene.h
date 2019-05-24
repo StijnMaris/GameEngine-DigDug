@@ -1,5 +1,6 @@
 #pragma once
 namespace dae {
+	class GameObject;
 	class LevelScene
 	{
 	public:
@@ -7,6 +8,6 @@ namespace dae {
 
 		void Init();
 
-		void InitControles();
+		void InitPlayer1Controles(std::shared_ptr<GameObject> gameObject);
 	};
 }

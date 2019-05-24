@@ -4,7 +4,7 @@
 #include "Texture2D.h"
 #include "Time.h"
 
-dae::SpriteComponent::SpriteComponent(std::shared_ptr<TextureComponent> textureComp, int rows, int cols, bool isAnimated, int startRow, int speed) :
+dae::SpriteComponent::SpriteComponent(std::shared_ptr<TextureComponent> textureComp, int rows, int cols, int startRow, bool isAnimated, int speed) :
 	BaseComponent("SpriteComponent"),
 	m_pTextureComp(textureComp), m_Rows(rows), m_Cols(cols), m_IsAnimated(isAnimated), m_AnimSpeed(speed), m_StartRow(startRow)
 {

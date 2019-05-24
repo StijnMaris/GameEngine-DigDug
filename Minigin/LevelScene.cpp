@@ -12,6 +12,7 @@
 #include "InputManager.h"
 #include "CommandComponent.h"
 #include "ColliderComponent.h"
+#include "GridBlock.h"
 
 dae::LevelScene::LevelScene()
 {
@@ -19,7 +20,6 @@ dae::LevelScene::LevelScene()
 
 void dae::LevelScene::Init()
 {
-	InitControles();
 	auto& scene = SceneManager::GetInstance().CreateScene("Level");
 	auto& time = Time::GetInstance();
 
@@ -30,28 +30,21 @@ void dae::LevelScene::Init()
 	go->SetPosition(0, 0);
 	scene.AddGameObject(go);
 
-	go = std::make_shared<GameObject>("DAELogo");
+	GridBlock test = { glm::vec3{300,250,0},6,1,BlockColor::Red,true };
+	test.Init();
+	scene.AddGameObject(test.GetBlock());
+
+	go = std::make_shared<GameObject>("Player");
 	go->Init();
 	go->SetPosition(216, 180);
 	go->SetScale(2, 2);
 	go->AddComponent(std::make_shared<TextureComponent>("DigDug.png"));
-	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, true, 0, 200));
+	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, 1, true, 200));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<SpriteComponent>()));
 	go->AddComponent(std::make_shared<CommandComponent>());
 	go->AddComponent(std::make_shared<ColliderComponent>(go->GetComponent<Transform>(), go->GetComponent<SpriteComponent>()->GetRectToDraw()));
-
+	InitPlayer1Controles(go);
 	scene.AddGameObject(go);
-	auto& input = InputManager::GetInstance();
-	InputAction LeftRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(go));
-	InputAction RightRun = { XINPUT_GAMEPAD_DPAD_RIGHT,InputTriggerState::Pressed,VK_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
-	input.MapInput(RightRun, std::make_shared<RunRightCommand>(go));
-	InputAction UpRun = { XINPUT_GAMEPAD_DPAD_UP,InputTriggerState::Pressed,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
-	input.MapInput(UpRun, std::make_shared<RunUpCommand>(go));
-	InputAction DownRun = { XINPUT_GAMEPAD_DPAD_DOWN,InputTriggerState::Pressed,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
-	input.MapInput(DownRun, std::make_shared<RunDownCommand>(go));
-	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
-	input.MapInput(Exit, std::make_shared<ExitCommand>(go));
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");
@@ -78,16 +71,17 @@ void dae::LevelScene::Init()
 	scene.AddGameObject(to);
 }
 
-void dae::LevelScene::InitControles()
+void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<GameObject> gameObject)
 {
-	//InputAction RightRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Down,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-	//InputAction UpRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Released,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-
-	//MapInput(RightRun, std::make_shared<RunLeftCommand>());
-	//MapInput(UpRun, std::make_shared<RunLeftCommand>());
-	//m_pButtons.insert_or_assign(VK_UP, std::make_shared<RunUpCommand>());
-	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_LEFT, std::make_shared<RunLeftCommand>());
-	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_DPAD_UP, std::make_shared<RunDownCommand>());
-	//m_pButtons.insert_or_assign(ControllerButton::L1, std::make_shared<ExitCommand>());
-	//m_pButtons.insert_or_assign(XINPUT_GAMEPAD_START, std::make_shared<ExitCommand>());
+	auto& input = InputManager::GetInstance();
+	InputAction LeftRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject));
+	InputAction RightRun = { XINPUT_GAMEPAD_DPAD_RIGHT,InputTriggerState::Pressed,VK_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
+	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject));
+	InputAction UpRun = { XINPUT_GAMEPAD_DPAD_UP,InputTriggerState::Pressed,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
+	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject));
+	InputAction DownRun = { XINPUT_GAMEPAD_DPAD_DOWN,InputTriggerState::Pressed,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
+	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject));
+	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
+	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject));
 }

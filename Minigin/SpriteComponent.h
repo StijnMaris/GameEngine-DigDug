@@ -8,7 +8,7 @@ namespace dae {
 	class SpriteComponent final : public dae::BaseComponent
 	{
 	public:
-		SpriteComponent(std::shared_ptr<TextureComponent>  textureComp, int rows, int cols, bool isAnimated = false, int startRow = 0, int speed = 0);
+		SpriteComponent(std::shared_ptr<TextureComponent>  textureComp, int rows, int cols, int startRow = 0, bool isAnimated = false, int speed = 0);
 		virtual ~SpriteComponent();
 
 		void Update() override;

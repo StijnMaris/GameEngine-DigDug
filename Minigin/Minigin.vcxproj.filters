@@ -43,6 +43,15 @@
     <Filter Include="Source Files\Singletons">
       <UniqueIdentifier>{e905a44b-b1c1-4e08-b148-e9fbb83a24c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\BaseComponets">
+      <UniqueIdentifier>{e7e7449a-0066-4183-9d91-fcf8bb14db2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameStuff">
+      <UniqueIdentifier>{de1074cc-623d-44db-b5d5-9fad52e90709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameStuff">
+      <UniqueIdentifier>{385bd68a-44be-41f6-8146-97e46866d2d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Log.h">
@@ -54,32 +63,8 @@
     <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="TextComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Command.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MovementComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandComponent.h">
-      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
       <Filter>Header Files\Visuals</Filter>
@@ -117,17 +102,41 @@
     <ClInclude Include="LevelScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
     <ClInclude Include="ColliderComponent.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\Components\BaseComponets</Filter>
     </ClInclude>
-    <ClInclude Include="GridSystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CommandComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
     </ClInclude>
-    <ClInclude Include="GridBlock.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="FPSComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
     </ClInclude>
     <ClInclude Include="SpriteComponent.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
+    <ClInclude Include="TextComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
+    <ClInclude Include="GridBlock.h">
+      <Filter>Header Files\GameStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="GridSystem.h">
+      <Filter>Header Files\GameStuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,14 +212,14 @@
     <ClCompile Include="ColliderComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="GridSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GridBlock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GridBlock.cpp">
+      <Filter>Source Files\GameStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="GridSystem.cpp">
+      <Filter>Source Files\GameStuff</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,13 +8,13 @@
 
 namespace dae
 {
-	enum GamepadIndex : DWORD
+	enum class GamepadIndex : DWORD
 	{
 		PlayerOne = 0,
 		PlayerTwo = 1,
 	};
 
-	enum InputTriggerState
+	enum class InputTriggerState
 	{
 		Pressed = 0,
 		Down = 1,
@@ -25,14 +25,14 @@ namespace dae
 	{
 		InputAction() :
 			ActionID(-1),
-			TriggerState(Pressed),
+			TriggerState(InputTriggerState::Pressed),
 			KeyboardCode(-1),
 			MouseButtonCode(-1),
 			GamepadButtonCode(0),
-			PlayerIndex(PlayerOne),
+			PlayerIndex(GamepadIndex::PlayerOne),
 			IsTriggered(false) {}
 
-		InputAction(int actionID, InputTriggerState triggerState = Pressed, int keyboardCode = -1, int mouseButtonCode = -1, WORD gamepadButtonCode = 0, GamepadIndex playerIndex = PlayerOne) :
+		InputAction(int actionID, InputTriggerState triggerState = InputTriggerState::Pressed, int keyboardCode = -1, int mouseButtonCode = -1, WORD gamepadButtonCode = 0, GamepadIndex playerIndex = GamepadIndex::PlayerOne) :
 			ActionID(actionID),
 			TriggerState(triggerState),
 			KeyboardCode(keyboardCode),

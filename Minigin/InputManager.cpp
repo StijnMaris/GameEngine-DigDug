@@ -99,20 +99,20 @@ bool dae::InputManager::IsActionTriggered(int actionID)
 
 const dae::InputTriggerState dae::InputManager::GetKeystrokeState(int key) const
 {
-	InputTriggerState outKS = Idle;
+	InputTriggerState outKS = InputTriggerState::Idle;
 	if (IsKeyPressed(key, true))
 	{
 		if (IsKeyPressed(key))
-			outKS = Down;
+			outKS = InputTriggerState::Down;
 		else
-			outKS = Released;
+			outKS = InputTriggerState::Released;
 	}
 	else
 	{
 		if (IsKeyPressed(key))
-			outKS = Pressed;
+			outKS = InputTriggerState::Pressed;
 		else
-			outKS = Idle;
+			outKS = InputTriggerState::Idle;
 	}
 	return outKS;
 }
@@ -128,10 +128,9 @@ void dae::InputManager::HandleInput()
 		//GAMEPAD
 		if (m_UseGamepad && currAction->GamepadButtonCode != 0)
 		{
-			if (m_pGamePads[currAction->PlayerIndex])
-			{	//TODO:
-				//Currently playerindex of gamepad changes if one disconnects
-				auto ks = m_pGamePads[currAction->PlayerIndex]->GetButtonState(currAction->GamepadButtonCode);
+			if (m_pGamePads[static_cast<int>(currAction->PlayerIndex)])
+			{
+				auto ks = m_pGamePads[static_cast<int>(currAction->PlayerIndex)]->GetButtonState(currAction->GamepadButtonCode);
 				if (ks == currAction->TriggerState)
 					currAction->IsTriggered = true;
 			}
@@ -220,20 +219,20 @@ void dae::InputManager::ProcessGamePadInput()
 //Keystates
 const dae::InputTriggerState dae::Gamepad::GetButtonState(WORD button) const
 {
-	InputTriggerState outKS = Idle;
+	InputTriggerState outKS = InputTriggerState::Idle;
 	if (WasPressed(button))
 	{
 		if (IsPressed(button))
-			outKS = Down;
+			outKS = InputTriggerState::Down;
 		else
-			outKS = Released;
+			outKS = InputTriggerState::Released;
 	}
 	else
 	{
 		if (IsPressed(button))
-			outKS = Pressed;
+			outKS = InputTriggerState::Pressed;
 		else
-			outKS = Idle;
+			outKS = InputTriggerState::Idle;
 	}
 	return outKS;
 }
