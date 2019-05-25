@@ -25,6 +25,8 @@ namespace dae
 		void RenderTexture(const Texture2D& texture, const glm::vec3& pos, const SDL_Rect& srcRect) const;
 		void RenderTexture(const Texture2D& texture, std::shared_ptr<SpriteComponent> spriteComp) const;
 
+		void DrawSquare(glm::vec3 position, float size);
+
 		SDL_Renderer* GetSDLRenderer() const { return mRenderer; }
 	};
 }

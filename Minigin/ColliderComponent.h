@@ -14,6 +14,11 @@ namespace  dae {
 		void Update() override;
 		void SetColliderRect(SDL_Rect rect);
 
+		SDL_Rect GetCollider() const
+		{
+			return  m_Collider;
+		}
+
 	private:
 		SDL_Rect m_Collider;
 		glm::vec3 m_PrevPosition;

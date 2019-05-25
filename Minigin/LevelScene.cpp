@@ -13,14 +13,10 @@
 #include "CommandComponent.h"
 #include "ColliderComponent.h"
 #include "GridBlock.h"
-
-dae::LevelScene::LevelScene()
-{
-}
+#include "Renderer.h"
 
 void dae::LevelScene::Init()
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Level");
 	auto& time = Time::GetInstance();
 
 	std::shared_ptr<GameObject> go = std::make_shared<GameObject>("BackGround");
@@ -28,23 +24,24 @@ void dae::LevelScene::Init()
 	go->AddComponent(std::make_shared<TextureComponent>("background.jpg"));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
 	go->SetPosition(0, 0);
-	scene.AddGameObject(go);
-
-	GridBlock test = { glm::vec3{300,250,0},6,1,BlockColor::Red,true };
-	test.Init();
-	scene.AddGameObject(test.GetBlock());
+	AddGameObject(go);
 
 	go = std::make_shared<GameObject>("Player");
 	go->Init();
 	go->SetPosition(216, 180);
 	go->SetScale(2, 2);
 	go->AddComponent(std::make_shared<TextureComponent>("DigDug.png"));
-	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, 1, true, 200));
+	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, 0, true, 200));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<SpriteComponent>()));
 	go->AddComponent(std::make_shared<CommandComponent>());
 	go->AddComponent(std::make_shared<ColliderComponent>(go->GetComponent<Transform>(), go->GetComponent<SpriteComponent>()->GetRectToDraw()));
 	InitPlayer1Controles(go);
-	scene.AddGameObject(go);
+	AddGameObject(go);
+
+	/*GridBlock test1 = { glm::vec3{300,250,0},6,1,BlockColor::Red,true };
+	test1.Init();
+	test2 = std::make_shared<GridBlock>(test1);
+	scene.AddGameObject(test1.GetBlock());*/
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");
@@ -52,7 +49,7 @@ void dae::LevelScene::Init()
 	to->AddComponent(std::make_shared<TextComponent>("Programming 4 Assignment", font));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(80, 20);
-	scene.AddGameObject(to);
+	AddGameObject(to);
 
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 	to = std::make_shared<GameObject>("FPSText");
@@ -60,7 +57,7 @@ void dae::LevelScene::Init()
 	to->AddComponent(std::make_shared<TextComponent>("FPS:", font));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(570, 10);
-	scene.AddGameObject(to);
+	AddGameObject(to);
 
 	to = std::make_shared<GameObject>("FPS");
 	to->Init();
@@ -68,7 +65,22 @@ void dae::LevelScene::Init()
 	to->AddComponent(std::make_shared<FPSComponent>(to->GetComponent<TextComponent>()));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(610, 10);
-	scene.AddGameObject(to);
+	AddGameObject(to);
+}
+
+void dae::LevelScene::Update()
+{
+	Scene::Update();
+	/*auto test3 = test->GetComponent<ColliderComponent>()->GetCollider();
+	if (test2->CheckIfColliding(test3))
+	{
+		test2->SetBlockColor(BlockColor::Black);
+	}*/
+}
+
+void dae::LevelScene::Render() const
+{
+	Scene::Render();
 }
 
 void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<GameObject> gameObject)
@@ -84,4 +96,8 @@ void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<GameObject> gameObjec
 	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject));
 	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
 	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject));
+}
+
+dae::LevelScene::LevelScene(const std::string& name) :Scene(name)
+{
 }

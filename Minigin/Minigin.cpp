@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 #include <SDL.h>
 #include "Time.h"
+#include "Scene.h"
 #include "LevelScene.h"
 
 bool dae::Minigin::m_DoContinue = true;
@@ -40,8 +41,10 @@ void dae::Minigin::Initialize()
  */
 void dae::Minigin::LoadGame() const
 {
-	LevelScene levelScene{};
-	levelScene.Init();
+	auto&sceneMan = SceneManager::GetInstance();
+	std::shared_ptr<Scene> level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level"));
+	std::dynamic_pointer_cast<LevelScene>(level)->Init();
+	sceneMan.SetActiveScene("Level");
 }
 
 void dae::Minigin::Cleanup()
@@ -74,7 +77,6 @@ void dae::Minigin::Run()
 
 			//doContinue;
 			input.ProcessInput();
-
 			sceneManager.Update();
 			renderer.Render();
 		}

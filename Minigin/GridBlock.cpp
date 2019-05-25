@@ -36,3 +36,19 @@ bool dae::GridBlock::Destroy()
 	}
 	return false;
 }
+
+void dae::GridBlock::SetBlockColor(BlockColor color)
+{
+	m_Color = color;
+	m_pBlock->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(m_Color));
+}
+
+bool dae::GridBlock::CheckIfColliding(SDL_Rect& otherRect) const
+{
+	if (m_Color > BlockColor::Blue)
+	{
+		auto collider = m_pBlock->GetComponent<ColliderComponent>()->GetCollider();
+		return SDL_HasIntersection(&collider, &otherRect);
+	}
+	return false;
+}

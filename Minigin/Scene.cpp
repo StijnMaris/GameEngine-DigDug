@@ -4,7 +4,7 @@
 
 unsigned int dae::Scene::idCounter = 0;
 
-dae::Scene::Scene(const std::string& name) : mName(name) {}
+dae::Scene::Scene(const std::string& name) : m_Name(name) {}
 
 dae::Scene::~Scene() = default;
 

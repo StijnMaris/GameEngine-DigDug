@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
 #include <glm/vec3.hpp>
+#include <SDL.h>
 
 namespace dae {
 	enum class BlockColor
@@ -12,6 +13,8 @@ namespace dae {
 		Pink = 4,
 		Red = 5
 	};
+
+	class GameObject;
 	class GridBlock
 	{
 	public:
@@ -30,6 +33,15 @@ namespace dae {
 		bool Destroy();
 
 		bool IsDestroyed() const { return m_Destroyed; }
+
+		BlockColor GetBlockColor() const
+		{
+			return m_Color;
+		}
+
+		void SetBlockColor(BlockColor color);
+
+		bool CheckIfColliding(SDL_Rect& otherRect) const;
 
 	private:
 		std::shared_ptr<GameObject> m_pBlock;

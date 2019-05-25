@@ -99,3 +99,14 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, std::shared_ptr<Spri
 
 	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &(spriteComp->GetRectToDraw()), &dst, 0, &center, flip);
 }
+
+void dae::Renderer::DrawSquare(glm::vec3 position, float size)
+{
+	SDL_SetRenderDrawColor(GetSDLRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_Rect rect;
+	rect.x = (int)position.x;
+	rect.y = (int)position.y;
+	rect.w = (int)size;
+	rect.h = (int)size;
+	SDL_RenderDrawRect(GetSDLRenderer(), &rect);
+}
