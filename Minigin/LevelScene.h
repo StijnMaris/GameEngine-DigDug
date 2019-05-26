@@ -4,6 +4,7 @@
 namespace dae {
 	class GameObject;
 	class GridSystem;
+	class Character;
 	class LevelScene : public Scene
 	{
 	public:
@@ -13,7 +14,7 @@ namespace dae {
 		void Update() override;
 		void Render() const override;
 
-		void InitPlayer1Controles(std::shared_ptr<GameObject> gameObject);
+		void InitPlayer1Controles(std::shared_ptr<Character> gameObject);
 
 	private:
 		std::shared_ptr<GridSystem> m_pTheGrid;

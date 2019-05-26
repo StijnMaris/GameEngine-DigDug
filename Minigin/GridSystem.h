@@ -23,7 +23,8 @@ namespace  dae {
 		Player2 = 3,
 		VSPlayer2 = 4,
 		Pooka = 5,
-		Fygar = 6
+		Fygar = 6,
+		Rock = 7
 	};
 
 	class GameObject;
@@ -35,7 +36,7 @@ namespace  dae {
 
 		void Init();
 
-		//void Update();
+		void Update();
 		void Draw() const;
 		void Reset();
 
@@ -50,6 +51,7 @@ namespace  dae {
 		void SetCellState(int row, int col, bool newState);
 		void SetCellState(glm::vec3 position, bool newState);
 		void SetCellState(std::shared_ptr<GridBlock> newBlock);
+		void SetCellState(int row, int col, CellDefinition cellDef);
 
 		glm::vec3 GetCellPosition(int row, int height) const;
 		glm::vec3 GetCellPosition(std::pair<int, int> cellData) const;
@@ -89,12 +91,16 @@ namespace  dae {
 
 		void CheckForCollision();
 
+		void LoadMap(std::string path);
+
+		void DefineMap();
+
 	private:
 		std::shared_ptr<GameObject> m_pGridSystem;
 		std::shared_ptr<Character>  m_pPlayer1;
 
 		std::vector<std::vector<bool>> m_Grid;
-		std::vector<std::vector<int>> m_GridDefinition;
+		std::vector<std::vector<CellDefinition>> m_GridDefinition;
 		std::vector<std::vector<std::shared_ptr<GridBlock>>> m_pBlocks;
 
 		glm::vec3 m_StartPos{};

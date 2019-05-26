@@ -25,14 +25,20 @@ namespace dae {
 		Character(std::string name, std::string imagePath, int rows, int cols, int startRow = 0);
 		~Character() = default;
 
-		virtual void Init();
-		virtual void Die();
+		void Init();
+		void Update();
+		void Die();
 
 		bool GetIsDead() const { return m_IsDead; }
 
 		std::shared_ptr<GameObject> GetCharacter() const
 		{
 			return m_pCharacter;
+		}
+
+		void SetCharacterState(CharacterState newState)
+		{
+			m_CharacterState = newState;
 		}
 	private:
 		std::shared_ptr<GameObject> m_pCharacter;

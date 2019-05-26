@@ -33,15 +33,15 @@ void dae::LevelScene::Init()
 	m_pTheGrid->Init();
 	m_pTheGrid->AddToScene(*this);
 
-	InitPlayer1Controles(m_pTheGrid->GetPlayer()->GetCharacter());
+	InitPlayer1Controles(m_pTheGrid->GetPlayer());
 	AddGameObject(m_pTheGrid->GetPlayer()->GetCharacter());
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");
 	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("Programming 4 Assignment", font));
+	to->AddComponent(std::make_shared<TextComponent>("DigDug", font));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(80, 20);
+	to->SetPosition(220, 20);
 	AddGameObject(to);
 
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
@@ -64,7 +64,7 @@ void dae::LevelScene::Init()
 void dae::LevelScene::Update()
 {
 	Scene::Update();
-
+	m_pTheGrid->Update();
 	m_pTheGrid->CheckForCollision();
 	/*auto test3 = test->GetComponent<ColliderComponent>()->GetCollider();
 	if (test2->CheckIfColliding(test3))
@@ -79,18 +79,24 @@ void dae::LevelScene::Render() const
 	//m_pTheGrid->Draw();
 }
 
-void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<GameObject> gameObject)
+void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<Character> gameObject)
 {
 	auto& input = InputManager::GetInstance();
-	InputAction LeftRun = { XINPUT_GAMEPAD_DPAD_LEFT,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	InputAction LeftRun = { 1,InputTriggerState::Pressed,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
 	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject));
-	InputAction RightRun = { XINPUT_GAMEPAD_DPAD_RIGHT,InputTriggerState::Pressed,VK_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
+	InputAction RightRun = { 2,InputTriggerState::Pressed,VK_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
 	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject));
-	InputAction UpRun = { XINPUT_GAMEPAD_DPAD_UP,InputTriggerState::Pressed,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
+	InputAction UpRun = { 3,InputTriggerState::Pressed,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
 	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject));
-	InputAction DownRun = { XINPUT_GAMEPAD_DPAD_DOWN,InputTriggerState::Pressed,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
+	InputAction DownRun = { 4,InputTriggerState::Pressed,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
 	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject));
-	InputAction Exit = { XINPUT_GAMEPAD_START,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
+
+	InputAction Action = { 5,InputTriggerState::Down,VK_SPACE,-1,XINPUT_GAMEPAD_A };
+	input.MapInput(Action, std::make_shared<ActionCommand>(gameObject));
+	InputAction StopAction = { 6,InputTriggerState::Released,VK_SPACE,-1,XINPUT_GAMEPAD_A };
+	input.MapInput(StopAction, std::make_shared<StopActionCommand>(gameObject));
+
+	InputAction Exit = { 16,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
 	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject));
 }
 

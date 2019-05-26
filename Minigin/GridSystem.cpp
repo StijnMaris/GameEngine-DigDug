@@ -8,6 +8,7 @@
 #include "ColliderComponent.h"
 #include "RenderComponent.h"
 #include "CommandComponent.h"
+#include <fstream>
 
 dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
 {
@@ -18,6 +19,7 @@ dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
 void dae::GridSystem::Init()
 {
 	m_pPlayer1->Init();
+	m_pPlayer1->GetCharacter()->SetPosition(16, 160 - 16);
 	m_StartPos = m_pGridSystem->GetPosition();
 	SetUpGrid();
 	for (size_t i = 0; i < m_Columns; i++)
@@ -28,6 +30,12 @@ void dae::GridSystem::Init()
 			m_pBlocks[i][j]->GetBlock()->SetScale(2, 2);
 		}
 	}
+	DefineMap();
+}
+
+void dae::GridSystem::Update()
+{
+	m_pPlayer1->Update();
 }
 
 void dae::GridSystem::Draw() const
@@ -117,6 +125,13 @@ void dae::GridSystem::SetUpGrid()
 			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_StartPos.x + i * m_CellSize, m_StartPos.y + j * m_CellSize,0 }, i, j, static_cast<BlockColor>(color));
 		}
 	}
+
+	m_GridDefinition.resize(m_Columns);
+	for (int i = 0; i < m_Columns; i++)
+	{
+		m_GridDefinition[i].resize(m_Rows);
+	}
+	LoadMap("../Data/GridLevel.txt");
 }
 
 bool dae::GridSystem::GetCellState(int row, int col) const
@@ -163,6 +178,11 @@ void dae::GridSystem::SetCellState(std::shared_ptr<GridBlock> newBlock)
 	const auto blockPos = newBlock->GetBlock()->GetPosition();
 	SetCellState(blockPos, true);
 	m_pBlocks[newBlock->GetRow()][newBlock->GetColumn()] = newBlock;
+}
+
+void dae::GridSystem::SetCellState(int row, int col, CellDefinition cellDef)
+{
+	m_GridDefinition[row][col] = (cellDef);
 }
 
 glm::vec3 dae::GridSystem::GetCellPosition(int row, int height) const
@@ -296,5 +316,64 @@ void dae::GridSystem::CheckForCollision()
 	if (m_pBlocks[gridPos.first][gridPos.second]->CheckIfColliding(collider))
 	{
 		m_pBlocks[gridPos.first][gridPos.second]->Destroy();
+	}
+}
+
+void dae::GridSystem::LoadMap(std::string path)
+{
+	char tile;
+	std::ifstream mapFile(path);
+
+	if (!mapFile)
+	{
+		std::cout << "Opening Map File Failed" << std::endl;
+	}
+	for (int i = 0; i < m_Columns; i++)
+	{
+		for (int j = 0; j < m_Rows; ++j)
+		{
+			mapFile.get(tile);
+			SetCellState(i, j, static_cast<CellDefinition>(std::atoi(&tile)));
+			mapFile.ignore();
+		}
+	}
+	mapFile.close();
+}
+
+void dae::GridSystem::DefineMap()
+{
+	for (int i = 0; i < m_Columns; i++)
+	{
+		for (int j = 0; j < m_Rows; ++j)
+		{
+			switch (m_GridDefinition[i][j])
+			{
+			case CellDefinition::Normal:
+
+				break;
+			case CellDefinition::Empty:
+				DestroyCell(i, j);
+				break;
+			case CellDefinition::Player1:
+				DestroyCell(i, j);
+				//m_pPlayer1->GetCharacter()->SetPosition();
+				break;
+			case CellDefinition::Player2:
+				DestroyCell(i, j);
+				break;
+			case CellDefinition::VSPlayer2:
+				DestroyCell(i, j);
+				break;
+			case CellDefinition::Pooka:
+				DestroyCell(i, j);
+				break;
+			case CellDefinition::Fygar:
+				DestroyCell(i, j);
+				break;
+			case CellDefinition::Rock:
+				DestroyCell(i, j);
+				break;
+			}
+		}
 	}
 }

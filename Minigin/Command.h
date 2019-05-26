@@ -1,7 +1,8 @@
 #pragma once
+
 namespace dae {
 	class GameObject;
-
+	class Character;
 	class Command : public std::enable_shared_from_this<Command>
 	{
 	public:
@@ -18,42 +19,51 @@ namespace dae {
 	class CharacterCommand : public Command
 	{
 	public:
-		CharacterCommand(std::shared_ptr<GameObject> character) : Command(character) {}
+		CharacterCommand(std::shared_ptr<Character> character);
 		virtual bool execute() = 0;
+	protected:
+		std::shared_ptr<Character> m_pCharacter;
 	};
 
 	class RunLeftCommand : public CharacterCommand
 	{
 	public:
-		RunLeftCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		RunLeftCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
 	class RunRightCommand : public CharacterCommand
 	{
 	public:
-		RunRightCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		RunRightCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
 	class RunUpCommand : public CharacterCommand
 	{
 	public:
-		RunUpCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		RunUpCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
 	class RunDownCommand : public CharacterCommand
 	{
 	public:
-		RunDownCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		RunDownCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
 	class ActionCommand : public CharacterCommand
 	{
 	public:
-		ActionCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		ActionCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		bool execute() override;
+	};
+
+	class StopActionCommand : public CharacterCommand
+	{
+	public:
+		StopActionCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 
@@ -61,7 +71,7 @@ namespace dae {
 	class ExitCommand : public CharacterCommand
 	{
 	public:
-		ExitCommand(std::shared_ptr<GameObject> character) : CharacterCommand(character) {}
+		ExitCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
 		bool execute() override;
 	};
 }

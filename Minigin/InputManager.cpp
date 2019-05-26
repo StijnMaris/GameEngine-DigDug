@@ -145,7 +145,7 @@ void dae::InputManager::HandleInput()
 
 		if (currAction->IsTriggered)
 		{
-			if (currAction->ActionID == 16)
+			if (currAction->ActionID == 16 || currAction->ActionID == 17)
 				it->second.second->execute();
 			it->second.second->AddToCommandStream();
 			//std::cout << it->second.first.PlayerIndex << std::endl;

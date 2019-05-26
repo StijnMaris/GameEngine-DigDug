@@ -9,5 +9,7 @@ namespace dae {
 		~ActionComponent() = default;
 
 		void DoAction();
+
+		void Update() override {}
 	};
 }

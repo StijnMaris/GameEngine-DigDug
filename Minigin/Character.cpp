@@ -29,6 +29,26 @@ void dae::Character::Init()
 	m_pCharacter->AddComponent(std::make_shared<MovementComponent>(m_pCharacter->GetComponent<Transform>(), m_pCharacter->GetComponent<ColliderComponent>()->GetCollider()));
 }
 
+void dae::Character::Update()
+{
+	switch (m_CharacterState)
+	{
+	case CharacterState::Idle:
+		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Idle));
+		break;
+	case CharacterState::Action:
+		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Action));
+		break;
+	case CharacterState::Die:
+		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Die));
+		break;
+	default:
+		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Idle));
+		break;
+	}
+}
+
 void dae::Character::Die()
 {
+	SetCharacterState(CharacterState::Die);
 }

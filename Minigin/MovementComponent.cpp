@@ -14,7 +14,7 @@ dae::MovementComponent::~MovementComponent()
 void dae::MovementComponent::MoveUp()
 {
 	auto newY = m_pTransform->GetPosition().y - m_Rect.h;
-	if (newY > 0)
+	if (newY > 128)
 	{
 		m_pTransform->SetPosition(m_pTransform->GetPosition().x, newY, m_pTransform->GetPosition().z);
 	}
