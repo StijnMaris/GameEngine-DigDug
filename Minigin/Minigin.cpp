@@ -24,7 +24,7 @@ void dae::Minigin::Initialize()
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		640,
-		860,
+		796,
 		SDL_WINDOW_OPENGL
 	);
 	if (window == nullptr)

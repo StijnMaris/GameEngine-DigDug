@@ -29,10 +29,10 @@ void dae::GridSystem::Init()
 
 	m_pPlayer = std::make_shared<GameObject>("Player");
 	m_pPlayer->Init();
-	m_pPlayer->SetPosition(200, 180);
+	m_pPlayer->SetPosition(16, 16);
 	m_pPlayer->SetScale(2, 2);
 	m_pPlayer->AddComponent(std::make_shared<TextureComponent>("DigDug.png"));
-	m_pPlayer->AddComponent(std::make_shared<SpriteComponent>(m_pPlayer->GetComponent<TextureComponent>(), 2, 4, 0, true, 200));
+	m_pPlayer->AddComponent(std::make_shared<SpriteComponent>(m_pPlayer->GetComponent<TextureComponent>(), 3, 4, 0, true, 200));
 	m_pPlayer->AddComponent(std::make_shared<RenderComponent>(m_pPlayer->GetComponent<SpriteComponent>()));
 	m_pPlayer->AddComponent(std::make_shared<CommandComponent>());
 	m_pPlayer->AddComponent(std::make_shared<ColliderComponent>(m_pPlayer->GetComponent<Transform>(), m_pPlayer->GetComponent<SpriteComponent>()->GetRectToDraw()));
@@ -41,20 +41,22 @@ void dae::GridSystem::Init()
 void dae::GridSystem::Draw() const
 {
 	////Debug render the cells
-	//for (int i = 0; i < m_Rows; i++)
-	//{
-	//	for (int j = 0; j < m_Columns; j++)
-	//	{
-	//		if (GetCellState(i, j))
-	//		{
-	//			Renderer::GetInstance().DrawSquareAroundCenter(GetCellPosition(i, j), m_CellSize / 2.f, Color(255, 0, 0, 255));
-	//		}
-	//		else
-	//		{
-	//			Renderer::GetInstance().DrawSquareAroundCenter(GetCellPosition(i, j), m_CellSize / 2.f, Color(0, 255, 0, 255));
-	//		}
-	//	}
-	//}
+	for (int i = 0; i < m_Columns; i++)
+	{
+		for (int j = 0; j < m_Rows; j++)
+		{
+			if (GetCellState(i, j))
+			{
+				Renderer::GetInstance().DrawSquareAroundCenter(GetCellPosition(i, j), (float)m_CellSize);
+			}
+			else
+			{
+				Renderer::GetInstance().DrawSquareAroundCenter(GetCellPosition(i, j), (float)m_CellSize);
+			}
+		}
+	}
+	auto rect = m_pPlayer->GetComponent<ColliderComponent>()->GetCollider();
+	Renderer::GetInstance().DrawSquareAroundCenter(glm::vec3{ rect.x,rect.y,0 }, (float)/*m_CellSize*/rect.w);
 }
 
 void dae::GridSystem::Reset()
@@ -173,7 +175,7 @@ void dae::GridSystem::SetCellState(std::shared_ptr<GridBlock> newBlock)
 
 glm::vec3 dae::GridSystem::GetCellPosition(int row, int height) const
 {
-	return glm::vec3(row * m_CellSize + m_CellSize / 2.f, height * m_CellSize + m_CellSize / 2.f, 0.f);
+	return glm::vec3(m_pBlocks[row][height]->GetBlock()->GetComponent<ColliderComponent>()->GetCollider().x, m_pBlocks[row][height]->GetBlock()->GetComponent<ColliderComponent>()->GetCollider().y, 0.f);
 }
 
 glm::vec3 dae::GridSystem::GetCellPosition(std::pair<int, int> cellData) const
@@ -222,9 +224,7 @@ std::pair<int, int> dae::GridSystem::GetCellData(const glm::vec3 position) const
 
 void dae::GridSystem::GetCellData(const std::shared_ptr<GridBlock> block, int& row, int& col) const
 {
-	auto position = glm::vec2{ 2,2 };
-	UNREFERENCED_PARAMETER(block);
-	//= block->GetParent()->GetTransform()->GetPosition();
+	auto position = block->GetBlock()->GetPosition();
 	//Find the nearest Grid X Position
 	{
 		const int remainder = int(position.x) % m_CellSize;
@@ -276,6 +276,7 @@ bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, Direction di
 
 bool dae::GridSystem::DestroyCell(int row, int col)
 {
+	m_Grid[row][col] = false;
 	return m_pBlocks[row][col]->Destroy();
 }
 
@@ -286,15 +287,22 @@ float dae::GridSystem::GetDistanceBetween(glm::vec3 start, glm::vec3 end)
 
 void dae::GridSystem::CheckForCollision()
 {
-	for (int i = 0; i < m_Columns; i++)
+	/*for (int i = 0; i < m_Columns; i++)
 	{
 		for (int j = 0; j < m_Rows; ++j)
 		{
 			auto collider = m_pPlayer->GetComponent<ColliderComponent>()->GetCollider();
 			if (m_pBlocks[i][j]->CheckIfColliding(collider))
 			{
-				m_pBlocks[i][j]->SetBlockColor(BlockColor::Black);
+				m_pBlocks[i][j]->Destroy();
 			}
 		}
+	}*/
+
+	auto collider = m_pPlayer->GetComponent<ColliderComponent>()->GetCollider();
+	auto gridPos = GetCellData(m_pPlayer->GetPosition());
+	if (m_pBlocks[gridPos.first][gridPos.second]->CheckIfColliding(collider))
+	{
+		m_pBlocks[gridPos.first][gridPos.second]->Destroy();
 	}
 }

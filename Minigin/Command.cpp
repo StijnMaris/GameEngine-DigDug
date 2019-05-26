@@ -16,7 +16,7 @@ bool dae::RunLeftCommand::execute()
 {
 	std::cout << "Left" << "\n";
 
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x - 10, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x - 32, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
 
 	return true;
 	//Locator::getAudio().playSound(0);
@@ -25,7 +25,7 @@ bool dae::RunLeftCommand::execute()
 bool dae::RunRightCommand::execute()
 {
 	std::cout << "Right" << "\n";
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x + 10, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x + 32, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
 	return true;
 	//Locator::getAudio().playSound(1);
 }
@@ -33,7 +33,7 @@ bool dae::RunRightCommand::execute()
 bool dae::RunUpCommand::execute()
 {
 	std::cout << "Up" << "\n";
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y - 10, m_pOwner->GetPosition().z);
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y - 32, m_pOwner->GetPosition().z);
 	return true;
 	//Locator::getAudio().playSound(2);
 }
@@ -41,7 +41,7 @@ bool dae::RunUpCommand::execute()
 bool dae::RunDownCommand::execute()
 {
 	std::cout << "Down" << "\n";
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y + 10, m_pOwner->GetPosition().z);
+	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y + 32, m_pOwner->GetPosition().z);
 	return true;
 	//Locator::getAudio().playSound(3);
 }

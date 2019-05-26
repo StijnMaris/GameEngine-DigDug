@@ -21,6 +21,7 @@ void dae::GridBlock::Init()
 {
 	m_pBlock->Init();
 	m_pBlock->SetPosition(m_Pos);
+	m_pBlock->SetScale(2,2);
 	m_pBlock->AddComponent(std::make_shared<TextureComponent>("Ground.png"));
 	m_pBlock->AddComponent(std::make_shared<SpriteComponent>(m_pBlock->GetComponent<TextureComponent>(), 6, 1, static_cast<int>(m_Color)));
 	m_pBlock->AddComponent(std::make_shared<RenderComponent>(m_pBlock->GetComponent<SpriteComponent>()));

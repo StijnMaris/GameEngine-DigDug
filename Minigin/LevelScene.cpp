@@ -20,14 +20,14 @@ void dae::LevelScene::Init()
 {
 	auto& time = Time::GetInstance();
 
-	std::shared_ptr<GameObject> go = std::make_shared<GameObject>("BackGround");
+	/*std::shared_ptr<GameObject> go = std::make_shared<GameObject>("BackGround");
 	go->Init();
 	go->AddComponent(std::make_shared<TextureComponent>("background.jpg"));
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
 	go->SetPosition(0, 0);
-	AddGameObject(go);
+	AddGameObject(go);*/
 
-	m_pTheGrid = std::make_shared<GridSystem>(30, 15);
+	m_pTheGrid = std::make_shared<GridSystem>(25, 20);
 	m_pTheGrid->GetGridSystem()->Init();
 	m_pTheGrid->GetGridSystem()->SetPosition(16, 16);
 	m_pTheGrid->Init();
@@ -76,6 +76,7 @@ void dae::LevelScene::Update()
 void dae::LevelScene::Render() const
 {
 	Scene::Render();
+	//m_pTheGrid->Draw();
 }
 
 void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<GameObject> gameObject)

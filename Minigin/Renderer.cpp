@@ -110,3 +110,14 @@ void dae::Renderer::DrawSquare(glm::vec3 position, float size)
 	rect.h = (int)size;
 	SDL_RenderDrawRect(GetSDLRenderer(), &rect);
 }
+
+void dae::Renderer::DrawSquareAroundCenter(glm::vec3 position, float size)
+{
+	SDL_SetRenderDrawColor(GetSDLRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_Rect rect;
+	rect.x = static_cast<int>(position.x - size / 2.f);
+	rect.y = static_cast<int>(position.y - size / 2.f);
+	rect.w = static_cast<int>(size);
+	rect.h = static_cast<int>(size);
+	SDL_RenderDrawRect(GetSDLRenderer(), &rect);
+}
