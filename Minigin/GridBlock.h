@@ -18,7 +18,7 @@ namespace dae {
 	class GridBlock
 	{
 	public:
-		GridBlock(glm::vec3 pos, int row, int col, BlockColor color, bool hasCollision, bool destroyed = false);
+		GridBlock(glm::vec3 pos, int row, int col, BlockColor color, bool destroyed = false);
 		virtual ~GridBlock();
 
 		void Init();

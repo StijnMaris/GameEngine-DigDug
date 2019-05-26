@@ -3,6 +3,7 @@
 
 namespace dae {
 	class GameObject;
+	class GridSystem;
 	class LevelScene : public Scene
 	{
 	public:
@@ -15,5 +16,6 @@ namespace dae {
 		void InitPlayer1Controles(std::shared_ptr<GameObject> gameObject);
 
 	private:
+		std::shared_ptr<GridSystem> m_pTheGrid;
 	};
 }

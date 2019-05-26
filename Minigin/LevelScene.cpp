@@ -14,6 +14,7 @@
 #include "ColliderComponent.h"
 #include "GridBlock.h"
 #include "Renderer.h"
+#include "GridSystem.h"
 
 void dae::LevelScene::Init()
 {
@@ -26,22 +27,14 @@ void dae::LevelScene::Init()
 	go->SetPosition(0, 0);
 	AddGameObject(go);
 
-	go = std::make_shared<GameObject>("Player");
-	go->Init();
-	go->SetPosition(216, 180);
-	go->SetScale(2, 2);
-	go->AddComponent(std::make_shared<TextureComponent>("DigDug.png"));
-	go->AddComponent(std::make_shared<SpriteComponent>(go->GetComponent<TextureComponent>(), 2, 4, 0, true, 200));
-	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<SpriteComponent>()));
-	go->AddComponent(std::make_shared<CommandComponent>());
-	go->AddComponent(std::make_shared<ColliderComponent>(go->GetComponent<Transform>(), go->GetComponent<SpriteComponent>()->GetRectToDraw()));
-	InitPlayer1Controles(go);
-	AddGameObject(go);
+	m_pTheGrid = std::make_shared<GridSystem>(30, 15);
+	m_pTheGrid->GetGridSystem()->Init();
+	m_pTheGrid->GetGridSystem()->SetPosition(16, 16);
+	m_pTheGrid->Init();
+	m_pTheGrid->AddToScene(*this);
 
-	/*GridBlock test1 = { glm::vec3{300,250,0},6,1,BlockColor::Red,true };
-	test1.Init();
-	test2 = std::make_shared<GridBlock>(test1);
-	scene.AddGameObject(test1.GetBlock());*/
+	InitPlayer1Controles(m_pTheGrid->GetPlayer());
+	AddGameObject(m_pTheGrid->GetPlayer());
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");
@@ -71,6 +64,8 @@ void dae::LevelScene::Init()
 void dae::LevelScene::Update()
 {
 	Scene::Update();
+
+	m_pTheGrid->CheckForCollision();
 	/*auto test3 = test->GetComponent<ColliderComponent>()->GetCollider();
 	if (test2->CheckIfColliding(test3))
 	{
