@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include "Minigin.h"
 #include "CommandComponent.h"
+#include "MovementComponent.h"
+#include "ActionComponent.h"
 //#include "Locator.h"
 
 void dae::Command::AddToCommandStream()
@@ -14,34 +16,32 @@ void dae::Command::AddToCommandStream()
 
 bool dae::RunLeftCommand::execute()
 {
-	std::cout << "Left" << "\n";
-
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x - 32, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
-
+	//std::cout << "Left" << "\n";
+	m_pOwner->GetComponent<MovementComponent>()->MoveDown();
 	return true;
 	//Locator::getAudio().playSound(0);
 }
 
 bool dae::RunRightCommand::execute()
 {
-	std::cout << "Right" << "\n";
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x + 32, m_pOwner->GetPosition().y, m_pOwner->GetPosition().z);
+	//std::cout << "Right" << "\n";
+	m_pOwner->GetComponent<MovementComponent>()->MoveDown();
 	return true;
 	//Locator::getAudio().playSound(1);
 }
 
 bool dae::RunUpCommand::execute()
 {
-	std::cout << "Up" << "\n";
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y - 32, m_pOwner->GetPosition().z);
+	//std::cout << "Up" << "\n";
+	m_pOwner->GetComponent<MovementComponent>()->MoveDown();
 	return true;
 	//Locator::getAudio().playSound(2);
 }
 
 bool dae::RunDownCommand::execute()
 {
-	std::cout << "Down" << "\n";
-	m_pOwner->SetPosition(m_pOwner->GetPosition().x, m_pOwner->GetPosition().y + 32, m_pOwner->GetPosition().z);
+	//std::cout << "Down" << "\n";
+	m_pOwner->GetComponent<MovementComponent>()->MoveDown();
 	return true;
 	//Locator::getAudio().playSound(3);
 }
@@ -49,7 +49,7 @@ bool dae::RunDownCommand::execute()
 bool dae::ActionCommand::execute()
 {
 	std::cout << "Action" << "\n";
-
+	m_pOwner->GetComponent<ActionComponent>()->DoAction();
 	return true;
 }
 

@@ -12,10 +12,10 @@ namespace dae {
 
 	enum class CharacterState
 	{
-		Idle,
-		Move,
-		Action,
-		Die
+		Idle = 0,
+		Move = 0,
+		Action = 1,
+		Die = 2
 	};
 
 	class GameObject;
@@ -26,7 +26,6 @@ namespace dae {
 		~Character() = default;
 
 		virtual void Init();
-		virtual void DoAction() = 0;
 		virtual void Die();
 
 		bool GetIsDead() const { return m_IsDead; }

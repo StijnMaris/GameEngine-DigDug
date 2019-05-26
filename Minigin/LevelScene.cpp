@@ -15,7 +15,6 @@
 #include "GridBlock.h"
 #include "Renderer.h"
 #include "GridSystem.h"
-#include "Player.h"
 
 void dae::LevelScene::Init()
 {

@@ -8,12 +8,11 @@
 #include "ColliderComponent.h"
 #include "RenderComponent.h"
 #include "CommandComponent.h"
-#include "Player.h"
 
 dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
 {
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
-	m_pPlayer1 = std::make_shared<Player>("Player1", "DigDug.png", 3, 4);
+	m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug.png", 3, 4);
 }
 
 void dae::GridSystem::Init()

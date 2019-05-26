@@ -82,7 +82,7 @@ namespace  dae {
 			return m_pGridSystem;
 		}
 
-		std::shared_ptr<Player> GetPlayer() const
+		std::shared_ptr<Character> GetPlayer() const
 		{
 			return m_pPlayer1;
 		}
@@ -91,7 +91,7 @@ namespace  dae {
 
 	private:
 		std::shared_ptr<GameObject> m_pGridSystem;
-		std::shared_ptr<Player>  m_pPlayer1;
+		std::shared_ptr<Character>  m_pPlayer1;
 
 		std::vector<std::vector<bool>> m_Grid;
 		std::vector<std::vector<int>> m_GridDefinition;
