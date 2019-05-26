@@ -2,9 +2,9 @@
 #include "BaseComponent.h"
 #include <SDL.h>
 #include <glm/vec3.hpp>
-#include "Transform.h"
 
 namespace  dae {
+	class Transform;
 	class ColliderComponent final : public BaseComponent
 	{
 	public:

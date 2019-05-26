@@ -7,6 +7,7 @@
 #include "BaseComponent.h"
 #include "CommandComponent.h"
 #include "ColliderComponent.h"
+#include "MovementComponent.h"
 
 dae::GameObject::~GameObject() = default;
 
@@ -68,6 +69,7 @@ void dae::GameObject::Render() const
 	auto rend5 = GetComponent<CommandComponent>();
 	auto rend7 = GetComponent<ColliderComponent>();
 	auto rend6 = GetComponent<SpriteComponent>();
+	auto rend8 = GetComponent<MovementComponent>();
 	auto pos = GetComponent<Transform>();
 }
 

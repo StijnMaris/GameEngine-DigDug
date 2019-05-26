@@ -15,6 +15,7 @@
 #include "GridBlock.h"
 #include "Renderer.h"
 #include "GridSystem.h"
+#include "Player.h"
 
 void dae::LevelScene::Init()
 {
@@ -33,8 +34,8 @@ void dae::LevelScene::Init()
 	m_pTheGrid->Init();
 	m_pTheGrid->AddToScene(*this);
 
-	InitPlayer1Controles(m_pTheGrid->GetPlayer());
-	AddGameObject(m_pTheGrid->GetPlayer());
+	InitPlayer1Controles(m_pTheGrid->GetPlayer()->GetCharacter());
+	AddGameObject(m_pTheGrid->GetPlayer()->GetCharacter());
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");

@@ -8,14 +8,17 @@
 #include "ColliderComponent.h"
 #include "RenderComponent.h"
 #include "CommandComponent.h"
+#include "Player.h"
 
 dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
 {
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
+	m_pPlayer1 = std::make_shared<Player>("Player1", "DigDug.png", 3, 4);
 }
 
 void dae::GridSystem::Init()
 {
+	m_pPlayer1->Init();
 	m_StartPos = m_pGridSystem->GetPosition();
 	SetUpGrid();
 	for (size_t i = 0; i < m_Columns; i++)
@@ -26,16 +29,6 @@ void dae::GridSystem::Init()
 			m_pBlocks[i][j]->GetBlock()->SetScale(2, 2);
 		}
 	}
-
-	m_pPlayer = std::make_shared<GameObject>("Player");
-	m_pPlayer->Init();
-	m_pPlayer->SetPosition(16, 16);
-	m_pPlayer->SetScale(2, 2);
-	m_pPlayer->AddComponent(std::make_shared<TextureComponent>("DigDug.png"));
-	m_pPlayer->AddComponent(std::make_shared<SpriteComponent>(m_pPlayer->GetComponent<TextureComponent>(), 3, 4, 0, true, 200));
-	m_pPlayer->AddComponent(std::make_shared<RenderComponent>(m_pPlayer->GetComponent<SpriteComponent>()));
-	m_pPlayer->AddComponent(std::make_shared<CommandComponent>());
-	m_pPlayer->AddComponent(std::make_shared<ColliderComponent>(m_pPlayer->GetComponent<Transform>(), m_pPlayer->GetComponent<SpriteComponent>()->GetRectToDraw()));
 }
 
 void dae::GridSystem::Draw() const
@@ -55,7 +48,7 @@ void dae::GridSystem::Draw() const
 			}
 		}
 	}
-	auto rect = m_pPlayer->GetComponent<ColliderComponent>()->GetCollider();
+	auto rect = m_pPlayer1->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
 	Renderer::GetInstance().DrawSquareAroundCenter(glm::vec3{ rect.x,rect.y,0 }, (float)/*m_CellSize*/rect.w);
 }
 
@@ -299,8 +292,8 @@ void dae::GridSystem::CheckForCollision()
 		}
 	}*/
 
-	auto collider = m_pPlayer->GetComponent<ColliderComponent>()->GetCollider();
-	auto gridPos = GetCellData(m_pPlayer->GetPosition());
+	auto collider = m_pPlayer1->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
+	auto gridPos = GetCellData(m_pPlayer1->GetCharacter()->GetPosition());
 	if (m_pBlocks[gridPos.first][gridPos.second]->CheckIfColliding(collider))
 	{
 		m_pBlocks[gridPos.first][gridPos.second]->Destroy();

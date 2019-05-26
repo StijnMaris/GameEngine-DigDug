@@ -1,6 +1,7 @@
 #pragma once
 //#include "Block.h"
 #include <glm/vec3.hpp>
+#include "Character.h"
 
 namespace  dae {
 	class Scene;
@@ -26,6 +27,7 @@ namespace  dae {
 	};
 
 	class GameObject;
+	class Player;
 	class GridSystem final
 	{
 	public:
@@ -80,15 +82,16 @@ namespace  dae {
 			return m_pGridSystem;
 		}
 
-		std::shared_ptr<GameObject> GetPlayer() const
+		std::shared_ptr<Player> GetPlayer() const
 		{
-			return m_pPlayer;
+			return m_pPlayer1;
 		}
 
 		void CheckForCollision();
 
 	private:
-		std::shared_ptr<GameObject> m_pGridSystem, m_pPlayer;
+		std::shared_ptr<GameObject> m_pGridSystem;
+		std::shared_ptr<Player>  m_pPlayer1;
 
 		std::vector<std::vector<bool>> m_Grid;
 		std::vector<std::vector<int>> m_GridDefinition;
