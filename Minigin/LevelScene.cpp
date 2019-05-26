@@ -15,6 +15,7 @@
 #include "GridBlock.h"
 #include "Renderer.h"
 #include "GridSystem.h"
+#include "Observer.h"
 
 void dae::LevelScene::Init()
 {
@@ -44,6 +45,16 @@ void dae::LevelScene::Init()
 	to->SetPosition(220, 20);
 	AddGameObject(to);
 
+	std::shared_ptr<Score> theScore = std::make_shared<Score>();
+	m_pTheGrid->addObserver(theScore);
+
+	m_Score = std::make_shared<GameObject>("Score");
+	m_Score->Init();
+	m_Score->AddComponent(std::make_shared<TextComponent>("Score: 0", font));
+	m_Score->AddComponent(std::make_shared<RenderComponent>(m_Score->GetComponent<TextComponent>()->GetTextureComponent()));
+	m_Score->SetPosition(220, 60);
+	AddGameObject(m_Score);
+
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 	to = std::make_shared<GameObject>("FPSText");
 	to->Init();
@@ -66,6 +77,7 @@ void dae::LevelScene::Update()
 	Scene::Update();
 	m_pTheGrid->Update();
 	m_pTheGrid->CheckForCollision();
+	m_Score->GetComponent<TextComponent>()->SetText("Score: " + Score::m_Score);
 	/*auto test3 = test->GetComponent<ColliderComponent>()->GetCollider();
 	if (test2->CheckIfColliding(test3))
 	{

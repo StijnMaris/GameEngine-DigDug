@@ -4,6 +4,8 @@
 #include "Character.h"
 
 namespace  dae {
+	enum class Event;
+	class Observer;
 	class Scene;
 	class GridBlock;
 
@@ -26,7 +28,6 @@ namespace  dae {
 		Fygar = 6,
 		Rock = 7
 	};
-
 	class GameObject;
 	class Player;
 	class GridSystem final
@@ -95,6 +96,12 @@ namespace  dae {
 
 		void DefineMap();
 
+		void addObserver(std::shared_ptr<Observer> observer);
+		void removeObserver(std::shared_ptr<Observer> observer);
+
+	protected:
+		void notify(Event event);
+
 	private:
 		std::shared_ptr<GameObject> m_pGridSystem;
 		std::shared_ptr<Character>  m_pPlayer1;
@@ -107,5 +114,8 @@ namespace  dae {
 		int m_CellSize = 32;
 		int m_Rows = 0;
 		int m_Columns = 0;
+
+		std::vector<std::shared_ptr<Observer>> m_pObservers;
+		int m_numObservers;
 	};
 }

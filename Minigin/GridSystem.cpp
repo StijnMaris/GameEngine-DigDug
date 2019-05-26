@@ -9,6 +9,7 @@
 #include "RenderComponent.h"
 #include "CommandComponent.h"
 #include <fstream>
+#include "Observer.h"
 
 dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
 {
@@ -289,6 +290,23 @@ bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, Direction di
 bool dae::GridSystem::DestroyCell(int row, int col)
 {
 	m_Grid[row][col] = false;
+	/*if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::White)
+	{
+		notify(Event::WhiteBlockDestroyed);
+	}
+	else if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::Yellow)
+	{
+		notify(Event::YellowBlockDestroyed);
+	}
+	else if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::Pink)
+	{
+		notify(Event::PinkBlockDestroyed);
+	}
+	else if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::Red)
+	{
+		notify(Event::RedBlockDestroyed);
+	}*/
+
 	return m_pBlocks[row][col]->Destroy();
 }
 
@@ -375,5 +393,25 @@ void dae::GridSystem::DefineMap()
 				break;
 			}
 		}
+	}
+}
+
+void dae::GridSystem::addObserver(std::shared_ptr<Observer> observer)
+{
+	m_pObservers.push_back(observer);
+	m_numObservers++;
+}
+
+void dae::GridSystem::removeObserver(std::shared_ptr<Observer> observer)
+{
+	m_pObservers.erase(std::find(m_pObservers.begin(), m_pObservers.end(), observer));
+	m_numObservers--;
+}
+
+void dae::GridSystem::notify(Event event)
+{
+	for (int i = 0; i < m_numObservers; i++)
+	{
+		m_pObservers[i]->onNotify(event);
 	}
 }

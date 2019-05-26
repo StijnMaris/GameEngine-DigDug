@@ -147,6 +147,9 @@
     <ClInclude Include="ActionComponent.h">
       <Filter>Header Files\Components\BaseComponets</Filter>
     </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Log.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="ActionComponent.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Observers.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
