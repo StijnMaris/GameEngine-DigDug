@@ -335,6 +335,25 @@ void dae::GridSystem::CheckForCollision()
 	{
 		m_pBlocks[gridPos.first][gridPos.second]->Destroy();
 	}
+	/*else if (gridPos.first - 1 >= 0 && gridPos.first + 1 < m_Rows && gridPos.first - 1 >= 0 && gridPos.first + 1 < m_Columns)
+	{
+		if (m_pBlocks[gridPos.first + 1][gridPos.second]->CheckIfColliding(collider))
+		{
+			m_pBlocks[gridPos.first + 1][gridPos.second]->Destroy();
+		}
+		else if (m_pBlocks[gridPos.first - 1][gridPos.second]->CheckIfColliding(collider))
+		{
+			m_pBlocks[gridPos.first - 1][gridPos.second]->Destroy();
+		}
+		else if (m_pBlocks[gridPos.first][gridPos.second + 1]->CheckIfColliding(collider))
+		{
+			m_pBlocks[gridPos.first][gridPos.second + 1]->Destroy();
+		}
+		else if (m_pBlocks[gridPos.first][gridPos.second - 1]->CheckIfColliding(collider))
+		{
+			m_pBlocks[gridPos.first][gridPos.second - 1]->Destroy();
+		}
+	}*/
 }
 
 void dae::GridSystem::LoadMap(std::string path)

@@ -19,5 +19,10 @@ namespace  dae {
 	private:
 		std::shared_ptr<Transform> m_pTransform;
 		SDL_Rect m_Rect;
+
+		SDL_Rect m_BoundRect;
+
+		float m_MovementsizeH,m_MovementsizeW;
+		int m_GridMovConstraintW,m_GridMovConstraintH;
 	};
 }
