@@ -3,6 +3,7 @@
 #include <minwinbase.h>
 #include <iostream>
 #include "GameObject.h"
+#include "Minigin.h"
 
 //*******************//
 //***INPUTMANAGER***//
@@ -13,8 +14,6 @@ dae::InputManager::InputManager()
 
 dae::InputManager::~InputManager()
 {
-	KBcurrentState.clear();
-	KBpreviousState.clear();
 	m_pButtons.clear();
 }
 
@@ -26,32 +25,29 @@ void dae::InputManager::Init()
 
 	m_UseKeyboard = true;
 
-	KBcurrentState.insert(KBcurrentState.begin(), 256, false);
-	KBpreviousState.insert(KBpreviousState.begin(), 256, false);
-
 	if (InitGamepads())
 		m_UseGamepad = true;
 
 	std::cout << "Finished initalizing the input manager" << std::endl;
-	std::cout << "Number of connected gamepads: " << nGamepads << std::endl;
+	std::cout << "Number of connected gamepads: " << m_NrGamepads << std::endl;
 
 	m_IsInitialized = true;
 }
 
 void dae::InputManager::MapInput(InputAction button, std::shared_ptr<Command> command)
 {
-	auto it = m_pButtons.find(button.ActionID);
+	auto it = m_pButtons.find(button.m_ActionID);
 	if (it != m_pButtons.end())
-		m_pButtons.at(button.ActionID) = std::make_pair(button, command);
+		m_pButtons.at(button.m_ActionID) = std::make_pair(button, command);
 
-	m_pButtons[button.ActionID] = std::make_pair(button, command);
+	m_pButtons[button.m_ActionID] = std::make_pair(button, command);
 }
 
 bool dae::InputManager::InitGamepads()
 {
 	int playerID = -1;
 	XINPUT_STATE state;
-	for (DWORD i = 0; i < XUSER_MAX_COUNT && playerID == -1; i++)
+	for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
 	{
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
 
@@ -64,13 +60,13 @@ bool dae::InputManager::InitGamepads()
 		m_pGamePads.push_back(std::make_shared<Gamepad>(playerID));
 	}
 	//Set number of gamepads
-	nGamepads = (unsigned int)m_pGamePads.size();
+	m_NrGamepads = (unsigned int)m_pGamePads.size();
 	//Does every player have a gamepad?
-	if (nGamepads != nPlayers)
+	if (m_NrGamepads != m_NrPlayers)
 		return false;
 
 	// select current player
-	currentlyActivePlayer = 0;
+	m_CurrentlyActivePlayer = 0;
 	if (m_pGamePads.size() > 0)
 		m_pCurrentGamePad = m_pGamePads[0];
 
@@ -94,27 +90,7 @@ void dae::InputManager::RefreshInput()
 
 bool dae::InputManager::IsActionTriggered(int actionID)
 {
-	return m_pButtons.at(actionID).first.IsTriggered;
-}
-
-const dae::InputTriggerState dae::InputManager::GetKeystrokeState(int key) const
-{
-	InputTriggerState outKS = InputTriggerState::Idle;
-	if (IsKeyPressed(key, true))
-	{
-		if (IsKeyPressed(key))
-			outKS = InputTriggerState::Down;
-		else
-			outKS = InputTriggerState::Released;
-	}
-	else
-	{
-		if (IsKeyPressed(key))
-			outKS = InputTriggerState::Pressed;
-		else
-			outKS = InputTriggerState::Idle;
-	}
-	return outKS;
+	return m_pButtons.at(actionID).first.m_IsTriggered;
 }
 
 void dae::InputManager::HandleInput()
@@ -123,29 +99,28 @@ void dae::InputManager::HandleInput()
 	for (auto it = m_pButtons.begin(); it != m_pButtons.end(); ++it)
 	{
 		auto currAction = &(it->second.first);
-		currAction->IsTriggered = false;
+		currAction->m_IsTriggered = false;
 
 		//GAMEPAD
-		if (m_UseGamepad && currAction->GamepadButtonCode != 0)
+		if (m_UseGamepad && currAction->m_GamepadButtonCode != 0)
 		{
-			if (m_pGamePads[static_cast<int>(currAction->PlayerIndex)])
+			if (m_pGamePads[static_cast<int>(currAction->m_PlayerIndex)])
 			{
-				auto ks = m_pGamePads[static_cast<int>(currAction->PlayerIndex)]->GetButtonState(currAction->GamepadButtonCode);
-				if (ks == currAction->TriggerState)
-					currAction->IsTriggered = true;
+				auto ks = m_pGamePads[static_cast<int>(currAction->m_PlayerIndex)]->GetButtonState(currAction->m_GamepadButtonCode);
+				if (ks == currAction->m_RequiredTriggerState)
+					currAction->m_IsTriggered = true;
 			}
 		}
 		//KEYBOARD
-		if (!currAction->IsTriggered && m_UseKeyboard && currAction->KeyboardCode != -1)
+		if (!currAction->m_IsTriggered && m_UseKeyboard && currAction->m_KeyboardCode != -1)
 		{
-			auto ks = GetKeystrokeState(currAction->KeyboardCode);
-			if (ks == currAction->TriggerState)
-				currAction->IsTriggered = true;
+			if (currAction->m_CurrentTriggerState == currAction->m_RequiredTriggerState)
+				currAction->m_IsTriggered = true;
 		}
 
-		if (currAction->IsTriggered)
+		if (currAction->m_IsTriggered)
 		{
-			if (currAction->ActionID == 16 || currAction->ActionID == 17)
+			if (currAction->m_ActionID == 16 || currAction->m_ActionID == 17)
 				it->second.second->execute();
 			it->second.second->AddToCommandStream();
 			//std::cout << it->second.first.PlayerIndex << std::endl;
@@ -160,18 +135,66 @@ void dae::InputManager::HandleInput()
 //Setting the current and previous states for the Keyboard
 void dae::InputManager::ProcessKeyboardInput()
 {
-	KBpreviousState = KBcurrentState;
-	for (unsigned int i = 0; i < KBcurrentState.size(); ++i)
-		KBcurrentState[i] = GetAsyncKeyState(i);
+	SDL_Event e;
+	const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
+
+	while (SDL_PollEvent(&e))
+	{
+		if (e.type == SDL_QUIT)
+		{
+			Minigin::m_DoContinue = false;
+		}
+		if (e.type == SDL_KEYDOWN)
+		{
+			//Cache the current key
+			auto currentKey = e.key.keysym.scancode;
+
+			//Stop running the program on Escape
+			if (currentKey == SDLK_ESCAPE)
+				Minigin::m_DoContinue = false;
+		}
+	}
+	for (int actionI = 0; actionI < (int)m_pButtons.size(); actionI++)
+	{
+		if (keyboardState[m_pButtons[actionI].first.m_KeyboardCode])
+		{
+			if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Idle || m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Released)
+			{
+				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Pressed;
+			}
+
+			else if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Pressed)
+			{
+				/*if (m_pButtons[actionI].first.m_RequiredTriggerState == InputTriggerState::Pressed)
+				{
+					m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Idle;
+				}*/
+				/*if (m_pButtons[actionI].first.m_RequiredTriggerState == InputTriggerState::Down)
+			   {*/
+				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Down;
+				//}
+			}
+		}
+		else {
+			if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Pressed || m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Down)
+			{
+				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Released;
+			}
+			else if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Released)
+			{
+				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Idle;
+			}
+		}
+	}
 }
 
-bool dae::InputManager::IsKeyPressed(int key, bool prevFrame) const
-{
-	if (!prevFrame)
-		return  (KBcurrentState[key] != 0);
-	else
-		return  (KBpreviousState[key] != 0);
-}
+//bool dae::InputManager::IsKeyPressed(int key, bool prevFrame) const
+//{
+//	if (!prevFrame)
+//		return  (KBcurrentState[key] != 0);
+//	else
+//		return  (KBpreviousState[key] != 0);
+//}
 
 const glm::vec2 dae::InputManager::getLStick() const
 {
