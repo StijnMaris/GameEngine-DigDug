@@ -94,22 +94,22 @@ void dae::LevelScene::Render() const
 void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<Character> gameObject)
 {
 	auto& input = InputManager::GetInstance();
-	InputAction LeftRun = { 1,InputTriggerState::Down,SDL_SCANCODE_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	InputAction LeftRun = { 1,InputTriggerState::Down,VK_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
 	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject));
-	InputAction RightRun = { 2,InputTriggerState::Down,SDL_SCANCODE_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
+	InputAction RightRun = { 2,InputTriggerState::Down,VK_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
 	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject));
-	InputAction UpRun = { 3,InputTriggerState::Down,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
+	InputAction UpRun = { 3,InputTriggerState::Down,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
 	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject));
-	InputAction DownRun = { 4,InputTriggerState::Pressed,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
+	InputAction DownRun = { 4,InputTriggerState::Pressed,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
 	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject));
 
-	InputAction Action = { 5,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
+	InputAction Action = { 5,InputTriggerState::Pressed,VK_SPACE,-1,XINPUT_GAMEPAD_A };
 	input.MapInput(Action, std::make_shared<ActionCommand>(gameObject));
 	//InputAction StopAction = { 6,InputTriggerState::Released,VK_SPACE,-1,XINPUT_GAMEPAD_A };
 	//input.MapInput(StopAction, std::make_shared<StopActionCommand>(gameObject));
 
-	/*InputAction Exit = { 16,InputTriggerState::Pressed,SDLK_ESCAPE,-1,XINPUT_GAMEPAD_START };
-	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject));*/
+	InputAction Exit = { 16,InputTriggerState::Pressed,VK_ESCAPE,-1,XINPUT_GAMEPAD_START };
+	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject));
 }
 
 dae::LevelScene::LevelScene(const std::string& name) :Scene(name)

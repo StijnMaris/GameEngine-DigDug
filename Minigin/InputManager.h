@@ -5,7 +5,6 @@
 #include "Singleton.h"
 #include <map>
 #include <glm/vec2.hpp>
-#include <SDL.h>
 
 namespace dae
 {
@@ -25,36 +24,30 @@ namespace dae
 	struct InputAction
 	{
 		InputAction() :
-			m_ActionID(-1),
-			m_RequiredTriggerState(InputTriggerState::Pressed),
-			m_KeyboardCode(SDL_SCANCODE_UNKNOWN),
-			m_MouseButtonCode(-1),
-			m_GamepadButtonCode(0),
-			m_PlayerIndex(GamepadIndex::PlayerOne),
-			m_IsTriggered(false),
-			m_CurrentTriggerState(InputTriggerState::Idle) {}
+			ActionID(-1),
+			TriggerState(InputTriggerState::Pressed),
+			KeyboardCode(-1),
+			MouseButtonCode(-1),
+			GamepadButtonCode(0),
+			PlayerIndex(GamepadIndex::PlayerOne),
+			IsTriggered(false) {}
 
-		InputAction(int actionID, InputTriggerState requiredTriggerState = InputTriggerState::Pressed,
-			SDL_Scancode keyboardCode = SDL_SCANCODE_UNKNOWN, int mouseButtonCode = -1, WORD gamepadButtonCode = 0,
-			GamepadIndex playerIndex = GamepadIndex::PlayerOne,
-			bool isTriggered = false, InputTriggerState currentTriggerState = InputTriggerState::Idle) :
-			m_ActionID(actionID),
-			m_RequiredTriggerState(requiredTriggerState),
-			m_KeyboardCode(keyboardCode),
-			m_MouseButtonCode(mouseButtonCode),
-			m_GamepadButtonCode(gamepadButtonCode),
-			m_PlayerIndex(playerIndex),
-			m_IsTriggered(isTriggered),
-			m_CurrentTriggerState(currentTriggerState) {}
+		InputAction(int actionID, InputTriggerState triggerState = InputTriggerState::Pressed, int keyboardCode = -1, int mouseButtonCode = -1, WORD gamepadButtonCode = 0, GamepadIndex playerIndex = GamepadIndex::PlayerOne) :
+			ActionID(actionID),
+			TriggerState(triggerState),
+			KeyboardCode(keyboardCode),
+			MouseButtonCode(mouseButtonCode),
+			GamepadButtonCode(gamepadButtonCode),
+			PlayerIndex(playerIndex),
+			IsTriggered(false) {}
 
-		int m_ActionID;
-		InputTriggerState m_RequiredTriggerState;
-		InputTriggerState m_CurrentTriggerState;
-		SDL_Scancode m_KeyboardCode;
-		int m_MouseButtonCode;
-		WORD m_GamepadButtonCode; //XINPUT_GAMEPAD_...
-		GamepadIndex m_PlayerIndex;
-		bool m_IsTriggered;
+		int ActionID;
+		InputTriggerState TriggerState;
+		int KeyboardCode; //VK_... (Range 0x07 <> 0xFE)
+		int MouseButtonCode; //VK_... (Range 0x00 <> 0x06)
+		WORD GamepadButtonCode; //XINPUT_GAMEPAD_...
+		GamepadIndex PlayerIndex;
+		bool IsTriggered;
 	};
 
 	class Gamepad
@@ -108,6 +101,7 @@ namespace dae
 		bool IsActionTriggered(int actionID);
 
 		const InputTriggerState GetKeystrokeState(int key) const;
+		bool IsKeyPressed(int key, bool prevFrame = false) const;
 
 		void RefreshControllerConnections();
 
@@ -129,15 +123,16 @@ namespace dae
 		bool m_UseKeyboard = true;
 
 		//Keyboad and mouse
+		std::vector<bool> KBcurrentState, KBpreviousState;
 		bool KBstate0InUse = false;
 		POINT mouseXY;
 
 		//GAMEPADS
 		std::vector<std::shared_ptr<Gamepad>> m_pGamePads;
 		std::shared_ptr<Gamepad> m_pCurrentGamePad;
-		unsigned int m_CurrentlyActivePlayer;
-		unsigned int m_NrGamepads;
-		unsigned int m_NrPlayers = 0;
+		unsigned int currentlyActivePlayer;
+		unsigned int nGamepads;
+		unsigned int nPlayers = 1;
 
 		XINPUT_STATE currentState{}, previousState{};
 
