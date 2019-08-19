@@ -62,12 +62,36 @@ void dae::GridSystem::Draw() const
 
 void dae::GridSystem::Reset()
 {
-	m_Grid.clear();
+	//m_Grid.clear();
 	for (int i = 0; i < m_pBlocks.size(); ++i)
 	{
-		m_pBlocks[i].clear();
+		for (size_t j = 0; j < m_pBlocks[i].size(); j++)
+		{
+			m_pBlocks[i][j]->Destroy();
+		}
 	}
-	m_pBlocks.clear();
+	//m_pBlocks.clear();
+
+	m_pPlayer1->GetCharacter()->SetPosition(16, 160 - 16);
+	//m_StartPos = m_pGridSystem->GetPosition();
+
+	int divi = m_Rows / 5;
+	int color = 1;
+	for (int i = 0; i < m_Columns; i++)
+	{
+		/*if ((i + 1) % (divi + 1) == 0)
+		{
+			color++;
+		}*/
+		color = 1;
+		for (int j = 0; j < m_Rows; ++j)
+		{
+			color = j / divi + 1;
+
+			m_pBlocks[i][j]->SetBlockColor(static_cast<BlockColor>(color));
+		}
+	}
+	DefineMap();
 }
 
 void dae::GridSystem::AddToScene(Scene& scene)
@@ -401,13 +425,10 @@ void dae::GridSystem::DefineMap()
 			case CellDefinition::VSPlayer2:
 				DestroyCell(i, j);
 				break;
-			case CellDefinition::Pooka:
+			case CellDefinition::SnoBee:
 				DestroyCell(i, j);
 				break;
-			case CellDefinition::Fygar:
-				DestroyCell(i, j);
-				break;
-			case CellDefinition::Rock:
+			case CellDefinition::Egg:
 				DestroyCell(i, j);
 				break;
 			}

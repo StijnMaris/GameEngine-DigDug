@@ -3,6 +3,7 @@
 namespace dae {
 	class GameObject;
 	class Character;
+	class LevelScene;
 	class Command : public std::enable_shared_from_this<Command>
 	{
 	public:
@@ -68,6 +69,17 @@ namespace dae {
 	};
 
 	//misc
+	class ResetCommand : public CharacterCommand
+	{
+	public:
+		ResetCommand(std::shared_ptr<LevelScene> Level, std::shared_ptr<Character> character) :
+			CharacterCommand(character),
+			m_pLevel(Level) {}
+		bool execute() override;
+	protected:
+		std::shared_ptr<LevelScene> m_pLevel;
+	};
+
 	class ExitCommand : public CharacterCommand
 	{
 	public:

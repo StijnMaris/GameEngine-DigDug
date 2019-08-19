@@ -7,6 +7,7 @@
 #include "MovementComponent.h"
 #include "ActionComponent.h"
 #include "Character.h"
+#include "LevelScene.h"
 //#include "Locator.h"
 
 void dae::Command::AddToCommandStream()
@@ -59,7 +60,7 @@ bool dae::RunDownCommand::execute()
 bool dae::ActionCommand::execute()
 {
 	//std::cout << "Action" << "\n";
-  	m_pCharacter->SetCharacterState(CharacterState::Action);
+	m_pCharacter->SetCharacterState(CharacterState::Action);
 	m_pCharacter->GetCharacter()->GetComponent<ActionComponent>()->DoAction();
 	return true;
 }
@@ -67,6 +68,12 @@ bool dae::ActionCommand::execute()
 bool dae::StopActionCommand::execute()
 {
 	m_pCharacter->SetCharacterState(CharacterState::Idle);
+	return true;
+}
+
+bool dae::ResetCommand::execute()
+{
+	m_pLevel->Reset();
 	return true;
 }
 

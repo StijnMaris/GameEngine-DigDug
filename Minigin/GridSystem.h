@@ -24,9 +24,8 @@ namespace  dae {
 		Player1 = 2,
 		Player2 = 3,
 		VSPlayer2 = 4,
-		Pooka = 5,
-		Fygar = 6,
-		Rock = 7
+		SnoBee = 5,
+		Egg = 6,
 	};
 	class GameObject;
 	class Player;
