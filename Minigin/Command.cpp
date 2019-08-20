@@ -16,7 +16,7 @@ void dae::Command::AddToCommandStream()
 	m_pOwner->GetComponent<CommandComponent>()->AddCommand(shared_from_this());
 }
 
-dae::CharacterCommand::CharacterCommand(std::shared_ptr<Character> character) :m_pCharacter(character)
+dae::CharacterCommand::CharacterCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) :m_pCharacter(character), m_pLevel(Level)
 {
 	m_pOwner = character->GetCharacter();
 }
@@ -25,7 +25,7 @@ bool dae::RunLeftCommand::execute()
 {
 	//std::cout << "Left" << "\n";
 	m_pCharacter->SetCharacterState(CharacterState::Move);
-	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveLeft();
+	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveLeft(m_pLevel->GetGridSystem());
 	return true;
 	//Locator::getAudio().playSound(0);
 }
@@ -34,7 +34,7 @@ bool dae::RunRightCommand::execute()
 {
 	//std::cout << "Right" << "\n";
 	m_pCharacter->SetCharacterState(CharacterState::Move);
-	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveRight();
+	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveRight(m_pLevel->GetGridSystem());
 	return true;
 	//Locator::getAudio().playSound(1);
 }
@@ -43,7 +43,7 @@ bool dae::RunUpCommand::execute()
 {
 	//std::cout << "Up" << "\n";
 	m_pCharacter->SetCharacterState(CharacterState::Move);
-	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveUp();
+	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveUp(m_pLevel->GetGridSystem());
 	return true;
 	//Locator::getAudio().playSound(2);
 }
@@ -52,7 +52,7 @@ bool dae::RunDownCommand::execute()
 {
 	//std::cout << "Down" << "\n";
 	m_pCharacter->SetCharacterState(CharacterState::Move);
-	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveDown();
+	m_pCharacter->GetCharacter()->GetComponent<MovementComponent>()->MoveDown(m_pLevel->GetGridSystem());
 	return true;
 	//Locator::getAudio().playSound(3);
 }

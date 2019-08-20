@@ -19,6 +19,11 @@ namespace dae {
 
 		void Reset();
 
+		std::shared_ptr<GridSystem> GetGridSystem()const
+		{
+			return  m_pTheGrid;
+		}
+
 	private:
 		std::shared_ptr<GridSystem> m_pTheGrid;
 		std::shared_ptr<GameObject> m_Score;

@@ -20,51 +20,52 @@ namespace dae {
 	class CharacterCommand : public Command
 	{
 	public:
-		CharacterCommand(std::shared_ptr<Character> character);
+		CharacterCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level);
 		virtual bool execute() = 0;
 	protected:
 		std::shared_ptr<Character> m_pCharacter;
+		std::shared_ptr<LevelScene> m_pLevel;
 	};
 
 	class RunLeftCommand : public CharacterCommand
 	{
 	public:
-		RunLeftCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		RunLeftCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 
 	class RunRightCommand : public CharacterCommand
 	{
 	public:
-		RunRightCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		RunRightCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 
 	class RunUpCommand : public CharacterCommand
 	{
 	public:
-		RunUpCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		RunUpCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 
 	class RunDownCommand : public CharacterCommand
 	{
 	public:
-		RunDownCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		RunDownCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 
 	class ActionCommand : public CharacterCommand
 	{
 	public:
-		ActionCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		ActionCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 
 	class StopActionCommand : public CharacterCommand
 	{
 	public:
-		StopActionCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		StopActionCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 
@@ -72,18 +73,15 @@ namespace dae {
 	class ResetCommand : public CharacterCommand
 	{
 	public:
-		ResetCommand(std::shared_ptr<LevelScene> Level, std::shared_ptr<Character> character) :
-			CharacterCommand(character),
-			m_pLevel(Level) {}
+		ResetCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) :
+			CharacterCommand(character, Level) {}
 		bool execute() override;
-	protected:
-		std::shared_ptr<LevelScene> m_pLevel;
 	};
 
 	class ExitCommand : public CharacterCommand
 	{
 	public:
-		ExitCommand(std::shared_ptr<Character> character) : CharacterCommand(character) {}
+		ExitCommand(std::shared_ptr<Character> character, std::shared_ptr<LevelScene> Level) : CharacterCommand(character, Level) {}
 		bool execute() override;
 	};
 }

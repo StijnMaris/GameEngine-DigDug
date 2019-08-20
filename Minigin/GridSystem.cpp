@@ -19,9 +19,7 @@ dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
 
 void dae::GridSystem::Init()
 {
-	m_pPlayer1->Init();
-	m_pPlayer1->GetCharacter()->SetPosition(16, 160 - 16);
-	m_StartPos = m_pGridSystem->GetPosition();
+	m_GridStartPos = m_pGridSystem->GetPosition();
 	SetUpGrid();
 	for (size_t i = 0; i < m_Columns; i++)
 	{
@@ -32,6 +30,12 @@ void dae::GridSystem::Init()
 		}
 	}
 	DefineMap();
+	m_Player1StartPos = GetCellPosition(m_Columns / 2, m_Rows / 2);
+	m_Player1StartPos.x = m_Player1StartPos.x + m_CellSize / 2;
+	m_Player1StartPos.y = m_Player1StartPos.y + m_CellSize / 2;
+
+	m_pPlayer1->Init();
+	m_pPlayer1->GetCharacter()->SetPosition(m_Player1StartPos);
 }
 
 void dae::GridSystem::Update()
@@ -57,32 +61,19 @@ void dae::GridSystem::Draw() const
 		}
 	}
 	auto rect = m_pPlayer1->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
+	std::cout << "x: " << rect.x << " y: " << rect.y << std::endl;
 	Renderer::GetInstance().DrawSquareAroundCenter(glm::vec3{ rect.x,rect.y,0 }, (float)/*m_CellSize*/rect.w);
 }
 
 void dae::GridSystem::Reset()
 {
-	//m_Grid.clear();
-	for (int i = 0; i < m_pBlocks.size(); ++i)
-	{
-		for (size_t j = 0; j < m_pBlocks[i].size(); j++)
-		{
-			m_pBlocks[i][j]->Destroy();
-		}
-	}
-	//m_pBlocks.clear();
-
-	m_pPlayer1->GetCharacter()->SetPosition(16, 160 - 16);
+	m_pPlayer1->GetCharacter()->SetPosition(m_Player1StartPos);
 	//m_StartPos = m_pGridSystem->GetPosition();
 
 	int divi = m_Rows / 5;
 	int color = 1;
 	for (int i = 0; i < m_Columns; i++)
 	{
-		/*if ((i + 1) % (divi + 1) == 0)
-		{
-			color++;
-		}*/
 		color = 1;
 		for (int j = 0; j < m_Rows; ++j)
 		{
@@ -147,7 +138,7 @@ void dae::GridSystem::SetUpGrid()
 		{
 			color = j / divi + 1;
 
-			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_StartPos.x + i * m_CellSize, m_StartPos.y + j * m_CellSize,0 }, i, j, static_cast<BlockColor>(color));
+			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_GridStartPos.x + i * m_CellSize, m_GridStartPos.y + j * m_CellSize,0 }, i, j, static_cast<BlockColor>(color));
 		}
 	}
 
@@ -162,14 +153,14 @@ void dae::GridSystem::SetUpGrid()
 bool dae::GridSystem::GetCellState(int row, int col) const
 {
 	if (row < 0)
-		return true;
+		return false;
 	if (row > m_Rows - 1)
-		return true;
+		return false;
 
 	if (col < 0)
-		return true;
+		return false;
 	if (col > m_Columns - 1)
-		return true;
+		return false;
 
 	return m_Grid[row][col];
 }
@@ -235,7 +226,7 @@ void dae::GridSystem::GetCellData(const glm::vec3 position, int& row, int& col) 
 		row = (static_cast<int>(position.x) - remainder) / m_CellSize;
 	}
 
-	//Find the nearest Grid X Position
+	//Find the nearest Grid Y Position
 	{
 		const int remainder = int(position.y) % m_CellSize;
 		col = (static_cast<int>(position.y) - remainder) / m_CellSize;
@@ -281,29 +272,34 @@ bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, Direction di
 	GetCellData(position, row, col);
 
 	//Check for actual blocks
+
 	switch (dir)
 	{
 	case Direction::Up:
 	{
 		if (GetCellState(row, --col))
+			//return true;
 			return false;
 		break;
 	}
 	case Direction::Down:
 	{
 		if (GetCellState(row, ++col))
+			//return true;
 			return false;
 		break;
 	}
 	case Direction::Left:
 	{
 		if (GetCellState(--row, col))
+			//return true;
 			return false;
 		break;
 	}
 	case Direction::Right:
 	{
 		if (GetCellState(++row, col))
+			//return true;
 			return false;
 		break;
 	}
@@ -358,6 +354,7 @@ void dae::GridSystem::CheckForCollision()
 	if (m_pBlocks[gridPos.first][gridPos.second]->CheckIfColliding(collider))
 	{
 		m_pBlocks[gridPos.first][gridPos.second]->Destroy();
+		m_Grid[gridPos.first][gridPos.second] = false;
 	}
 	/*else if (gridPos.first - 1 >= 0 && gridPos.first + 1 < m_Rows && gridPos.first - 1 >= 0 && gridPos.first + 1 < m_Columns)
 	{

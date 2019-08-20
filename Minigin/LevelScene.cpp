@@ -95,22 +95,22 @@ void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<Character> gameObject
 {
 	auto& input = InputManager::GetInstance();
 	const InputAction LeftRun = { 1,InputTriggerState::Down,SDL_SCANCODE_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject));
+	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject, shared_from_this()));
 	const InputAction RightRun = { 2,InputTriggerState::Down,SDL_SCANCODE_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
-	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject));
+	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject, shared_from_this()));
 	const InputAction UpRun = { 3,InputTriggerState::Down,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
-	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject));
+	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject, shared_from_this()));
 	const InputAction DownRun = { 4,InputTriggerState::Down,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
-	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject));
+	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject, shared_from_this()));
 
 	const InputAction Push = { 5,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
-	input.MapInput(Push, std::make_shared<ActionCommand>(gameObject));
+	input.MapInput(Push, std::make_shared<ActionCommand>(gameObject, shared_from_this()));
 
 	InputAction Reset = { 6,InputTriggerState::Pressed,SDL_SCANCODE_R,-1,XINPUT_GAMEPAD_BACK };
-	input.MapInput(Reset, std::make_shared<ResetCommand>(shared_from_this(), gameObject));
+	input.MapInput(Reset, std::make_shared<ResetCommand>(gameObject, shared_from_this()));
 
 	const InputAction Exit = { 16,InputTriggerState::Pressed,SDL_SCANCODE_ESCAPE,-1,XINPUT_GAMEPAD_START };
-	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject));
+	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject, shared_from_this()));
 }
 
 void dae::LevelScene::Reset()

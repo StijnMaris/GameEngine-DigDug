@@ -109,7 +109,9 @@ namespace  dae {
 		std::vector<std::vector<CellDefinition>> m_GridDefinition;
 		std::vector<std::vector<std::shared_ptr<GridBlock>>> m_pBlocks;
 
-		glm::vec3 m_StartPos{};
+		glm::vec3 m_GridStartPos{};
+		glm::vec3 m_Player1StartPos{};
+		glm::vec3 m_Player2StartPos{};
 		int m_CellSize = 32;
 		int m_Rows = 0;
 		int m_Columns = 0;

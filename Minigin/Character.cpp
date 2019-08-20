@@ -18,7 +18,7 @@ dae::Character::Character(std::string name, std::string imagePath, int rows, int
 void dae::Character::Init()
 {
 	m_pCharacter->Init();
-	m_pCharacter->SetPosition(16, 16);
+	//m_pCharacter->SetPosition(16, 16);
 	m_pCharacter->SetScale(2, 2);
 	m_pCharacter->AddComponent(std::make_shared<TextureComponent>(m_PathName));
 	m_pCharacter->AddComponent(std::make_shared<SpriteComponent>(m_pCharacter->GetComponent<TextureComponent>(), m_Rows, m_Cols, m_StartRow, true, 200));
