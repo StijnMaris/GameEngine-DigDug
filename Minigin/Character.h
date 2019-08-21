@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/vec3.hpp>
 
 namespace dae {
 	enum class MovementDirection
@@ -40,6 +41,8 @@ namespace dae {
 		{
 			m_CharacterState = newState;
 		}
+
+		void SetPosition(glm::vec3 newPos)const;
 	private:
 		std::shared_ptr<GameObject> m_pCharacter;
 

@@ -26,7 +26,6 @@ void dae::MovementComponent::MoveUp(std::shared_ptr<GridSystem> grid)
 		m_StartPos = m_pTransform->GetPosition();
 		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
 		m_Destination = grid->GetCellPosition(gridPos.first, --gridPos.second);
-		m_IsDestinationSet = true;
 	}
 }
 
@@ -41,7 +40,6 @@ void dae::MovementComponent::MoveDown(std::shared_ptr<GridSystem> grid)
 		m_StartPos = m_pTransform->GetPosition();
 		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
 		m_Destination = grid->GetCellPosition(gridPos.first, ++gridPos.second);
-		m_IsDestinationSet = true;
 	}
 }
 
@@ -54,7 +52,6 @@ void dae::MovementComponent::MoveLeft(std::shared_ptr<GridSystem> grid)
 		m_StartPos = m_pTransform->GetPosition();
 		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
 		m_Destination = grid->GetCellPosition(--gridPos.first, gridPos.second);
-		m_IsDestinationSet = true;
 	}
 }
 
@@ -67,21 +64,24 @@ void dae::MovementComponent::MoveRight(std::shared_ptr<GridSystem> grid)
 		m_StartPos = m_pTransform->GetPosition();
 		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
 		m_Destination = grid->GetCellPosition(++gridPos.first, gridPos.second);
-		m_IsDestinationSet = true;
 	}
 }
 
 void dae::MovementComponent::Update()
 {
-	if (m_IsDestinationSet) {
-		auto& time = Time::GetInstance();
-		time.GetDeltaTime();
-		m_pTransform->SetPosition(glm::mix(m_pTransform->GetPosition(), m_Destination, 0.1f));
-		glm::vec3 posSub = m_Destination - m_pTransform->GetPosition();
-		posSub = abs(posSub);
-		if (posSub.x <= 1 && posSub.y <= 1)
-		{
-			m_pTransform->SetPosition(m_Destination);
-		}
+	auto& time = Time::GetInstance();
+	time.GetDeltaTime();
+	m_pTransform->SetPosition(glm::mix(m_pTransform->GetPosition(), m_Destination, 0.1f));
+	glm::vec3 posSub = m_Destination - m_pTransform->GetPosition();
+	posSub = abs(posSub);
+	if (posSub.x <= 1 && posSub.y <= 1)
+	{
+		m_pTransform->SetPosition(m_Destination);
 	}
+}
+
+void dae::MovementComponent::SetPosition(glm::vec3 newPos)
+{
+	m_StartPos = newPos;
+	m_Destination = newPos;
 }

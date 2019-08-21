@@ -35,7 +35,7 @@ void dae::GridSystem::Init()
 	m_Player1StartPos.y = m_Player1StartPos.y + m_CellSize / 2;
 
 	m_pPlayer1->Init();
-	m_pPlayer1->GetCharacter()->SetPosition(m_Player1StartPos);
+	m_pPlayer1->SetPosition(m_Player1StartPos);
 }
 
 void dae::GridSystem::Update()
@@ -67,8 +67,7 @@ void dae::GridSystem::Draw() const
 
 void dae::GridSystem::Reset()
 {
-	m_pPlayer1->GetCharacter()->SetPosition(m_Player1StartPos);
-	//m_StartPos = m_pGridSystem->GetPosition();
+	m_pPlayer1->SetPosition(m_Player1StartPos);
 
 	int divi = m_Rows / 5;
 	int color = 1;

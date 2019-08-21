@@ -19,6 +19,8 @@ namespace  dae {
 		void MoveRight(std::shared_ptr<GridSystem> grid);
 		void Update() override;
 
+		void SetPosition(glm::vec3 newPos);
+
 	private:
 		std::shared_ptr<Transform> m_pTransform;
 		SDL_Rect m_Rect;
