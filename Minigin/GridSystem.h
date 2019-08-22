@@ -54,6 +54,10 @@ namespace  dae {
 		std::pair<int, int> GetCellData(const glm::vec3 position) const;
 		void GetCellData(const std::shared_ptr<GridBlock> block, int& row, int&col) const;
 
+		std::shared_ptr<GridBlock> GetGridBlockAtPosition(int row, int col) const;
+		std::shared_ptr<GridBlock> GetGridBlockAtPosition(std::pair<int, int> cellData) const;
+		std::shared_ptr<GridBlock> GetGridBlockAtPosition(glm::vec3 position) const;
+
 		bool CanMoveInDirection(const glm::vec3& position, MovementDirection dir);
 		std::pair<int, int>  GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection dir);
 		bool IsAccesingBlockOutsideOfGrid(int row, int col)const;

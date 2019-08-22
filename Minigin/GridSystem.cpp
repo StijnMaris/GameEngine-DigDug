@@ -215,6 +215,23 @@ void dae::GridSystem::GetCellData(const std::shared_ptr<GridBlock> block, int& r
 	GetCellData(position, row, col);
 }
 
+std::shared_ptr<dae::GridBlock> dae::GridSystem::GetGridBlockAtPosition(int row, int col) const
+{
+	return m_pBlocks[row][col];
+}
+
+std::shared_ptr<dae::GridBlock> dae::GridSystem::GetGridBlockAtPosition(std::pair<int, int> cellData) const
+{
+	return GetGridBlockAtPosition(cellData.first, cellData.second);
+}
+
+std::shared_ptr<dae::GridBlock> dae::GridSystem::GetGridBlockAtPosition(glm::vec3 position) const
+{
+	int row, col;
+	GetCellData(position, row, col);
+	return GetGridBlockAtPosition(row, col);
+}
+
 bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, MovementDirection dir)
 {
 	int row, col;
