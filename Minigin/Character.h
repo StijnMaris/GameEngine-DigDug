@@ -4,7 +4,6 @@
 namespace dae {
 	enum class MovementDirection
 	{
-		None,
 		Up,
 		Down,
 		Left,
@@ -40,6 +39,16 @@ namespace dae {
 		void SetCharacterState(CharacterState newState)
 		{
 			m_CharacterState = newState;
+		}
+
+		void SetMovementDirection(MovementDirection newDirection)
+		{
+			m_MovDir = newDirection;
+		}
+
+		MovementDirection GetMovementDirection()const
+		{
+			return m_MovDir;
 		}
 
 		void SetPosition(glm::vec3 newPos)const;

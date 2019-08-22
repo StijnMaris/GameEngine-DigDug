@@ -11,7 +11,7 @@ namespace  dae {
 	{
 	public:
 		MovementComponent(std::shared_ptr<Transform> transform, SDL_Rect rect);
-		~MovementComponent();
+		~MovementComponent() = default;
 
 		void MoveUp(std::shared_ptr<GridSystem> grid);
 		void MoveDown(std::shared_ptr<GridSystem> grid);

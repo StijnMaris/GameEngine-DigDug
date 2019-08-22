@@ -9,6 +9,7 @@ namespace dae {
 		Black = 0,
 		Blue = 1,
 		Egg = 2,
+		Diamond = 3,
 	};
 
 	class GameObject;

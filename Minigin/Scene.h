@@ -18,7 +18,7 @@ namespace dae
 			return m_Name;
 		}
 
-		~Scene();
+		virtual ~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
 		Scene& operator=(const Scene& other) = delete;

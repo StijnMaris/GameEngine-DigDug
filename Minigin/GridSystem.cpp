@@ -6,12 +6,12 @@
 #include <glm/vec2.hpp>
 #include "Scene.h"
 #include "ColliderComponent.h"
-#include "RenderComponent.h"
-#include "CommandComponent.h"
+//#include "RenderComponent.h"
+//#include "CommandComponent.h"
 #include <fstream>
 #include "Observer.h"
 
-dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols)
+dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols), m_numObservers(0)
 {
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
 	m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug.png", 3, 4);
@@ -21,18 +21,15 @@ void dae::GridSystem::Init()
 {
 	m_GridStartPos = m_pGridSystem->GetPosition();
 	SetUpGrid();
-	for (size_t i = 0; i < m_Columns; i++)
+	for (size_t i = 0; i < m_Rows; i++)
 	{
-		for (int j = 0; j < m_Rows; j++)
+		for (int j = 0; j < m_Columns; j++)
 		{
 			m_pBlocks[i][j]->Init();
 			m_pBlocks[i][j]->GetBlock()->SetScale(2, 2);
 		}
 	}
 	DefineMap();
-	m_Player1StartPos = GetCellPosition(m_Columns / 2, m_Rows / 2);
-	m_Player1StartPos.x = m_Player1StartPos.x + m_CellSize / 2;
-	m_Player1StartPos.y = m_Player1StartPos.y + m_CellSize / 2;
 
 	m_pPlayer1->Init();
 	m_pPlayer1->SetPosition(m_Player1StartPos);
@@ -46,9 +43,9 @@ void dae::GridSystem::Update()
 void dae::GridSystem::Draw() const
 {
 	////Debug render the cells
-	for (int i = 0; i < m_Columns; i++)
+	for (int i = 0; i < m_Rows; i++)
 	{
-		for (int j = 0; j < m_Rows; j++)
+		for (int j = 0; j < m_Columns; j++)
 		{
 			if (GetCellState(i, j))
 			{
@@ -69,14 +66,12 @@ void dae::GridSystem::Reset()
 {
 	m_pPlayer1->SetPosition(m_Player1StartPos);
 
-	int divi = m_Rows / 5;
-	int color = 1;
-	for (int i = 0; i < m_Columns; i++)
+	int divi = m_Columns / 5;
+	for (int i = 0; i < m_Rows; i++)
 	{
-		color = 1;
-		for (int j = 0; j < m_Rows; ++j)
+		for (int j = 0; j < m_Columns; ++j)
 		{
-			color = j / divi + 1;
+			int color = j / divi + 1;
 
 			m_pBlocks[i][j]->SetBlockColor(static_cast<BlockColor>(color));
 		}
@@ -86,9 +81,9 @@ void dae::GridSystem::Reset()
 
 void dae::GridSystem::AddToScene(Scene& scene)
 {
-	for (size_t i = 0; i < m_Columns; i++)
+	for (size_t i = 0; i < m_Rows; i++)
 	{
-		for (int j = 0; j < m_Rows; j++)
+		for (int j = 0; j < m_Columns; j++)
 		{
 			scene.AddGameObject(m_pBlocks[i][j]->GetBlock());
 		}
@@ -98,69 +93,44 @@ void dae::GridSystem::AddToScene(Scene& scene)
 void dae::GridSystem::SetUpGrid()
 {
 	m_Grid.clear();
-	m_Grid.resize(m_Columns);
-	for (int i = 0; i < m_Columns; i++)
+	m_Grid.resize(m_Rows);
+	for (int i = 0; i < m_Rows; i++)
 	{
-		m_Grid[i].resize(m_Rows);
-	}
-	int divi = m_Rows / 5;
-	for (int i = 0; i < m_Columns; i++)
-	{
-		for (int j = 0; j < m_Rows; ++j)
-		{
-			if (i < divi)
-			{
-				m_Grid[i][j] = false;
-			}
-			else {
-				m_Grid[i][j] = true;
-			}
-		}
+		m_Grid[i].resize(m_Columns);
+		std::fill(m_Grid[i].begin(), m_Grid[i].end(), true);
 	}
 
 	m_pBlocks.clear();
-	m_pBlocks.resize(m_Columns);
-	for (int i = 0; i < m_Columns; i++)
+	m_pBlocks.resize(m_Rows);
+	for (int i = 0; i < m_Rows; i++)
 	{
-		m_pBlocks[i].resize(m_Rows);
+		m_pBlocks[i].resize(m_Columns);
 	}
 
-	int color = 1;
-	for (int i = 0; i < m_Columns; i++)
+	for (int i = 0; i < m_Rows; i++)
 	{
-		/*if ((i + 1) % (divi + 1) == 0)
+		for (int j = 0; j < m_Columns; ++j)
 		{
-			color++;
-		}*/
-		color = 1;
-		for (int j = 0; j < m_Rows; ++j)
-		{
-			color = j / divi + 1;
+			BlockColor color = BlockColor::Blue;
 
-			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_GridStartPos.x + i * m_CellSize, m_GridStartPos.y + j * m_CellSize,0 }, i, j, static_cast<BlockColor>(color));
+			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_GridStartPos.x + j * m_CellSize, m_GridStartPos.y + i * m_CellSize,0 }, i, j, color);
 		}
 	}
 
-	m_GridDefinition.resize(m_Columns);
-	for (int i = 0; i < m_Columns; i++)
+	m_GridDefinition.resize(m_Rows);
+	for (int i = 0; i < m_Rows; i++)
 	{
-		m_GridDefinition[i].resize(m_Rows);
+		m_GridDefinition[i].resize(m_Columns);
 	}
 	LoadMap("../Data/GridLevel.txt");
 }
 
 bool dae::GridSystem::GetCellState(int row, int col) const
 {
-	if (row < 0)
-		return false;
-	if (row > m_Rows - 1)
-		return false;
-
-	if (col < 0)
-		return false;
-	if (col > m_Columns - 1)
-		return false;
-
+	if (IsAccesingBlockOutsideOfGrid(row, col))
+	{
+		return true;
+	}
 	return m_Grid[row][col];
 }
 
@@ -221,51 +191,31 @@ void dae::GridSystem::GetCellData(const glm::vec3 position, int& row, int& col) 
 {
 	//Find the nearest Grid X Position
 	{
-		const int remainder = int(position.x) % m_CellSize;
-		row = (static_cast<int>(position.x) - remainder) / m_CellSize;
+		const int remainder = int(position.y) % m_CellSize;
+		row = (static_cast<int>(position.y) - remainder) / m_CellSize;
 	}
 
 	//Find the nearest Grid Y Position
 	{
-		const int remainder = int(position.y) % m_CellSize;
-		col = (static_cast<int>(position.y) - remainder) / m_CellSize;
+		const int remainder = int(position.x) % m_CellSize;
+		col = (static_cast<int>(position.x) - remainder) / m_CellSize;
 	}
 }
 
 std::pair<int, int> dae::GridSystem::GetCellData(const glm::vec3 position) const
 {
 	int row, col;
-	//Find the nearest Grid X Position
-	{
-		const int remainder = int(position.x) % m_CellSize;
-		row = (static_cast<int>(position.x) - remainder) / m_CellSize;
-	}
-
-	//Find the nearest Grid X Position
-	{
-		const int remainder = int(position.y) % m_CellSize;
-		col = (static_cast<int>(position.y) - remainder) / m_CellSize;
-	}
+	GetCellData(position, row, col);
 	return std::make_pair(row, col);
 }
 
 void dae::GridSystem::GetCellData(const std::shared_ptr<GridBlock> block, int& row, int& col) const
 {
 	auto position = block->GetBlock()->GetPosition();
-	//Find the nearest Grid X Position
-	{
-		const int remainder = int(position.x) % m_CellSize;
-		row = (static_cast<int>(position.x) - remainder) / m_CellSize;
-	}
-
-	//Find the nearest Grid X Position
-	{
-		const int remainder = int(position.y) % m_CellSize;
-		col = (static_cast<int>(position.y) - remainder) / m_CellSize;
-	}
+	GetCellData(position, row, col);
 }
 
-bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, Direction dir)
+bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, MovementDirection dir)
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -274,36 +224,85 @@ bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, Direction di
 
 	switch (dir)
 	{
-	case Direction::Up:
-	{
-		if (GetCellState(row, --col))
-			//return true;
-			return false;
-		break;
-	}
-	case Direction::Down:
-	{
-		if (GetCellState(row, ++col))
-			//return true;
-			return false;
-		break;
-	}
-	case Direction::Left:
+	case MovementDirection::Up:
 	{
 		if (GetCellState(--row, col))
-			//return true;
 			return false;
+
 		break;
 	}
-	case Direction::Right:
+	case MovementDirection::Down:
 	{
 		if (GetCellState(++row, col))
-			//return true;
 			return false;
+
 		break;
+	}
+	case MovementDirection::Left:
+	{
+		if (GetCellState(row, --col))
+			return false;
+
+		break;
+	}
+	case MovementDirection::Right:
+	{
+		if (GetCellState(row, ++col))
+			return false;
+
+		break;
+	}
+	default:
+	{
+		return false;
 	}
 	}
 	return true;
+}
+
+std::pair<int, int>  dae::GridSystem::GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection dir)
+{
+	int row, col;
+	GetCellData(position, row, col);
+	switch (dir)
+	{
+	case MovementDirection::Up:
+	{
+		if (!IsAccesingBlockOutsideOfGrid(--row, col))
+			return std::pair<int, int>{row, col};
+	}
+	case MovementDirection::Down:
+	{
+		if (!IsAccesingBlockOutsideOfGrid(++row, col))
+			return std::pair<int, int>{row, col};
+	}
+	case MovementDirection::Left:
+	{
+		if (!IsAccesingBlockOutsideOfGrid(row, --col))
+			return std::pair<int, int>{row, col};
+	}
+	case MovementDirection::Right:
+	{
+		if (!IsAccesingBlockOutsideOfGrid(row, ++col))
+			return std::pair<int, int>{row, col};
+	}
+	default:
+		return std::pair<int, int>{-1, -1};
+	}
+}
+
+bool dae::GridSystem::IsAccesingBlockOutsideOfGrid(int row, int col)const
+{
+	if (row < 0)
+		return true;
+	if (row > m_Rows - 1)
+		return true;
+
+	if (col < 0)
+		return true;
+	if (col > m_Columns - 1)
+		return true;
+	return false;
 }
 
 bool dae::GridSystem::DestroyCell(int row, int col)
@@ -385,9 +384,9 @@ void dae::GridSystem::LoadMap(std::string path)
 	{
 		std::cout << "Opening Map File Failed" << std::endl;
 	}
-	for (int i = 0; i < m_Columns; i++)
+	for (int i = 0; i < m_Rows; i++)
 	{
-		for (int j = 0; j < m_Rows; ++j)
+		for (int j = 0; j < m_Columns; ++j)
 		{
 			mapFile.get(tile);
 			SetCellState(i, j, static_cast<CellDefinition>(std::atoi(&tile)));
@@ -399,21 +398,24 @@ void dae::GridSystem::LoadMap(std::string path)
 
 void dae::GridSystem::DefineMap()
 {
-	for (int i = 0; i < m_Columns; i++)
+	for (int i = 0; i < m_Rows; i++)
 	{
-		for (int j = 0; j < m_Rows; ++j)
+		for (int j = 0; j < m_Columns; ++j)
 		{
 			switch (m_GridDefinition[i][j])
 			{
 			case CellDefinition::Normal:
-
+				m_pBlocks[i][j]->SetBlockColor(BlockColor::Blue);
 				break;
 			case CellDefinition::Empty:
 				DestroyCell(i, j);
 				break;
 			case CellDefinition::Player1:
 				DestroyCell(i, j);
-				//m_pPlayer1->GetCharacter()->SetPosition();
+				glm::vec3 pos = GetCellPosition(i, j);
+				pos.x += 16;
+				pos.y += 16;
+				m_Player1StartPos = pos;
 				break;
 			case CellDefinition::Player2:
 				DestroyCell(i, j);
@@ -425,7 +427,11 @@ void dae::GridSystem::DefineMap()
 				DestroyCell(i, j);
 				break;
 			case CellDefinition::Egg:
-				DestroyCell(i, j);
+				m_pBlocks[i][j]->SetBlockColor(BlockColor::Egg);
+				break;
+
+			case CellDefinition::Diamond:
+				m_pBlocks[i][j]->SetBlockColor(BlockColor::Diamond);
 				break;
 			}
 		}

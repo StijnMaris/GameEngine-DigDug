@@ -9,14 +9,6 @@ namespace  dae {
 	class Scene;
 	class GridBlock;
 
-	enum class Direction
-	{
-		Up,
-		Down,
-		Left,
-		Right
-	};
-
 	enum class CellDefinition
 	{
 		Normal = 0,
@@ -26,6 +18,7 @@ namespace  dae {
 		VSPlayer2 = 4,
 		SnoBee = 5,
 		Egg = 6,
+		Diamond = 7,
 	};
 	class GameObject;
 	class Player;
@@ -60,7 +53,10 @@ namespace  dae {
 		void GetCellData(const glm::vec3 position, int& row, int& col) const;
 		std::pair<int, int> GetCellData(const glm::vec3 position) const;
 		void GetCellData(const std::shared_ptr<GridBlock> block, int& row, int&col) const;
-		bool CanMoveInDirection(const glm::vec3& position, Direction dir);
+
+		bool CanMoveInDirection(const glm::vec3& position, MovementDirection dir);
+		std::pair<int, int>  GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection dir);
+		bool IsAccesingBlockOutsideOfGrid(int row, int col)const;
 
 		bool DestroyCell(int row, int column);
 
