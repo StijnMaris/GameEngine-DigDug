@@ -1,9 +1,9 @@
 #include "MiniginPCH.h"
 #include "LevelScene.h"
-#include "SceneManager.h"
+//#include "SceneManager.h"
 #include "Time.h"
 #include "GameObject.h"
-#include "TextureComponent.h"
+//#include "TextureComponent.h"
 #include "RenderComponent.h"
 #include "Scene.h"
 #include "ResourceManager.h"
@@ -11,9 +11,9 @@
 #include "FPSComponent.h"
 #include "InputManager.h"
 #include "CommandComponent.h"
-#include "ColliderComponent.h"
-#include "GridBlock.h"
-#include "Renderer.h"
+//#include "ColliderComponent.h"
+//#include "GridBlock.h"
+//#include "Renderer.h"
 #include "GridSystem.h"
 #include "Observer.h"
 
@@ -28,7 +28,7 @@ void dae::LevelScene::Init()
 	go->SetPosition(0, 0);
 	AddGameObject(go);*/
 
-	m_pTheGrid = std::make_shared<GridSystem>(25, 20);
+	m_pTheGrid = std::make_shared<GridSystem>(25, 20, "../Data/GridLevel.txt");
 	m_pTheGrid->GetGridSystem()->Init();
 	m_pTheGrid->GetGridSystem()->SetPosition(16, 16);
 	m_pTheGrid->Init();

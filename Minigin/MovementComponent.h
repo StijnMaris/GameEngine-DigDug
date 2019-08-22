@@ -28,7 +28,9 @@ namespace  dae {
 		glm::vec3 m_StartPos;
 		glm::vec3 m_Destination;
 
-		bool m_IsDestinationSet;
+		float m_MovementSpeed;
+
+		int m_Accuracy;
 
 		/*SDL_Rect m_BoundRect;
 

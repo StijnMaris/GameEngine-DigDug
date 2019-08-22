@@ -6,12 +6,13 @@
 namespace dae {
 	enum class BlockColor
 	{
-		Black = 0,
-		Blue = 1,
+		Empty = 0,
+		Ice = 1,
 		Egg = 2,
 		Diamond = 3,
+		Wall = 4
 	};
-
+	enum class MovementDirection;
 	class GameObject;
 	class GridBlock
 	{
@@ -40,6 +41,8 @@ namespace dae {
 		void SetBlockColor(BlockColor color);
 
 		bool CheckIfColliding(SDL_Rect& otherRect) const;
+
+		void Slide(MovementDirection& Direction);
 
 	private:
 		std::shared_ptr<GameObject> m_pBlock;

@@ -15,11 +15,11 @@ void dae::ActionComponent::DoAction(std::shared_ptr<GridSystem> grid, MovementDi
 	{
 		if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && !grid->CanMoveInDirection(grid->GetCellPosition(neighborPos), movDir) && grid->GetGridBlockAtPosition(neighborPos)->GetBlockColor() != BlockColor::Diamond)
 		{
-			std::pair<int, int> block = grid->GetNeighboringBlockInDirection(m_pTransform->GetPosition(), movDir);
-			grid->DestroyCell(block.first, block.second);
+			grid->DestroyCell(neighborPos.first, neighborPos.second);
 		}
 		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && grid->CanMoveInDirection(grid->GetCellPosition(neighborPos), movDir))
 		{
+			grid->GetGridBlockAtPosition(neighborPos);
 		}
 	}
 }

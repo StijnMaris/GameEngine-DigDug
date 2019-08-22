@@ -19,13 +19,14 @@ namespace  dae {
 		SnoBee = 5,
 		Egg = 6,
 		Diamond = 7,
+		Wall = 8,
 	};
 	class GameObject;
 	class Player;
 	class GridSystem final
 	{
 	public:
-		GridSystem(int rows, int cols);
+		GridSystem(int rows, int cols, std::string filePath);
 
 		void Init();
 
@@ -39,10 +40,10 @@ namespace  dae {
 
 		bool GetCellState(int row, int col) const;
 		bool GetCellState(std::pair<int, int> cellData) const;
-		bool GetCellState(glm::vec3 position) const;
+		bool GetCellState(glm::vec3& position) const;
 
 		void SetCellState(int row, int col, bool newState);
-		void SetCellState(glm::vec3 position, bool newState);
+		void SetCellState(glm::vec3& position, bool newState);
 		void SetCellState(std::shared_ptr<GridBlock> newBlock);
 		void SetCellState(int row, int col, CellDefinition cellDef);
 
@@ -51,20 +52,21 @@ namespace  dae {
 		glm::vec3 GetCellPosition(const glm::vec3& position) const;
 
 		void GetCellData(const glm::vec3 position, int& row, int& col) const;
-		std::pair<int, int> GetCellData(const glm::vec3 position) const;
+		std::pair<int, int> GetCellData(const glm::vec3& position) const;
 		void GetCellData(const std::shared_ptr<GridBlock> block, int& row, int&col) const;
 
 		std::shared_ptr<GridBlock> GetGridBlockAtPosition(int row, int col) const;
 		std::shared_ptr<GridBlock> GetGridBlockAtPosition(std::pair<int, int> cellData) const;
-		std::shared_ptr<GridBlock> GetGridBlockAtPosition(glm::vec3 position) const;
+		std::shared_ptr<GridBlock> GetGridBlockAtPosition(glm::vec3& position) const;
 
 		bool CanMoveInDirection(const glm::vec3& position, MovementDirection dir);
-		std::pair<int, int>  GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection dir);
+		std::pair<int, int>  GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection& dir);
+
 		bool IsAccesingBlockOutsideOfGrid(int row, int col)const;
 
 		bool DestroyCell(int row, int column);
 
-		float GetDistanceBetween(glm::vec3 start, glm::vec3 end);
+		float GetDistanceBetween(glm::vec3& start, glm::vec3& end);
 
 		int GetCellSize() const
 		{
@@ -91,7 +93,7 @@ namespace  dae {
 
 		void CheckForCollision();
 
-		void LoadMap(std::string path);
+		void LoadMap(std::string& path);
 
 		void DefineMap();
 
@@ -118,5 +120,7 @@ namespace  dae {
 
 		std::vector<std::shared_ptr<Observer>> m_pObservers;
 		int m_numObservers;
+
+		std::string m_FilePath;
 	};
 }

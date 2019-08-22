@@ -21,7 +21,7 @@ void dae::GridBlock::Init()
 {
 	m_pBlock->Init();
 	m_pBlock->SetPosition(m_Pos);
-	m_pBlock->SetScale(2,2);
+	m_pBlock->SetScale(2, 2);
 	m_pBlock->AddComponent(std::make_shared<TextureComponent>("Ground.png"));
 	m_pBlock->AddComponent(std::make_shared<SpriteComponent>(m_pBlock->GetComponent<TextureComponent>(), 6, 1, static_cast<int>(m_Color)));
 	m_pBlock->AddComponent(std::make_shared<RenderComponent>(m_pBlock->GetComponent<SpriteComponent>()));
@@ -32,7 +32,7 @@ bool dae::GridBlock::Destroy()
 {
 	if (!m_Destroyed)
 	{
-		SetBlockColor(BlockColor::Black);
+		SetBlockColor(BlockColor::Empty);
 		return true;
 	}
 	return false;
@@ -46,7 +46,7 @@ void dae::GridBlock::SetBlockColor(BlockColor color)
 
 bool dae::GridBlock::CheckIfColliding(SDL_Rect& otherRect) const
 {
-	if (m_Color > BlockColor::Blue)
+	if (m_Color > BlockColor::Empty)
 	{
 		auto collider = m_pBlock->GetComponent<ColliderComponent>()->GetCollider();
 		return SDL_HasIntersection(&collider, &otherRect);

@@ -11,7 +11,7 @@
 #include <fstream>
 #include "Observer.h"
 
-dae::GridSystem::GridSystem(int rows, int cols) :m_Rows(rows), m_Columns(cols), m_numObservers(0)
+dae::GridSystem::GridSystem(int rows, int cols, std::string filePath) :m_Rows(rows), m_Columns(cols), m_FilePath(filePath), m_numObservers(0)
 {
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
 	m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug.png", 3, 4);
@@ -111,7 +111,7 @@ void dae::GridSystem::SetUpGrid()
 	{
 		for (int j = 0; j < m_Columns; ++j)
 		{
-			BlockColor color = BlockColor::Blue;
+			BlockColor color = BlockColor::Ice;
 
 			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_GridStartPos.x + j * m_CellSize, m_GridStartPos.y + i * m_CellSize,0 }, i, j, color);
 		}
@@ -122,7 +122,7 @@ void dae::GridSystem::SetUpGrid()
 	{
 		m_GridDefinition[i].resize(m_Columns);
 	}
-	LoadMap("../Data/GridLevel.txt");
+	LoadMap(m_FilePath);
 }
 
 bool dae::GridSystem::GetCellState(int row, int col) const
@@ -139,7 +139,7 @@ bool dae::GridSystem::GetCellState(std::pair<int, int> cellData) const
 	return GetCellState(cellData.first, cellData.second);
 }
 
-bool dae::GridSystem::GetCellState(glm::vec3 position) const
+bool dae::GridSystem::GetCellState(glm::vec3& position) const
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -151,7 +151,7 @@ void dae::GridSystem::SetCellState(int row, int col, bool newState)
 	m_Grid[row][col] = newState;
 }
 
-void dae::GridSystem::SetCellState(glm::vec3 position, bool newState)
+void dae::GridSystem::SetCellState(glm::vec3& position, bool newState)
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -160,7 +160,7 @@ void dae::GridSystem::SetCellState(glm::vec3 position, bool newState)
 
 void dae::GridSystem::SetCellState(std::shared_ptr<GridBlock> newBlock)
 {
-	const auto blockPos = newBlock->GetBlock()->GetPosition();
+	auto blockPos = newBlock->GetBlock()->GetPosition();
 	SetCellState(blockPos, true);
 	m_pBlocks[newBlock->GetRow()][newBlock->GetColumn()] = newBlock;
 }
@@ -202,7 +202,7 @@ void dae::GridSystem::GetCellData(const glm::vec3 position, int& row, int& col) 
 	}
 }
 
-std::pair<int, int> dae::GridSystem::GetCellData(const glm::vec3 position) const
+std::pair<int, int> dae::GridSystem::GetCellData(const glm::vec3& position) const
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -225,7 +225,7 @@ std::shared_ptr<dae::GridBlock> dae::GridSystem::GetGridBlockAtPosition(std::pai
 	return GetGridBlockAtPosition(cellData.first, cellData.second);
 }
 
-std::shared_ptr<dae::GridBlock> dae::GridSystem::GetGridBlockAtPosition(glm::vec3 position) const
+std::shared_ptr<dae::GridBlock> dae::GridSystem::GetGridBlockAtPosition(glm::vec3& position) const
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -277,7 +277,7 @@ bool dae::GridSystem::CanMoveInDirection(const glm::vec3& position, MovementDire
 	return true;
 }
 
-std::pair<int, int>  dae::GridSystem::GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection dir)
+std::pair<int, int>  dae::GridSystem::GetNeighboringBlockInDirection(const glm::vec3& position, MovementDirection& dir)
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -345,7 +345,7 @@ bool dae::GridSystem::DestroyCell(int row, int col)
 	return m_pBlocks[row][col]->Destroy();
 }
 
-float dae::GridSystem::GetDistanceBetween(glm::vec3 start, glm::vec3 end)
+float dae::GridSystem::GetDistanceBetween(glm::vec3& start, glm::vec3& end)
 {
 	return std::sqrtf(std::powf(end.x - start.x, 2) + std::powf(end.y - start.y, 2));
 }
@@ -392,7 +392,7 @@ void dae::GridSystem::CheckForCollision()
 	}*/
 }
 
-void dae::GridSystem::LoadMap(std::string path)
+void dae::GridSystem::LoadMap(std::string& path)
 {
 	char tile;
 	std::ifstream mapFile(path);
@@ -406,8 +406,16 @@ void dae::GridSystem::LoadMap(std::string path)
 		for (int j = 0; j < m_Columns; ++j)
 		{
 			mapFile.get(tile);
-			SetCellState(i, j, static_cast<CellDefinition>(std::atoi(&tile)));
-			mapFile.ignore();
+			if (i == 0 || j == 0 || i == m_Rows - 1 || j == m_Columns - 1)
+			{
+				SetCellState(i, j, CellDefinition::Wall);
+				mapFile.ignore();
+			}
+			else
+			{
+				SetCellState(i, j, static_cast<CellDefinition>(std::atoi(&tile)));
+				mapFile.ignore();
+			}
 		}
 	}
 	mapFile.close();
@@ -422,7 +430,7 @@ void dae::GridSystem::DefineMap()
 			switch (m_GridDefinition[i][j])
 			{
 			case CellDefinition::Normal:
-				m_pBlocks[i][j]->SetBlockColor(BlockColor::Blue);
+				m_pBlocks[i][j]->SetBlockColor(BlockColor::Ice);
 				break;
 			case CellDefinition::Empty:
 				DestroyCell(i, j);
@@ -449,6 +457,10 @@ void dae::GridSystem::DefineMap()
 
 			case CellDefinition::Diamond:
 				m_pBlocks[i][j]->SetBlockColor(BlockColor::Diamond);
+				break;
+
+			case CellDefinition::Wall:
+				m_pBlocks[i][j]->SetBlockColor(BlockColor::Wall);
 				break;
 			}
 		}

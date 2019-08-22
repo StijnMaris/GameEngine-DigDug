@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
+#include <glm/vec3.hpp>
 
 namespace dae {
 	enum class MovementDirection;
@@ -14,9 +15,11 @@ namespace dae {
 
 		void DoAction(std::shared_ptr<GridSystem> grid, MovementDirection movDir);
 
-		void Update() override {}
+		void Update() override {};
 
 	private:
 		std::shared_ptr<Transform> m_pTransform;
+		glm::vec3 m_StartPos;
+		glm::vec3 m_Destination;
 	};
 }
