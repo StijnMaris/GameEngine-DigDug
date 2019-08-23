@@ -25,7 +25,7 @@ void dae::Character::Init()
 	m_pCharacter->AddComponent(std::make_shared<CommandComponent>());
 	m_pCharacter->AddComponent(std::make_shared<ActionComponent>(m_pCharacter->GetComponent<Transform>()));
 	m_pCharacter->AddComponent(std::make_shared<ColliderComponent>(m_pCharacter->GetComponent<Transform>(), m_pCharacter->GetComponent<SpriteComponent>()->GetRectToDraw()));
-	m_pCharacter->AddComponent(std::make_shared<MovementComponent>(m_pCharacter->GetComponent<Transform>(), m_pCharacter->GetComponent<ColliderComponent>()->GetCollider()));
+	m_pCharacter->AddComponent(std::make_shared<MovementComponent>(m_pCharacter->GetComponent<Transform>(), m_pCharacter->GetComponent<ColliderComponent>()->GetCollider(), 0.1f));
 }
 
 void dae::Character::Update()

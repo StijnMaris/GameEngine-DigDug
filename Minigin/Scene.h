@@ -8,7 +8,8 @@ namespace dae
 	{
 	public:
 		Scene(const std::string& name);
-		void AddGameObject(const std::shared_ptr<GameObject>& gameObject);
+		void AddGameObject(const std::shared_ptr<GameObject> gameObject);
+		void RemoveGameObject(const std::shared_ptr<GameObject> gameObject);
 
 		virtual void Update();
 		virtual void Render() const;
@@ -19,10 +20,10 @@ namespace dae
 		}
 
 		virtual ~Scene();
-		Scene(const Scene& other) = delete;
-		Scene(Scene&& other) = delete;
-		Scene& operator=(const Scene& other) = delete;
-		Scene& operator=(Scene&& other) = delete;
+		//Scene(const Scene& other) = delete;
+		//Scene(Scene&& other) = delete;
+		//Scene& operator=(const Scene& other) = delete;
+		//Scene& operator=(Scene&& other) = delete;
 
 	private:
 

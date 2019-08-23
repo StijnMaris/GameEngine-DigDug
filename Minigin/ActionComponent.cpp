@@ -24,7 +24,7 @@ void dae::ActionComponent::DoAction(std::shared_ptr<GridSystem> grid, MovementDi
 		}
 		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && grid->CanMoveInDirection(neighborPos, movDir))
 		{
-			grid->SlideBlockInDirection(neighborPos, movDir);
+			grid->SlideBlockInDirection(neighborPos, movDir, color);
 		}
 	}
 }

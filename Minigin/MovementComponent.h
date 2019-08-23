@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseComponent.h"
-//#include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <SDL.h>
 
@@ -10,7 +9,7 @@ namespace  dae {
 	class MovementComponent final : public BaseComponent
 	{
 	public:
-		MovementComponent(std::shared_ptr<Transform> transform, SDL_Rect rect);
+		MovementComponent(std::shared_ptr<Transform> transform, SDL_Rect rect, float movSpeed);
 		~MovementComponent() = default;
 
 		void MoveUp(std::shared_ptr<GridSystem> grid);

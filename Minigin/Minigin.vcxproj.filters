@@ -150,6 +150,9 @@
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SlidingBlock.h">
+      <Filter>Header Files\GameStuff</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Log.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="Observers.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SlidingBlock.cpp">
+      <Filter>Source Files\GameStuff</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

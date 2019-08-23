@@ -3,14 +3,14 @@
 #include "Transform.h"
 #include "GridSystem.h"
 #include "Time.h"
+#include "Character.h"
 
-dae::MovementComponent::MovementComponent(std::shared_ptr<Transform> transform, SDL_Rect rect) :
-	BaseComponent("MovementComponent"), m_pTransform(transform), m_Rect(rect)
+dae::MovementComponent::MovementComponent(std::shared_ptr<Transform> transform, SDL_Rect rect, float movSpeed) :
+	BaseComponent("MovementComponent"), m_pTransform(transform), m_Rect(rect), m_MovementSpeed(movSpeed)
 {
 	m_GridMovConstraintW = m_Rect.w;
 	m_GridMovConstraintH = m_Rect.h;
 
-	m_MovementSpeed = 0.1f;
 	m_Accuracy = 5;
 
 	m_Destination = glm::vec3{};

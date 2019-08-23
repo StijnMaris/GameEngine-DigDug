@@ -20,7 +20,7 @@ namespace dae {
 		GridBlock(glm::vec3 pos, int row, int col, BlockColor color, bool destroyed = false);
 		virtual ~GridBlock();
 
-		void Init();
+		virtual void Init();
 		int GetRow() const { return m_Row; }
 		int GetColumn() const { return m_Col; }
 
@@ -44,7 +44,6 @@ namespace dae {
 
 	private:
 		std::shared_ptr<GameObject> m_pBlock;
-
 		glm::vec3 m_Pos;
 		int m_Row;
 		int m_Col;

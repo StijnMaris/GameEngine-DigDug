@@ -3,7 +3,7 @@
 //#include "SceneManager.h"
 #include "Time.h"
 #include "GameObject.h"
-//#include "TextureComponent.h"
+#include "Character.h"
 #include "RenderComponent.h"
 #include "Scene.h"
 #include "ResourceManager.h"
@@ -27,12 +27,11 @@ void dae::LevelScene::Init()
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
 	go->SetPosition(0, 0);
 	AddGameObject(go);*/
-
-	m_pTheGrid = std::make_shared<GridSystem>(25, 20, "../Data/GridLevel.txt");
+	m_FilePath = "../Data/GridLevel.txt";
+	m_pTheGrid = std::make_shared<GridSystem>(25, 20, m_FilePath, shared_from_this());
 	m_pTheGrid->GetGridSystem()->Init();
 	m_pTheGrid->GetGridSystem()->SetPosition(16, 16);
 	m_pTheGrid->Init();
-	m_pTheGrid->AddToScene(*this);
 
 	InitPlayer1Controles(m_pTheGrid->GetPlayer());
 	AddGameObject(m_pTheGrid->GetPlayer()->GetCharacter());

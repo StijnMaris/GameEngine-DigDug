@@ -27,5 +27,6 @@ namespace dae {
 	private:
 		std::shared_ptr<GridSystem> m_pTheGrid;
 		std::shared_ptr<GameObject> m_Score;
+		std::string m_FilePath;
 	};
 }

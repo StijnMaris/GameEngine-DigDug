@@ -1,13 +1,18 @@
 #pragma once
-//#include "Block.h"
 #include <glm/vec3.hpp>
-#include "Character.h"
 
 namespace  dae {
+	enum class BlockColor;
 	enum class Event;
+	enum class MovementDirection;
 	class Observer;
 	class Scene;
 	class GridBlock;
+	class Character;
+	class Scene;
+	class GameObject;
+	class Player;
+	class SlidingBlock;
 
 	enum class CellDefinition
 	{
@@ -21,12 +26,11 @@ namespace  dae {
 		Diamond = 7,
 		Wall = 8,
 	};
-	class GameObject;
-	class Player;
-	class GridSystem final
+
+	class GridSystem final :public std::enable_shared_from_this<GridSystem>
 	{
 	public:
-		GridSystem(int rows, int cols, std::string filePath);
+		GridSystem(int rows, int cols, std::string& filePath, std::shared_ptr<Scene> scene);
 
 		void Init();
 
@@ -34,7 +38,8 @@ namespace  dae {
 		void Draw() const;
 		void Reset();
 
-		void AddToScene(Scene& scene);
+		void AddToScene(std::shared_ptr<GameObject> object)const;
+		void RemoveFromScene(std::shared_ptr<GameObject> object)const;
 
 		void SetUpGrid();
 
@@ -91,13 +96,15 @@ namespace  dae {
 			return m_pPlayer1;
 		}
 
-		void SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir);
-
+		void SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir, BlockColor& color);
+		void UpdateSlidingBlocks();
 		void CheckForCollision();
 
 		void LoadMap(std::string& path);
 
 		void DefineMap();
+
+		void AddGridToScene();
 
 		void addObserver(std::shared_ptr<Observer> observer);
 		void removeObserver(std::shared_ptr<Observer> observer);
@@ -113,12 +120,18 @@ namespace  dae {
 		std::vector<std::vector<CellDefinition>> m_GridDefinition;
 		std::vector<std::vector<std::shared_ptr<GridBlock>>> m_pBlocks;
 
+		std::vector<std::shared_ptr<SlidingBlock>> m_pSlidingBlocks;
+
+		std::vector<std::shared_ptr<Character>> m_pEnemies;
+
 		glm::vec3 m_GridStartPos{};
 		glm::vec3 m_Player1StartPos{};
 		glm::vec3 m_Player2StartPos{};
 		int m_CellSize = 32;
 		int m_Rows = 0;
 		int m_Columns = 0;
+
+		std::weak_ptr<Scene> m_Scene;
 
 		std::vector<std::shared_ptr<Observer>> m_pObservers;
 		int m_numObservers;

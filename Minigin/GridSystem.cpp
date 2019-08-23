@@ -6,15 +6,17 @@
 #include <glm/vec2.hpp>
 #include "Scene.h"
 #include "ColliderComponent.h"
-//#include "RenderComponent.h"
-//#include "CommandComponent.h"
+#include "Character.h"
+//#include "Scene.h"
 #include <fstream>
 #include "Observer.h"
+#include "SlidingBlock.h"
+#include "MovementComponent.h"
+#include <algorithm>
 
-dae::GridSystem::GridSystem(int rows, int cols, std::string filePath) :m_Rows(rows), m_Columns(cols), m_FilePath(filePath), m_numObservers(0)
+dae::GridSystem::GridSystem(int rows, int cols, std::string& filePath, std::shared_ptr<Scene> scene) :m_Rows(rows), m_Columns(cols), m_FilePath(filePath), m_Scene(scene), m_numObservers(0)
 {
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
-	m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug.png", 3, 4);
 }
 
 void dae::GridSystem::Init()
@@ -30,14 +32,13 @@ void dae::GridSystem::Init()
 		}
 	}
 	DefineMap();
-
-	m_pPlayer1->Init();
-	m_pPlayer1->SetPosition(m_Player1StartPos);
+	AddGridToScene();
 }
 
 void dae::GridSystem::Update()
 {
 	m_pPlayer1->Update();
+	UpdateSlidingBlocks();
 }
 
 void dae::GridSystem::Draw() const
@@ -79,15 +80,18 @@ void dae::GridSystem::Reset()
 	DefineMap();
 }
 
-void dae::GridSystem::AddToScene(Scene& scene)
+void dae::GridSystem::AddToScene(std::shared_ptr<GameObject> object)const
 {
-	for (size_t i = 0; i < m_Rows; i++)
-	{
-		for (int j = 0; j < m_Columns; j++)
-		{
-			scene.AddGameObject(m_pBlocks[i][j]->GetBlock());
-		}
-	}
+	std::shared_ptr<Scene> scene = m_Scene.lock();
+	if (scene)
+		scene->AddGameObject(object);
+}
+
+void dae::GridSystem::RemoveFromScene(std::shared_ptr<GameObject> object) const
+{
+	std::shared_ptr<Scene> scene = m_Scene.lock();
+	if (scene)
+		scene->RemoveGameObject(object);
 }
 
 void dae::GridSystem::SetUpGrid()
@@ -350,7 +354,7 @@ float dae::GridSystem::GetDistanceBetween(glm::vec3& start, glm::vec3& end)
 	return std::sqrtf(std::powf(end.x - start.x, 2) + std::powf(end.y - start.y, 2));
 }
 
-void dae::GridSystem::SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir)
+void dae::GridSystem::SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir, BlockColor& color)
 {
 	int row, col;
 	GetCellData(position, row, col);
@@ -360,29 +364,86 @@ void dae::GridSystem::SlideBlockInDirection(const glm::vec3& position, MovementD
 	case MovementDirection::Up:
 	{
 		if (!IsAccesingBlockOutsideOfGrid(row, col)) {
-			auto block = std::make_shared<GridBlock>(glm::vec3{ position.x, position.y,0 }, -1, -1, BlockColor::Egg);
-			block->Init();
 			DestroyCell(row, col);
+
+			auto block = std::make_shared<SlidingBlock>(glm::vec3{ position.x, position.y,0 }, MovementDirection::Up, row, col, color);
+			block->Init();
+			AddToScene(block->GetBlock());
+			m_pSlidingBlocks.push_back(block);
 		}
+		break;
 	}
 	case MovementDirection::Down:
 	{
-		//if (!IsAccesingBlockOutsideOfGrid(++row, col))
-			//return std::pair<int, int>{row, col};
+		if (!IsAccesingBlockOutsideOfGrid(row, col)) {
+			DestroyCell(row, col);
+
+			auto block = std::make_shared<SlidingBlock>(glm::vec3{ position.x, position.y,0 }, MovementDirection::Down, row, col, color);
+			block->Init();
+			AddToScene(block->GetBlock());
+			m_pSlidingBlocks.push_back(block);
+		}
+		break;
 	}
 	case MovementDirection::Left:
 	{
-		//if (!IsAccesingBlockOutsideOfGrid(row, --col))
-			//return std::pair<int, int>{row, col};
+		if (!IsAccesingBlockOutsideOfGrid(row, col)) {
+			DestroyCell(row, col);
+
+			auto block = std::make_shared<SlidingBlock>(glm::vec3{ position.x, position.y,0 }, MovementDirection::Left, row, col, color);
+			block->Init();
+			AddToScene(block->GetBlock());
+			m_pSlidingBlocks.push_back(block);
+		}
+		break;
 	}
 	case MovementDirection::Right:
 	{
-		//if (!IsAccesingBlockOutsideOfGrid(row, ++col))
-			//return std::pair<int, int>{row, col};
+		if (!IsAccesingBlockOutsideOfGrid(row, col)) {
+			DestroyCell(row, col);
+
+			auto block = std::make_shared<SlidingBlock>(glm::vec3{ position.x, position.y,0 }, MovementDirection::Right, row, col, color);
+			block->Init();
+			AddToScene(block->GetBlock());
+			m_pSlidingBlocks.push_back(block);
+		}
+		break;
 	}
 	default:
 		break;
-		//return std::pair<int, int>{-1, -1};
+	}
+}
+
+void dae::GridSystem::UpdateSlidingBlocks()
+{
+	for (std::shared_ptr<SlidingBlock> element : m_pSlidingBlocks)
+	{
+		if (CanMoveInDirection(element->GetBlock()->GetPosition(), element->GetMovementDirection()))
+		{
+			switch (element->GetMovementDirection())
+			{
+			case MovementDirection::Up:
+				element->GetBlock()->GetComponent<MovementComponent>()->MoveUp(shared_from_this());
+				break;
+			case MovementDirection::Down:
+				element->GetBlock()->GetComponent<MovementComponent>()->MoveDown(shared_from_this());
+				break;
+			case MovementDirection::Left:
+				element->GetBlock()->GetComponent<MovementComponent>()->MoveLeft(shared_from_this());
+				break;
+			case MovementDirection::Right:
+				element->GetBlock()->GetComponent<MovementComponent>()->MoveRight(shared_from_this());
+				break;
+			}
+		}
+		else
+		{
+			RemoveFromScene(element->GetBlock());
+			m_pSlidingBlocks.erase(std::remove(m_pSlidingBlocks.begin(), m_pSlidingBlocks.end(), element), m_pSlidingBlocks.end());
+			auto pos = element->GetBlock()->GetPosition();
+			SetCellState(pos, true);
+			GetGridBlockAtPosition(pos)->SetBlockColor(element->GetBlockColor());
+		}
 	}
 }
 
@@ -477,6 +538,9 @@ void dae::GridSystem::DefineMap()
 				pos.x += 16;
 				pos.y += 16;
 				m_Player1StartPos = pos;
+				m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug.png", 3, 4);
+				m_pPlayer1->Init();
+				m_pPlayer1->SetPosition(m_Player1StartPos);
 				break;
 			case CellDefinition::Player2:
 				DestroyCell(i, j);
@@ -499,6 +563,17 @@ void dae::GridSystem::DefineMap()
 				m_pBlocks[i][j]->SetBlockColor(BlockColor::Wall);
 				break;
 			}
+		}
+	}
+}
+
+void dae::GridSystem::AddGridToScene()
+{
+	for (size_t i = 0; i < m_Rows; i++)
+	{
+		for (int j = 0; j < m_Columns; j++)
+		{
+			AddToScene(m_pBlocks[i][j]->GetBlock());
 		}
 	}
 }
