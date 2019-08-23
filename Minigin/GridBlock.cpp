@@ -10,7 +10,8 @@
 dae::GridBlock::GridBlock(glm::vec3 pos, int row, int col, BlockColor color, bool destroyed) :
 	m_Pos(pos), m_Row(row), m_Col(col), m_Color(color), m_Destroyed(destroyed)
 {
-	m_pBlock = std::make_shared<GameObject>("GridBlock");
+	std::string name = "GridBlock [" + std::to_string(m_Row) + "][" + std::to_string(m_Col) + "]";
+	m_pBlock = std::make_shared<GameObject>(name);
 }
 
 dae::GridBlock::~GridBlock()

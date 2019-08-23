@@ -350,6 +350,42 @@ float dae::GridSystem::GetDistanceBetween(glm::vec3& start, glm::vec3& end)
 	return std::sqrtf(std::powf(end.x - start.x, 2) + std::powf(end.y - start.y, 2));
 }
 
+void dae::GridSystem::SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir)
+{
+	int row, col;
+	GetCellData(position, row, col);
+
+	switch (dir)
+	{
+	case MovementDirection::Up:
+	{
+		if (!IsAccesingBlockOutsideOfGrid(row, col)) {
+			auto block = std::make_shared<GridBlock>(glm::vec3{ position.x, position.y,0 }, -1, -1, BlockColor::Egg);
+			block->Init();
+			DestroyCell(row, col);
+		}
+	}
+	case MovementDirection::Down:
+	{
+		//if (!IsAccesingBlockOutsideOfGrid(++row, col))
+			//return std::pair<int, int>{row, col};
+	}
+	case MovementDirection::Left:
+	{
+		//if (!IsAccesingBlockOutsideOfGrid(row, --col))
+			//return std::pair<int, int>{row, col};
+	}
+	case MovementDirection::Right:
+	{
+		//if (!IsAccesingBlockOutsideOfGrid(row, ++col))
+			//return std::pair<int, int>{row, col};
+	}
+	default:
+		break;
+		//return std::pair<int, int>{-1, -1};
+	}
+}
+
 void dae::GridSystem::CheckForCollision()
 {
 	/*for (int i = 0; i < m_Columns; i++)

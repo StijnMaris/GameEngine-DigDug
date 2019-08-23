@@ -10,16 +10,21 @@ dae::ActionComponent::ActionComponent(std::shared_ptr<Transform> transform) :Bas
 
 void dae::ActionComponent::DoAction(std::shared_ptr<GridSystem> grid, MovementDirection movDir)
 {
-	std::pair<int, int> neighborPos = grid->GetNeighboringBlockInDirection(m_pTransform->GetPosition(), movDir);
-	if (neighborPos.first >= 0 && neighborPos.second >= 0)
+	std::pair<int, int> neighborGridPos = grid->GetNeighboringBlockInDirection(m_pTransform->GetPosition(), movDir);
+	glm::vec3 neighborPos = grid->GetCellPosition(neighborGridPos);
+	if (neighborGridPos.first >= 0 && neighborGridPos.second >= 0)
 	{
-		if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && !grid->CanMoveInDirection(grid->GetCellPosition(neighborPos), movDir) && grid->GetGridBlockAtPosition(neighborPos)->GetBlockColor() != BlockColor::Diamond)
+		BlockColor color = grid->GetGridBlockAtPosition(neighborGridPos)->GetBlockColor();
+		if (color == BlockColor::Wall)
 		{
-			grid->DestroyCell(neighborPos.first, neighborPos.second);
 		}
-		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && grid->CanMoveInDirection(grid->GetCellPosition(neighborPos), movDir))
+		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && !grid->CanMoveInDirection(neighborPos, movDir) && color != BlockColor::Diamond)
 		{
-			grid->GetGridBlockAtPosition(neighborPos);
+			grid->DestroyCell(neighborGridPos.first, neighborGridPos.second);
+		}
+		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && grid->CanMoveInDirection(neighborPos, movDir))
+		{
+			grid->SlideBlockInDirection(neighborPos, movDir);
 		}
 	}
 }

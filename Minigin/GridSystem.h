@@ -51,9 +51,9 @@ namespace  dae {
 		glm::vec3 GetCellPosition(std::pair<int, int> cellData) const;
 		glm::vec3 GetCellPosition(const glm::vec3& position) const;
 
-		void GetCellData(const glm::vec3 position, int& row, int& col) const;
+		void GetCellData(glm::vec3 position, int& row, int& col) const;
 		std::pair<int, int> GetCellData(const glm::vec3& position) const;
-		void GetCellData(const std::shared_ptr<GridBlock> block, int& row, int&col) const;
+		void GetCellData(std::shared_ptr<GridBlock> block, int& row, int&col) const;
 
 		std::shared_ptr<GridBlock> GetGridBlockAtPosition(int row, int col) const;
 		std::shared_ptr<GridBlock> GetGridBlockAtPosition(std::pair<int, int> cellData) const;
@@ -90,6 +90,8 @@ namespace  dae {
 		{
 			return m_pPlayer1;
 		}
+
+		void SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir);
 
 		void CheckForCollision();
 

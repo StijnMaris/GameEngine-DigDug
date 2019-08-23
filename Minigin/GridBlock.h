@@ -42,8 +42,6 @@ namespace dae {
 
 		bool CheckIfColliding(SDL_Rect& otherRect) const;
 
-		void Slide(MovementDirection& Direction);
-
 	private:
 		std::shared_ptr<GameObject> m_pBlock;
 
