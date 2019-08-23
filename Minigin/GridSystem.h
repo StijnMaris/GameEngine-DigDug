@@ -69,7 +69,8 @@ namespace  dae {
 
 		bool IsAccesingBlockOutsideOfGrid(int row, int col)const;
 
-		bool DestroyCell(int row, int column);
+		bool DestroyCell(int row, int col);
+		bool DestroyBlock(int row, int col);
 
 		float GetDistanceBetween(glm::vec3& start, glm::vec3& end);
 

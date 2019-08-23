@@ -328,16 +328,26 @@ bool dae::GridSystem::IsAccesingBlockOutsideOfGrid(int row, int col)const
 
 bool dae::GridSystem::DestroyCell(int row, int col)
 {
-	m_Grid[row][col] = false;
-	/*if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::White)
+	SetCellState(row, col, false);
+
+	return m_pBlocks[row][col]->Destroy();
+}
+
+bool dae::GridSystem::DestroyBlock(int row, int col)
+{
+	switch (m_pBlocks[row][col]->GetBlockColor())
 	{
-		notify(Event::WhiteBlockDestroyed);
+	case BlockColor::Ice:
+		notify(Event::IceBlockDestroyed);
+		break;
+	case BlockColor::Egg:
+		notify(Event::EggBlockDestroyed);
+		break;
+	default:
+		break;
 	}
-	else if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::Yellow)
-	{
-		notify(Event::YellowBlockDestroyed);
-	}
-	else if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::Pink)
+
+	/*else if (m_pBlocks[row][col]->GetBlockColor() == BlockColor::Pink)
 	{
 		notify(Event::PinkBlockDestroyed);
 	}
@@ -346,7 +356,7 @@ bool dae::GridSystem::DestroyCell(int row, int col)
 		notify(Event::RedBlockDestroyed);
 	}*/
 
-	return m_pBlocks[row][col]->Destroy();
+	return DestroyCell(row, col);
 }
 
 float dae::GridSystem::GetDistanceBetween(glm::vec3& start, glm::vec3& end)

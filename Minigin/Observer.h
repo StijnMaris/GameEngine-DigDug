@@ -2,7 +2,7 @@
 #include <vector>
 
 namespace dae {
-	enum class Event { WhiteBlockDestroyed, YellowBlockDestroyed, PinkBlockDestroyed, RedBlockDestroyed };
+	enum class Event { IceBlockDestroyed, EggBlockDestroyed, EnemyDestroyed, ArrangedDiamonds };
 	class Observer
 	{
 	public:
@@ -73,17 +73,17 @@ namespace dae {
 		{
 			switch (event)
 			{
-			case Event::WhiteBlockDestroyed:
-				m_Score += 100;
+			case Event::IceBlockDestroyed:
+				m_Score += 30;
 				break;
 
-			case Event::YellowBlockDestroyed:
-				m_Score += 200;
+			case Event::EggBlockDestroyed:
+				m_Score += 500;
 				break;
-			case Event::PinkBlockDestroyed:
-				m_Score += 300;
+			case Event::EnemyDestroyed:
+				m_Score += 400;
 				break;
-			case Event::RedBlockDestroyed:
+			case Event::ArrangedDiamonds:
 				m_Score += 400;
 				break;
 				/*case Event::GameOver:

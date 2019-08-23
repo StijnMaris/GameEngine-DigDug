@@ -20,7 +20,7 @@ void dae::ActionComponent::DoAction(std::shared_ptr<GridSystem> grid, MovementDi
 		}
 		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && !grid->CanMoveInDirection(neighborPos, movDir) && color != BlockColor::Diamond)
 		{
-			grid->DestroyCell(neighborGridPos.first, neighborGridPos.second);
+			grid->DestroyBlock(neighborGridPos.first, neighborGridPos.second);
 		}
 		else if (!grid->CanMoveInDirection(m_pTransform->GetPosition(), movDir) && grid->CanMoveInDirection(neighborPos, movDir))
 		{

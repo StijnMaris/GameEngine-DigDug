@@ -32,6 +32,8 @@ void dae::LevelScene::Init()
 	m_pTheGrid->GetGridSystem()->Init();
 	m_pTheGrid->GetGridSystem()->SetPosition(16, 16);
 	m_pTheGrid->Init();
+	std::shared_ptr<Score> scoreObserver = std::make_shared<Score>();
+	m_pTheGrid->addObserver(scoreObserver);
 
 	InitPlayer1Controles(m_pTheGrid->GetPlayer());
 	AddGameObject(m_pTheGrid->GetPlayer()->GetCharacter());
@@ -43,9 +45,6 @@ void dae::LevelScene::Init()
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(220, 20);
 	AddGameObject(to);
-
-	std::shared_ptr<Score> theScore = std::make_shared<Score>();
-	m_pTheGrid->addObserver(theScore);
 
 	m_Score = std::make_shared<GameObject>("Score");
 	m_Score->Init();
@@ -76,12 +75,7 @@ void dae::LevelScene::Update()
 	Scene::Update();
 	m_pTheGrid->Update();
 	m_pTheGrid->CheckForCollision();
-	m_Score->GetComponent<TextComponent>()->SetText("Score: " + Score::m_Score);
-	/*auto test3 = test->GetComponent<ColliderComponent>()->GetCollider();
-	if (test2->CheckIfColliding(test3))
-	{
-		test2->SetBlockColor(BlockColor::Black);
-	}*/
+	m_Score->GetComponent<TextComponent>()->SetText("Score: " + std::to_string(Score::m_Score));
 }
 
 void dae::LevelScene::Render() const

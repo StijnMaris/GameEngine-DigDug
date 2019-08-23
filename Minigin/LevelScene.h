@@ -5,6 +5,7 @@ namespace dae {
 	class GameObject;
 	class GridSystem;
 	class Character;
+	//class Observer;
 	class LevelScene final : public Scene, public std::enable_shared_from_this<LevelScene>
 	{
 	public:
@@ -27,6 +28,7 @@ namespace dae {
 	private:
 		std::shared_ptr<GridSystem> m_pTheGrid;
 		std::shared_ptr<GameObject> m_Score;
+		//std::shared_ptr<dae::Score> m_ScoreObserver;
 		std::string m_FilePath;
 	};
 }
