@@ -28,9 +28,9 @@ void dae::LevelScene::Init()
 	go->SetPosition(0, 0);
 	AddGameObject(go);*/
 	m_FilePath = "../Data/GridLevel.txt";
-	m_pTheGrid = std::make_shared<GridSystem>(25, 20, m_FilePath, shared_from_this());
+	m_pTheGrid = std::make_shared<GridSystem>(21, 19, m_FilePath, shared_from_this());
 	m_pTheGrid->GetGridSystem()->Init();
-	m_pTheGrid->GetGridSystem()->SetPosition(16, 16);
+	m_pTheGrid->GetGridSystem()->SetPosition(16, 16 + 32 * 4);
 	m_pTheGrid->Init();
 	std::shared_ptr<Score> scoreObserver = std::make_shared<Score>();
 	m_pTheGrid->addObserver(scoreObserver);
@@ -41,7 +41,7 @@ void dae::LevelScene::Init()
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>("TitleText");
 	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("DigDug", font));
+	to->AddComponent(std::make_shared<TextComponent>("PENGO", font));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
 	to->SetPosition(220, 20);
 	AddGameObject(to);
@@ -58,7 +58,7 @@ void dae::LevelScene::Init()
 	to->Init();
 	to->AddComponent(std::make_shared<TextComponent>("FPS:", font));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(570, 10);
+	to->SetPosition(550, 10);
 	AddGameObject(to);
 
 	to = std::make_shared<GameObject>("FPS");
@@ -66,7 +66,7 @@ void dae::LevelScene::Init()
 	to->AddComponent(std::make_shared<TextComponent>(std::to_string(time.GetFps()), font));
 	to->AddComponent(std::make_shared<FPSComponent>(to->GetComponent<TextComponent>()));
 	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(610, 10);
+	to->SetPosition(590, 10);
 	AddGameObject(to);
 }
 

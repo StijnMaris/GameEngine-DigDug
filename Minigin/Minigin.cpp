@@ -23,7 +23,7 @@ void dae::Minigin::Initialize()
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640,
+		608,
 		796,
 		SDL_WINDOW_OPENGL
 	);

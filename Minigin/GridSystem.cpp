@@ -59,7 +59,7 @@ void dae::GridSystem::Draw() const
 		}
 	}
 	auto rect = m_pPlayer1->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
-	std::cout << "x: " << rect.x << " y: " << rect.y << std::endl;
+	//std::cout << "x: " << rect.x << " y: " << rect.y << std::endl;
 	Renderer::GetInstance().DrawSquareAroundCenter(glm::vec3{ rect.x,rect.y,0 }, (float)/*m_CellSize*/rect.w);
 }
 
@@ -195,8 +195,8 @@ void dae::GridSystem::GetCellData(const glm::vec3 position, int& row, int& col) 
 {
 	//Find the nearest Grid X Position
 	{
-		const int remainder = int(position.y) % m_CellSize;
-		row = (static_cast<int>(position.y) - remainder) / m_CellSize;
+		const int remainder = int(position.y - (m_GridStartPos.y - m_CellSize / 2)) % m_CellSize;
+		row = (static_cast<int>(position.y - (m_GridStartPos.y - m_CellSize / 2)) - remainder) / m_CellSize;
 	}
 
 	//Find the nearest Grid Y Position
