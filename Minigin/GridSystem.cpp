@@ -548,7 +548,7 @@ void dae::GridSystem::DefineMap()
 				pos.x += 16;
 				pos.y += 16;
 				m_Player1StartPos = pos;
-				m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug.png", 3, 4);
+				m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug2.png", 4, 4);
 				m_pPlayer1->Init();
 				m_pPlayer1->SetPosition(m_Player1StartPos);
 				break;

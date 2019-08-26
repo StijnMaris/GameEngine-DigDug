@@ -65,6 +65,11 @@ namespace dae {
 			m_StartRow = startRow;
 			m_RectToDraw.y = m_StartRow * m_SpriteHeight;
 		}
+
+		void SetIsAnimated(bool isAnimated)
+		{
+			m_IsAnimated = isAnimated;
+		}
 	private:
 		std::shared_ptr<TextureComponent> m_pTextureComp;
 		bool m_FlipHorizontal = false;
