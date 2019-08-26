@@ -9,6 +9,7 @@
 #include "Time.h"
 #include "Scene.h"
 #include "LevelScene.h"
+#include "MenuScene.h"
 
 bool dae::Minigin::m_DoContinue = true;
 
@@ -42,9 +43,13 @@ void dae::Minigin::Initialize()
 void dae::Minigin::LoadGame() const
 {
 	auto&sceneMan = SceneManager::GetInstance();
-	std::shared_ptr<Scene> level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level"));
+	const std::shared_ptr<Scene> level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level", "../Data/GridLevel.txt"));
 	std::dynamic_pointer_cast<LevelScene>(level)->Init();
 	sceneMan.SetActiveScene("Level");
+
+	const std::shared_ptr<Scene> menu = sceneMan.CreateScene(std::make_shared<MenuScene>("Menu"));
+	std::dynamic_pointer_cast<MenuScene>(menu)->Init();
+	//sceneMan.SetActiveScene("Menu");
 }
 
 void dae::Minigin::Cleanup()
