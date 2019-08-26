@@ -13,9 +13,9 @@ namespace dae {
 	enum class CharacterState
 	{
 		Idle = 0,
-		Move = 0,
-		Action = 1,
-		Die = 2
+		Move = 1,
+		Action = 2,
+		Die = 3
 	};
 
 	class GameObject;

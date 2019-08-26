@@ -33,7 +33,32 @@ void dae::Character::Update()
 	switch (m_CharacterState)
 	{
 	case CharacterState::Idle:
-		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Idle));
+		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Move));
+		break;
+	case CharacterState::Move:
+		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Move));
+
+		switch (m_MovDir)
+		{
+		case MovementDirection::Up:
+			break;
+		case MovementDirection::Down:
+			break;
+		case MovementDirection::Left:
+			if (!m_pCharacter->GetComponent<SpriteComponent>()->IsFlippedHorizontal())
+			{
+				m_pCharacter->GetComponent<SpriteComponent>()->SetFlipHorizontal(true);
+			}
+			break;
+		case MovementDirection::Right:
+			if (m_pCharacter->GetComponent<SpriteComponent>()->IsFlippedHorizontal())
+			{
+				m_pCharacter->GetComponent<SpriteComponent>()->SetFlipHorizontal(false);
+			}
+			break;
+		default:
+			break;
+		}
 		break;
 	case CharacterState::Action:
 		m_pCharacter->GetComponent<SpriteComponent>()->SetStartRow(static_cast<int>(CharacterState::Action));
