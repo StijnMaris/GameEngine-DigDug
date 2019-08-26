@@ -9,7 +9,7 @@ namespace dae {
 	class LevelScene final : public Scene, public std::enable_shared_from_this<LevelScene>
 	{
 	public:
-		LevelScene(const std::string& name);
+		LevelScene(const std::string& name, const std::string& LevelFile);
 		~LevelScene();
 		void Init();
 

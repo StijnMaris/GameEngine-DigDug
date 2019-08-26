@@ -27,7 +27,7 @@ void dae::LevelScene::Init()
 	go->AddComponent(std::make_shared<RenderComponent>(go->GetComponent<TextureComponent>()));
 	go->SetPosition(0, 0);
 	AddGameObject(go);*/
-	m_FilePath = "../Data/GridLevel.txt";
+
 	m_pTheGrid = std::make_shared<GridSystem>(21, 19, m_FilePath, shared_from_this());
 	m_pTheGrid->GetGridSystem()->Init();
 	m_pTheGrid->GetGridSystem()->SetPosition(16, 16 + 32 * 4);
@@ -112,7 +112,7 @@ void dae::LevelScene::Reset()
 	//Init();
 }
 
-dae::LevelScene::LevelScene(const std::string& name) :Scene(name)
+dae::LevelScene::LevelScene(const std::string& name, const std::string& LevelFile) :Scene(name), m_FilePath(LevelFile)
 {
 }
 
