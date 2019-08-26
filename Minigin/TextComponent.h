@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseComponent.h"
-#include "TextureComponent.h"
 
 namespace dae {
 	class TextureComponent;
@@ -9,7 +8,7 @@ namespace dae {
 	{
 	public:
 		TextComponent(const std::string& text, std::shared_ptr<Font> font);
-		virtual ~TextComponent() = default;
+		~TextComponent() = default;
 
 		void Update() override;
 

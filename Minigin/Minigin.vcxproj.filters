@@ -153,6 +153,9 @@
     <ClInclude Include="SlidingBlock.h">
       <Filter>Header Files\GameStuff</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonComponent.h">
+      <Filter>Header Files\Components\BaseComponets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Log.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="SlidingBlock.cpp">
       <Filter>Source Files\GameStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonComponent.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
