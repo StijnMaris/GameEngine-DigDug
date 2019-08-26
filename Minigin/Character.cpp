@@ -13,6 +13,7 @@ dae::Character::Character(std::string name, std::string imagePath, int rows, int
 	m_Name(name), m_PathName(imagePath), m_Rows(rows), m_Cols(cols), m_StartRow(startRow)
 {
 	m_pCharacter = std::make_shared<GameObject>(m_Name);
+	m_CharacterState = CharacterState::Idle;
 }
 
 void dae::Character::Init()

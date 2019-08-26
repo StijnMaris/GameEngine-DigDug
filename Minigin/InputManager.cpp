@@ -36,11 +36,12 @@ void dae::InputManager::Init()
 
 void dae::InputManager::MapInput(InputAction button, std::shared_ptr<Command> command)
 {
-	auto it = m_pButtons.find(button.m_ActionID);
+	const auto hash = std::hash<std::string>{}(button.m_ActionID);
+	const auto it = m_pButtons.find(static_cast<int>(hash));
 	if (it != m_pButtons.end())
-		m_pButtons.at(button.m_ActionID) = std::make_pair(button, command);
+		m_pButtons.at(static_cast<int>(hash)) = std::make_pair(button, command);
 
-	m_pButtons[button.m_ActionID] = std::make_pair(button, command);
+	m_pButtons[static_cast<int>(hash)] = std::make_pair(button, command);
 }
 
 bool dae::InputManager::InitGamepads()
@@ -120,7 +121,7 @@ void dae::InputManager::HandleInput()
 
 		if (currAction->m_IsTriggered)
 		{
-			if (currAction->m_ActionID == 16 || currAction->m_ActionID == 17)
+			if (currAction->m_ActionID == "P1Exit" || currAction->m_ActionID == "P2Exit")
 				it->second.second->execute();
 			it->second.second->AddToCommandStream();
 			//std::cout << it->second.first.PlayerIndex << std::endl;
@@ -154,35 +155,35 @@ void dae::InputManager::ProcessKeyboardInput()
 				Minigin::m_DoContinue = false;
 		}
 	}
-	for (int actionI = 0; actionI < (int)m_pButtons.size(); actionI++)
+	for (std::pair<const int, std::pair<InputAction, std::shared_ptr<Command>>>& element : m_pButtons)
 	{
-		if (keyboardState[m_pButtons[actionI].first.m_KeyboardCode])
+		if (keyboardState[element.second.first.m_KeyboardCode])
 		{
-			if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Idle || m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Released)
+			if (element.second.first.m_CurrentTriggerState == InputTriggerState::Idle || element.second.first.m_CurrentTriggerState == InputTriggerState::Released)
 			{
-				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Pressed;
+				element.second.first.m_CurrentTriggerState = InputTriggerState::Pressed;
 			}
 
-			else if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Pressed)
+			else if (element.second.first.m_CurrentTriggerState == InputTriggerState::Pressed)
 			{
-				/*if (m_pButtons[actionI].first.m_RequiredTriggerState == InputTriggerState::Pressed)
+				/*if (element.second.first.m_RequiredTriggerState == InputTriggerState::Pressed)
 				{
-					m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Idle;
+					element.second.first.m_CurrentTriggerState = InputTriggerState::Idle;
 				}*/
-				/*if (m_pButtons[actionI].first.m_RequiredTriggerState == InputTriggerState::Down)
+				/*if (element.second.first.m_RequiredTriggerState == InputTriggerState::Down)
 			   {*/
-				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Down;
+				element.second.first.m_CurrentTriggerState = InputTriggerState::Down;
 				//}
 			}
 		}
 		else {
-			if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Pressed || m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Down)
+			if (element.second.first.m_CurrentTriggerState == InputTriggerState::Pressed || element.second.first.m_CurrentTriggerState == InputTriggerState::Down)
 			{
-				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Released;
+				element.second.first.m_CurrentTriggerState = InputTriggerState::Released;
 			}
-			else if (m_pButtons[actionI].first.m_CurrentTriggerState == InputTriggerState::Released)
+			else if (element.second.first.m_CurrentTriggerState == InputTriggerState::Released)
 			{
-				m_pButtons[actionI].first.m_CurrentTriggerState = InputTriggerState::Idle;
+				element.second.first.m_CurrentTriggerState = InputTriggerState::Idle;
 			}
 		}
 	}

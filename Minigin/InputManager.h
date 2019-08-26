@@ -25,7 +25,7 @@ namespace dae
 	struct InputAction
 	{
 		InputAction() :
-			m_ActionID(-1),
+			m_ActionID("default"),
 			m_RequiredTriggerState(InputTriggerState::Pressed),
 			m_KeyboardCode(SDL_SCANCODE_UNKNOWN),
 			m_MouseButtonCode(-1),
@@ -34,7 +34,7 @@ namespace dae
 			m_IsTriggered(false),
 			m_CurrentTriggerState(InputTriggerState::Idle) {}
 
-		InputAction(int actionID, InputTriggerState requiredTriggerState = InputTriggerState::Pressed,
+		InputAction(std::string& actionID, InputTriggerState requiredTriggerState = InputTriggerState::Pressed,
 			SDL_Scancode keyboardCode = SDL_SCANCODE_UNKNOWN, int mouseButtonCode = -1, WORD gamepadButtonCode = 0,
 			GamepadIndex playerIndex = GamepadIndex::PlayerOne,
 			bool isTriggered = false, InputTriggerState currentTriggerState = InputTriggerState::Idle) :
@@ -47,14 +47,14 @@ namespace dae
 			m_IsTriggered(isTriggered),
 			m_CurrentTriggerState(currentTriggerState) {}
 
-		int m_ActionID;
+		std::string m_ActionID;
 		InputTriggerState m_RequiredTriggerState;
-		InputTriggerState m_CurrentTriggerState;
 		SDL_Scancode m_KeyboardCode;
 		int m_MouseButtonCode;
 		WORD m_GamepadButtonCode; //XINPUT_GAMEPAD_...
 		GamepadIndex m_PlayerIndex;
 		bool m_IsTriggered;
+		InputTriggerState m_CurrentTriggerState;
 	};
 
 	class Gamepad

@@ -32,7 +32,7 @@ void dae::LevelScene::Init()
 	m_pTheGrid->GetGridSystem()->Init();
 	m_pTheGrid->GetGridSystem()->SetPosition(16, 16 + 32 * 4);
 	m_pTheGrid->Init();
-	std::shared_ptr<Score> scoreObserver = std::make_shared<Score>();
+	const std::shared_ptr<Score> scoreObserver = std::make_shared<Score>();
 	m_pTheGrid->addObserver(scoreObserver);
 
 	InitPlayer1Controles(m_pTheGrid->GetPlayer());
@@ -87,29 +87,35 @@ void dae::LevelScene::Render() const
 void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<Character> gameObject)
 {
 	auto& input = InputManager::GetInstance();
-	const InputAction LeftRun = { 1,InputTriggerState::Down,SDL_SCANCODE_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	std::string name = "P1LeftRun";
+	const InputAction LeftRun = { name,InputTriggerState::Down,SDL_SCANCODE_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
 	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject, shared_from_this()));
-	const InputAction RightRun = { 2,InputTriggerState::Down,SDL_SCANCODE_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
+	name = "P1RightRun";
+	const InputAction RightRun = { name,InputTriggerState::Down,SDL_SCANCODE_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
 	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject, shared_from_this()));
-	const InputAction UpRun = { 3,InputTriggerState::Down,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
+	name = "P1UpRun";
+	const InputAction UpRun = { name,InputTriggerState::Down,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
 	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject, shared_from_this()));
-	const InputAction DownRun = { 4,InputTriggerState::Down,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
+	name = "P1DownRun";
+	const InputAction DownRun = { name,InputTriggerState::Down,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
 	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject, shared_from_this()));
 
-	const InputAction Push = { 5,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
+	name = "P1Action";
+	const InputAction Push = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
 	input.MapInput(Push, std::make_shared<ActionCommand>(gameObject, shared_from_this()));
 
-	InputAction Reset = { 6,InputTriggerState::Pressed,SDL_SCANCODE_R,-1,XINPUT_GAMEPAD_BACK };
-	input.MapInput(Reset, std::make_shared<ResetCommand>(gameObject, shared_from_this()));
+	name = "P1Restart";
+	InputAction Restart = { name,InputTriggerState::Pressed,SDL_SCANCODE_R,-1,XINPUT_GAMEPAD_BACK };
+	input.MapInput(Restart, std::make_shared<ResetCommand>(gameObject, shared_from_this()));
 
-	const InputAction Exit = { 16,InputTriggerState::Pressed,SDL_SCANCODE_ESCAPE,-1,XINPUT_GAMEPAD_START };
+	name = "P1Exit";
+	const InputAction Exit = { name,InputTriggerState::Pressed,SDL_SCANCODE_ESCAPE,-1,XINPUT_GAMEPAD_START };
 	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject, shared_from_this()));
 }
 
 void dae::LevelScene::Reset()
 {
 	m_pTheGrid->Reset();
-	//Init();
 }
 
 dae::LevelScene::LevelScene(const std::string& name, const std::string& LevelFile) :Scene(name), m_FilePath(LevelFile)

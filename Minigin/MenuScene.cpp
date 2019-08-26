@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "TextComponent.h"
+#include "InputManager.h"
 
 dae::MenuScene::MenuScene(const std::string& name) :Scene(name)
 {
@@ -58,4 +59,29 @@ void dae::MenuScene::Render() const
 
 void dae::MenuScene::InitMenuControls()
 {
+	/*auto& input = InputManager::GetInstance();
+	std::string name = "P1LeftRun";
+	const InputAction LeftRun = { name,InputTriggerState::Down,SDL_SCANCODE_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
+	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject, shared_from_this()));
+	name = "P1RightRun";
+	const InputAction RightRun = { name,InputTriggerState::Down,SDL_SCANCODE_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
+	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject, shared_from_this()));
+	name = "P1UpRun";
+	const InputAction UpRun = { name,InputTriggerState::Down,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
+	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject, shared_from_this()));
+	name = "P1DownRun";
+	const InputAction DownRun = { name,InputTriggerState::Down,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
+	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject, shared_from_this()));
+
+	name = "P1Action";
+	const InputAction Push = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
+	input.MapInput(Push, std::make_shared<ActionCommand>(gameObject, shared_from_this()));
+
+	name = "P1Restart";
+	InputAction Restart = { name,InputTriggerState::Pressed,SDL_SCANCODE_R,-1,XINPUT_GAMEPAD_BACK };
+	input.MapInput(Restart, std::make_shared<ResetCommand>(gameObject, shared_from_this()));
+
+	name = "P1Exit";
+	const InputAction Exit = { name,InputTriggerState::Pressed,SDL_SCANCODE_ESCAPE,-1,XINPUT_GAMEPAD_START };
+	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject, shared_from_this()));*/
 }
