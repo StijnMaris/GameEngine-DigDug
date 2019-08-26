@@ -121,10 +121,7 @@ void dae::InputManager::HandleInput()
 
 		if (currAction->m_IsTriggered)
 		{
-			if (currAction->m_ActionID == "P1Exit" || currAction->m_ActionID == "P2Exit")
-				it->second.second->execute();
 			it->second.second->AddToCommandStream();
-			//std::cout << it->second.first.PlayerIndex << std::endl;
 		}
 	}
 }
@@ -145,15 +142,15 @@ void dae::InputManager::ProcessKeyboardInput()
 		{
 			Minigin::m_DoContinue = false;
 		}
-		if (e.type == SDL_KEYDOWN)
-		{
-			//Cache the current key
-			auto currentKey = e.key.keysym.scancode;
+		//if (e.type == SDL_KEYDOWN)
+		//{
+		//	//Cache the current key
+		//	auto currentKey = e.key.keysym.scancode;
 
-			//Stop running the program on Escape
-			if (currentKey == SDLK_ESCAPE)
-				Minigin::m_DoContinue = false;
-		}
+		//	//Stop running the program on Escape
+		//	if (currentKey == SDLK_ESCAPE)
+		//		Minigin::m_DoContinue = false;
+		//}
 	}
 	for (std::pair<const int, std::pair<InputAction, std::shared_ptr<Command>>>& element : m_pButtons)
 	{
