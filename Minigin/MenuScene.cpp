@@ -37,7 +37,7 @@ void dae::MenuScene::Init()
 	m_pMenu = std::make_shared<GameObject>("Menu");
 	m_pMenu->Init();
 	m_pMenu->AddComponent(std::make_shared<CommandComponent>());
-	AddGameObject(go);
+	AddGameObject(m_pMenu);
 
 	for (int i = 0; i < m_Names.size() / 3.f; ++i)
 	{
@@ -58,7 +58,6 @@ void dae::MenuScene::Init()
 void dae::MenuScene::Update()
 {
 	Scene::Update();
-	m_pMenu->Update();
 	for (std::shared_ptr<MenuButton> element : m_pButtons)
 	{
 		element->Update();
@@ -74,12 +73,12 @@ void dae::MenuScene::InitMenuControls()
 {
 	auto& input = InputManager::GetInstance();
 	std::string name = "MenuButtonUp";
-	const InputAction ButtonUp = { name,InputTriggerState::Pressed,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP  };
+	const InputAction ButtonUp = { name,InputTriggerState::Pressed,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
 	input.MapInput(ButtonUp, std::make_shared<MenuButtonUp>(GetMenu(), GetMenuButtons()));
 	name = "MenuButtonDown";
 	const InputAction ButtonDown = { name,InputTriggerState::Pressed,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
 	input.MapInput(ButtonDown, std::make_shared<MenuButtonDown>(GetMenu(), GetMenuButtons()));
 	name = "MenuButtonSelect";
-	const InputAction MenuButtonSelect = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A  };
+	const InputAction MenuButtonSelect = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
 	input.MapInput(MenuButtonSelect, std::make_shared<MenuButtonPress>(GetMenu(), GetMenuButtons()));
 }

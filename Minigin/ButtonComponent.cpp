@@ -1,7 +1,6 @@
 #include "MiniginPCH.h"
 #include "ButtonComponent.h"
 #include "TextComponent.h"
-#include "SpriteComponent.h"
 #include "SceneManager.h"
 #include "LevelScene.h"
 #include "InputManager.h"
@@ -25,7 +24,5 @@ void dae::ButtonComponent::OnClick(std::string levelName)
 {
 	auto&sceneMan = SceneManager::GetInstance();
 	sceneMan.SetActiveScene(levelName);
-	auto&inputMan = InputManager::GetInstance();
-	inputMan.RefreshInput();
 	std::dynamic_pointer_cast<LevelScene>(sceneMan.GetActiveScene())->Init();
 }

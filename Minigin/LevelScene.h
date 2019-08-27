@@ -18,7 +18,8 @@ namespace dae {
 
 		void InitPlayer1Controles(std::shared_ptr<Character> gameObject);
 
-		void Reset();
+		void Reset()const;
+		void Restart();
 
 		std::shared_ptr<GridSystem> GetGridSystem()const
 		{
@@ -27,7 +28,7 @@ namespace dae {
 
 	private:
 		std::shared_ptr<GridSystem> m_pTheGrid;
-		std::shared_ptr<GameObject> m_Score;
+		std::shared_ptr<GameObject> m_pFPS, m_pFPSText, m_pScore, m_pTitle;
 		//std::shared_ptr<dae::Score> m_ScoreObserver;
 		std::string m_FilePath;
 	};

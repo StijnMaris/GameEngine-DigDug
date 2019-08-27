@@ -52,6 +52,10 @@ namespace dae {
 		}
 
 		void SetPosition(glm::vec3 newPos)const;
+		std::string GetName()const
+		{
+			return m_Name;
+		}
 	private:
 		std::shared_ptr<GameObject> m_pCharacter;
 

@@ -37,6 +37,7 @@ namespace  dae {
 		void Update();
 		void Draw() const;
 		void Reset();
+		void Restart();
 
 		void AddToScene(std::shared_ptr<GameObject> object)const;
 		void RemoveFromScene(std::shared_ptr<GameObject> object)const;
@@ -92,10 +93,7 @@ namespace  dae {
 			return m_pGridSystem;
 		}
 
-		std::shared_ptr<Character> GetPlayer() const
-		{
-			return m_pPlayer1;
-		}
+		std::shared_ptr<Character> GetPlayer(std::string name);
 
 		void SlideBlockInDirection(const glm::vec3& position, MovementDirection& dir, BlockColor& color);
 		void UpdateSlidingBlocks();
@@ -115,7 +113,7 @@ namespace  dae {
 
 	private:
 		std::shared_ptr<GameObject> m_pGridSystem;
-		std::shared_ptr<Character>  m_pPlayer1;
+		std::vector<std::shared_ptr<Character>>  m_pPlayers;
 
 		std::vector<std::vector<bool>> m_Grid;
 		std::vector<std::vector<CellDefinition>> m_GridDefinition;
@@ -131,6 +129,7 @@ namespace  dae {
 		int m_CellSize = 32;
 		int m_Rows = 0;
 		int m_Columns = 0;
+		int m_ResetCounter;
 
 		std::weak_ptr<Scene> m_Scene;
 
@@ -138,7 +137,7 @@ namespace  dae {
 		int m_numObservers;
 
 		std::string m_FilePath;
-		std::string m_P1Name;
-		std::string m_P1File;
+		std::string m_P1Name, m_P2Name;
+		std::string m_P1File, m_P2File;
 	};
 }

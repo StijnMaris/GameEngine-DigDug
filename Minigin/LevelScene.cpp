@@ -35,39 +35,38 @@ void dae::LevelScene::Init()
 	const std::shared_ptr<Score> scoreObserver = std::make_shared<Score>();
 	m_pTheGrid->addObserver(scoreObserver);
 
-	InitPlayer1Controles(m_pTheGrid->GetPlayer());
-	AddGameObject(m_pTheGrid->GetPlayer()->GetCharacter());
+	InitPlayer1Controles(m_pTheGrid->GetPlayer("Player1"));
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<GameObject>("TitleText");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("PENGO", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(220, 20);
-	AddGameObject(to);
+	m_pTitle = std::make_shared<GameObject>("TitleText");
+	m_pTitle->Init();
+	m_pTitle->AddComponent(std::make_shared<TextComponent>("DIGDUG ON ICE", font));
+	m_pTitle->AddComponent(std::make_shared<RenderComponent>(m_pTitle->GetComponent<TextComponent>()->GetTextureComponent()));
+	m_pTitle->SetPosition(220, 20);
+	AddGameObject(m_pTitle);
 
-	m_Score = std::make_shared<GameObject>("Score");
-	m_Score->Init();
-	m_Score->AddComponent(std::make_shared<TextComponent>("Score: 0", font));
-	m_Score->AddComponent(std::make_shared<RenderComponent>(m_Score->GetComponent<TextComponent>()->GetTextureComponent()));
-	m_Score->SetPosition(220, 60);
-	AddGameObject(m_Score);
+	m_pScore = std::make_shared<GameObject>("Score");
+	m_pScore->Init();
+	m_pScore->AddComponent(std::make_shared<TextComponent>("Score: 0", font));
+	m_pScore->AddComponent(std::make_shared<RenderComponent>(m_pScore->GetComponent<TextComponent>()->GetTextureComponent()));
+	m_pScore->SetPosition(220, 60);
+	AddGameObject(m_pScore);
 
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
-	to = std::make_shared<GameObject>("FPSText");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("FPS:", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(550, 10);
-	AddGameObject(to);
+	m_pFPSText = std::make_shared<GameObject>("FPSText");
+	m_pFPSText->Init();
+	m_pFPSText->AddComponent(std::make_shared<TextComponent>("FPS:", font));
+	m_pFPSText->AddComponent(std::make_shared<RenderComponent>(m_pFPSText->GetComponent<TextComponent>()->GetTextureComponent()));
+	m_pFPSText->SetPosition(550, 10);
+	AddGameObject(m_pFPSText);
 
-	to = std::make_shared<GameObject>("FPS");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>(std::to_string(time.GetFps()), font));
-	to->AddComponent(std::make_shared<FPSComponent>(to->GetComponent<TextComponent>()));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(590, 10);
-	AddGameObject(to);
+	m_pFPS = std::make_shared<GameObject>("FPS");
+	m_pFPS->Init();
+	m_pFPS->AddComponent(std::make_shared<TextComponent>(std::to_string(time.GetFps()), font));
+	m_pFPS->AddComponent(std::make_shared<FPSComponent>(m_pFPS->GetComponent<TextComponent>()));
+	m_pFPS->AddComponent(std::make_shared<RenderComponent>(m_pFPS->GetComponent<TextComponent>()->GetTextureComponent()));
+	m_pFPS->SetPosition(590, 10);
+	AddGameObject(m_pFPS);
 }
 
 void dae::LevelScene::Update()
@@ -75,7 +74,7 @@ void dae::LevelScene::Update()
 	Scene::Update();
 	m_pTheGrid->Update();
 	m_pTheGrid->CheckForCollision();
-	m_Score->GetComponent<TextComponent>()->SetText("Score: " + std::to_string(Score::m_Score));
+	m_pScore->GetComponent<TextComponent>()->SetText("Score: " + std::to_string(Score::m_Score));
 }
 
 void dae::LevelScene::Render() const
@@ -113,9 +112,21 @@ void dae::LevelScene::InitPlayer1Controles(std::shared_ptr<Character> gameObject
 	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject, shared_from_this()));
 }
 
-void dae::LevelScene::Reset()
+void dae::LevelScene::Reset()const
 {
 	m_pTheGrid->Reset();
+}
+
+void dae::LevelScene::Restart()
+{
+	auto& scene = SceneManager::GetInstance();
+	scene.SetActiveScene("Menu");
+	RemoveGameObject(m_pFPS);
+	RemoveGameObject(m_pFPSText);
+	RemoveGameObject(m_pScore);
+	RemoveGameObject(m_pTitle);
+	m_pTheGrid->Restart();
+	//RemoveGameObject(m_pTheGrid->GetPlayer1()->GetCharacter());
 }
 
 dae::LevelScene::LevelScene(const std::string& name, const std::string& LevelFile) :Scene(name), m_FilePath(LevelFile)

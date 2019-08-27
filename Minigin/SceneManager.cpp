@@ -1,6 +1,7 @@
 #include "MiniginPCH.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "InputManager.h"
 
 void dae::SceneManager::Update()
 {
@@ -34,7 +35,12 @@ void dae::SceneManager::SetActiveScene(const std::string& name)
 	{
 		if (scene->GetSceneName() == name)
 		{
-			DisableScene(current);
+			if (m_pActiveScenes.size() > 0)
+			{
+				DisableScene(current);
+				auto&inputMan = InputManager::GetInstance();
+				inputMan.RefreshInput();
+			}
 			m_pActiveScenes.push_back(scene);
 			return;
 		}

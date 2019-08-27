@@ -10,6 +10,7 @@
 #include "LevelScene.h"
 #include "MenuButton.h"
 #include "ButtonComponent.h"
+#include "MenuScene.h"
 
 void dae::Command::AddToCommandStream()
 {
@@ -78,7 +79,9 @@ bool dae::StopActionCommand::execute()
 
 bool dae::ResetCommand::execute()
 {
-	m_pLevel->Reset();
+	m_pLevel->Restart();
+	auto&sceneMan = SceneManager::GetInstance();
+	std::dynamic_pointer_cast<MenuScene>(sceneMan.GetActiveScene())->InitMenuControls();
 	return true;
 }
 
@@ -101,7 +104,7 @@ bool dae::MenuButtonPress::execute()
 	{
 		if (element->GetButtonState() == ButtonState::Highlighted)
 		{
-			element->SetButtonState(ButtonState::Pressed);
+			//element->SetButtonState(ButtonState::Pressed);
 			element->GetButton()->GetComponent<ButtonComponent>()->OnClick(element->GetLevelPath());
 		}
 	}
@@ -136,7 +139,7 @@ bool dae::MenuButtonDown::execute()
 		if (m_pMenuButtons.at(i)->GetButtonState() == ButtonState::Highlighted)
 		{
 			m_CurIndex = i;
-			if (m_CurIndex + 1 < m_pMenuButtons.size())
+			if (m_CurIndex + 1 < static_cast<int>(m_pMenuButtons.size()))
 			{
 				m_pMenuButtons.at(i)->SetButtonState(ButtonState::Idle);
 				m_pMenuButtons.at(m_CurIndex + 1)->SetButtonState(ButtonState::Highlighted);
