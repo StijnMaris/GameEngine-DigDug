@@ -13,7 +13,6 @@ namespace dae
 	{
 		PlayerOne = 0,
 		PlayerTwo = 1,
-		Menu = 2,
 	};
 
 	enum class InputTriggerState

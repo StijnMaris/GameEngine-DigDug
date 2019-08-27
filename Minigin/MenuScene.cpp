@@ -74,12 +74,12 @@ void dae::MenuScene::InitMenuControls()
 {
 	auto& input = InputManager::GetInstance();
 	std::string name = "MenuButtonUp";
-	const InputAction ButtonUp = { name,InputTriggerState::Pressed,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP ,GamepadIndex::Menu };
+	const InputAction ButtonUp = { name,InputTriggerState::Pressed,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP  };
 	input.MapInput(ButtonUp, std::make_shared<MenuButtonUp>(GetMenu(), GetMenuButtons()));
 	name = "MenuButtonDown";
-	const InputAction ButtonDown = { name,InputTriggerState::Pressed,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::Menu };
+	const InputAction ButtonDown = { name,InputTriggerState::Pressed,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
 	input.MapInput(ButtonDown, std::make_shared<MenuButtonDown>(GetMenu(), GetMenuButtons()));
 	name = "MenuButtonSelect";
-	const InputAction MenuButtonSelect = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A ,GamepadIndex::Menu };
+	const InputAction MenuButtonSelect = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A  };
 	input.MapInput(MenuButtonSelect, std::make_shared<MenuButtonPress>(GetMenu(), GetMenuButtons()));
 }
