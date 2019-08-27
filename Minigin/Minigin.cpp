@@ -43,13 +43,13 @@ void dae::Minigin::Initialize()
 void dae::Minigin::LoadGame() const
 {
 	auto&sceneMan = SceneManager::GetInstance();
-	std::shared_ptr<Scene> level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level1SP", "../Data/Level1SP.txt"));
+	sceneMan.CreateScene(std::make_shared<LevelScene>("Level1SP", "../Data/Level1SP.txt"));
 	//std::dynamic_pointer_cast<LevelScene>(level)->Init();
-	level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level1MP", "../Data/Level1MP.txt"));
+	sceneMan.CreateScene(std::make_shared<LevelScene>("Level1MP", "../Data/Level1MP.txt"));
 	//std::dynamic_pointer_cast<LevelScene>(level)->Init();
-	level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level1VSP", "../Data/Level1VSP.txt"));
+	sceneMan.CreateScene(std::make_shared<LevelScene>("Level1VSP", "../Data/Level1VSP.txt"));
 	//std::dynamic_pointer_cast<LevelScene>(level)->Init();
-	//sceneMan.SetActiveScene("Level");
+	//sceneMan.SetActiveScene("Level1SP");
 
 	const std::shared_ptr<Scene> menu = sceneMan.CreateScene(std::make_shared<MenuScene>("Menu"));
 	std::dynamic_pointer_cast<MenuScene>(menu)->Init();
@@ -85,7 +85,6 @@ void dae::Minigin::Run()
 		{
 			time.Update();
 
-			//doContinue;
 			input.ProcessInput();
 			sceneManager.Update();
 			renderer.Render();

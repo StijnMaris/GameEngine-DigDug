@@ -98,13 +98,12 @@ namespace dae
 		//bool IsPressed(InputAction button) const;
 
 		void MapInput(InputAction button, std::shared_ptr<Command> command);
+		void RefreshInput();
 
 	private:
 		bool InitGamepads();
 		void ProcessKeyboardInput();
 		void ProcessGamePadInput();
-
-		void RefreshInput();
 
 		bool IsActionTriggered(int actionID);
 

@@ -87,6 +87,7 @@ void dae::InputManager::RefreshInput()
 {
 	ZeroMemory(&currentState, sizeof(XINPUT_STATE));
 	ZeroMemory(&previousState, sizeof(XINPUT_STATE));
+	m_pButtons.clear();
 }
 
 bool dae::InputManager::IsActionTriggered(int actionID)

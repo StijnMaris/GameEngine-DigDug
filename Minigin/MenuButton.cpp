@@ -21,14 +21,10 @@ dae::MenuButton::~MenuButton()
 
 void dae::MenuButton::Init()
 {
-	//auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	m_pButton->Init();
-	//m_pButton->SetScale(2, 2);
-	//m_pButton->AddComponent(std::make_shared<TextComponent>(m_Text, font));
 	m_pButton->AddComponent(std::make_shared<TextureComponent>(m_PathName));
 	m_pButton->AddComponent(std::make_shared<SpriteComponent>(m_pButton->GetComponent<TextureComponent>(), 3, 1));
 	m_pButton->AddComponent(std::make_shared<RenderComponent>(m_pButton->GetComponent<SpriteComponent>()));
-	m_pButton->AddComponent(std::make_shared<CommandComponent>());
 	m_pButton->AddComponent(std::make_shared<ButtonComponent>());
 }
 

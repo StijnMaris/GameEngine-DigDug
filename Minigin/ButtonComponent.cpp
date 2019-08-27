@@ -4,6 +4,7 @@
 #include "SpriteComponent.h"
 #include "SceneManager.h"
 #include "LevelScene.h"
+#include "InputManager.h"
 
 dae::ButtonComponent::ButtonComponent(
 	glm::vec3 normalColor,
@@ -24,5 +25,7 @@ void dae::ButtonComponent::OnClick(std::string levelName)
 {
 	auto&sceneMan = SceneManager::GetInstance();
 	sceneMan.SetActiveScene(levelName);
+	auto&inputMan = InputManager::GetInstance();
+	inputMan.RefreshInput();
 	std::dynamic_pointer_cast<LevelScene>(sceneMan.GetActiveScene())->Init();
 }

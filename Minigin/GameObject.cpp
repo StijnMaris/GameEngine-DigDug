@@ -50,10 +50,10 @@ void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		if (m_pComponents.size() == 8)
+		/*if (m_pComponents.size() == 8)
 		{
 			component->Update();
-		}
+		}*/
 
 		component->Update();
 	}
@@ -65,6 +65,8 @@ void dae::GameObject::Render() const
 	{
 		GetComponent<RenderComponent>()->Render();
 	}
+
+	//if i dont do this i get linker errors up the wazzu
 	auto rend3 = GetComponent<TextureComponent>();
 	auto rend4 = GetComponent<TextComponent>();
 	auto rend5 = GetComponent<CommandComponent>();
@@ -110,16 +112,6 @@ bool dae::GameObject::HasRenderComponent()const
 {
 	for (auto component : m_pComponents)
 	{
-		/*std::shared_ptr<BaseComponent> comp = component.lock();
-		if (comp)
-		{
-			auto Rendr = std::dynamic_pointer_cast<RenderComponent>(comp);
-			if (Rendr)
-			{
-				return true;
-			}
-		}*/
-
 		auto Rendr = std::dynamic_pointer_cast<RenderComponent>(component);
 		if (Rendr)
 		{
