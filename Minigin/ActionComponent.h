@@ -4,7 +4,7 @@
 
 namespace dae {
 	enum class MovementDirection;
-	class GridSystem;
+	class LevelScene;
 	class Transform;
 
 	class ActionComponent :public BaseComponent
@@ -13,7 +13,7 @@ namespace dae {
 		ActionComponent(std::shared_ptr<Transform> transform);
 		~ActionComponent() = default;
 
-		void DoAction(std::shared_ptr<GridSystem> grid, MovementDirection movDir);
+		void DoAction(std::shared_ptr<LevelScene> level, MovementDirection movDir);
 
 		void Update() override {};
 

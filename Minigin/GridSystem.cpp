@@ -19,8 +19,10 @@ dae::GridSystem::GridSystem(int rows, int cols, std::string& filePath, std::shar
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
 	m_P1Name = "Player1";
 	m_P2Name = "Player2";
+	m_P2Name = "PlayerVS";
 	m_P1File = "DigDug1.png";
 	m_P2File = "DigDug2.png";
+	m_PVSFile = "DigDugVS.png";
 
 	m_GridDefinition.resize(m_Rows);
 	for (int i = 0; i < m_Rows; i++)
@@ -361,6 +363,15 @@ bool dae::GridSystem::DestroyCell(int row, int col)
 	return m_pBlocks[row][col]->Destroy();
 }
 
+void dae::GridSystem::SpawnCharacter(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly)
+{
+	std::shared_ptr<Character> character = std::make_shared<Character>(name, file, 4, 4);
+	character->Init();
+	character->SetPosition(pos);
+	character->SetIsFriendly(isFriendly);
+	m_pPlayers.push_back(character);
+}
+
 bool dae::GridSystem::DestroyBlock(int row, int col)
 {
 	switch (m_pBlocks[row][col]->GetBlockColor())
@@ -570,12 +581,14 @@ void dae::GridSystem::LoadMap(std::string& path)
 
 void dae::GridSystem::DefineMap()
 {
-	std::shared_ptr<Character> player1;
-	std::shared_ptr<Character> player2;
+	std::shared_ptr<Character> character;
 	for (int i = 0; i < m_Rows; i++)
 	{
 		for (int j = 0; j < m_Columns; ++j)
 		{
+			glm::vec3 pos = GetCellPosition(i, j);
+			pos.x += 16;
+			pos.y += 16;
 			switch (m_GridDefinition[i][j])
 			{
 			case CellDefinition::Normal:
@@ -586,33 +599,27 @@ void dae::GridSystem::DefineMap()
 				break;
 			case CellDefinition::Player1:
 				DestroyCell(i, j);
-				glm::vec3 pos = GetCellPosition(i, j);
-				pos.x += 16;
-				pos.y += 16;
+
 				m_Player1StartPos = pos;
 
-				player1 = std::make_shared<Character>(m_P1Name, m_P1File, 4, 4);
-				player1->Init();
-				player1->SetPosition(m_Player1StartPos);
-				m_pPlayers.push_back(player1);
+				SpawnCharacter(m_Player1StartPos, m_P1Name, m_P1File, true);
 				break;
 			case CellDefinition::Player2:
 				DestroyCell(i, j);
-				pos = GetCellPosition(i, j);
-				pos.x += 16;
-				pos.y += 16;
+
 				m_Player2StartPos = pos;
 
-				player2 = std::make_shared<Character>(m_P2Name, m_P2File, 4, 4);
-				player2->Init();
-				player2->SetPosition(m_Player2StartPos);
-				m_pPlayers.push_back(player2);
+				SpawnCharacter(m_Player2StartPos, m_P2Name, m_P2File, true);
 				break;
 			case CellDefinition::VSPlayer2:
 				DestroyCell(i, j);
+
+				SpawnCharacter(pos, m_PVSName, m_PVSFile, true);
 				break;
 			case CellDefinition::SnoBee:
 				DestroyCell(i, j);
+
+				SpawnCharacter(pos, m_PVSFile, m_PVSFile, true);
 				break;
 			case CellDefinition::Egg:
 				m_pBlocks[i][j]->SetBlockColor(BlockColor::Egg);

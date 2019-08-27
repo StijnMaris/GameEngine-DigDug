@@ -12,10 +12,10 @@ namespace  dae {
 		MovementComponent(std::shared_ptr<Transform> transform, SDL_Rect rect, float movSpeed);
 		~MovementComponent() = default;
 
-		void MoveUp(std::shared_ptr<GridSystem> grid);
-		void MoveDown(std::shared_ptr<GridSystem> grid);
-		void MoveLeft(std::shared_ptr<GridSystem> grid);
-		void MoveRight(std::shared_ptr<GridSystem> grid);
+		void MoveUp(std::shared_ptr<GridSystem> level->GetGridSystem());
+		void MoveDown(std::shared_ptr<GridSystem> level->GetGridSystem());
+		void MoveLeft(std::shared_ptr<GridSystem> level->GetGridSystem());
+		void MoveRight(std::shared_ptr<GridSystem> level->GetGridSystem());
 		void Update() override;
 
 		void SetPosition(glm::vec3 newPos);

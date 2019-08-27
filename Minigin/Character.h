@@ -56,6 +56,16 @@ namespace dae {
 		{
 			return m_Name;
 		}
+
+		void SetIsFriendly(bool isFriendly)
+		{
+			m_IsFriendly = isFriendly;
+		}
+
+		bool GetIsFriendly()const
+		{
+			return m_IsFriendly;
+		}
 	private:
 		std::shared_ptr<GameObject> m_pCharacter;
 
@@ -66,5 +76,6 @@ namespace dae {
 		int m_Rows, m_Cols, m_StartRow;
 
 		bool m_IsDead = false;
+		bool m_IsFriendly = false;
 	};
 }

@@ -27,6 +27,11 @@ namespace dae {
 			return  m_pTheGrid;
 		}
 
+		bool GetIsMultyPlayer()const
+		{
+			return m_IsMultyPlayer;
+		}
+
 	private:
 		std::shared_ptr<GridSystem> m_pTheGrid;
 		std::shared_ptr<GameObject> m_pFPS, m_pFPSText, m_pScore, m_pTitle;

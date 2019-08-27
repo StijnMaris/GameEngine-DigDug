@@ -70,7 +70,6 @@ namespace  dae {
 
 		bool IsAccesingBlockOutsideOfGrid(int row, int col)const;
 
-		bool DestroyCell(int row, int col);
 		bool DestroyBlock(int row, int col);
 
 		float GetDistanceBetween(glm::vec3& start, glm::vec3& end);
@@ -99,10 +98,6 @@ namespace  dae {
 		void UpdateSlidingBlocks();
 		void CheckForCollision();
 
-		void LoadMap(std::string& path);
-
-		void DefineMap();
-
 		void AddGridToScene();
 
 		void addObserver(std::shared_ptr<Observer> observer);
@@ -112,6 +107,13 @@ namespace  dae {
 		void notify(Event event);
 
 	private:
+
+		void DefineMap();
+		void LoadMap(std::string& path);
+		bool DestroyCell(int row, int col);
+
+		void SpawnCharacter(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly);
+
 		std::shared_ptr<GameObject> m_pGridSystem;
 		std::vector<std::shared_ptr<Character>>  m_pPlayers;
 
@@ -137,7 +139,7 @@ namespace  dae {
 		int m_numObservers;
 
 		std::string m_FilePath;
-		std::string m_P1Name, m_P2Name;
-		std::string m_P1File, m_P2File;
+		std::string m_P1Name, m_P2Name, m_PVSName;
+		std::string m_P1File, m_P2File, m_PVSFile;
 	};
 }
