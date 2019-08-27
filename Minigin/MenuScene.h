@@ -17,9 +17,14 @@ namespace dae {
 
 		void InitMenuControls();
 
-		std::vector<std::shared_ptr<MenuButton>>GetMenu()
+		std::vector<std::shared_ptr<MenuButton>>GetMenuButtons()
 		{
 			return m_pButtons;
+		}
+
+		std::shared_ptr<GameObject>GetMenu()
+		{
+			return m_pMenu;
 		}
 
 	private:
@@ -31,5 +36,6 @@ namespace dae {
 
 		std::vector<std::shared_ptr<MenuButton>> m_pButtons;
 		std::vector<std::string> m_Names;
+		std::shared_ptr<GameObject> m_pMenu;
 	};
 }

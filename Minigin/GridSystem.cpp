@@ -19,6 +19,13 @@ dae::GridSystem::GridSystem(int rows, int cols, std::string& filePath, std::shar
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
 	m_P1Name = "Player1";
 	m_P1File = "DigDug2.png";
+
+	m_GridDefinition.resize(m_Rows);
+	for (int i = 0; i < m_Rows; i++)
+	{
+		m_GridDefinition[i].resize(m_Columns);
+	}
+	LoadMap(m_FilePath);
 }
 
 void dae::GridSystem::Init()
@@ -122,13 +129,6 @@ void dae::GridSystem::SetUpGrid()
 			m_pBlocks[i][j] = std::make_shared<GridBlock>(glm::vec3{ m_GridStartPos.x + j * m_CellSize, m_GridStartPos.y + i * m_CellSize,0 }, i, j, color);
 		}
 	}
-
-	m_GridDefinition.resize(m_Rows);
-	for (int i = 0; i < m_Rows; i++)
-	{
-		m_GridDefinition[i].resize(m_Columns);
-	}
-	LoadMap(m_FilePath);
 }
 
 bool dae::GridSystem::GetCellState(int row, int col) const
