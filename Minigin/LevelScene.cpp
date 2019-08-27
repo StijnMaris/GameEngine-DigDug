@@ -155,6 +155,7 @@ void dae::LevelScene::Restart()
 	scene.SetActiveScene("Menu");
 	RemoveGameObject(m_pFPS);
 	RemoveGameObject(m_pFPSText);
+	Score::m_Score = 0;
 	RemoveGameObject(m_pScore);
 	RemoveGameObject(m_pTitle);
 	m_pTheGrid->Restart();

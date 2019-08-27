@@ -7,12 +7,13 @@
 #include "Scene.h"
 #include "ColliderComponent.h"
 #include "Character.h"
-//#include "Scene.h"
+#include "LevelScene.h"
 #include <fstream>
 #include "Observer.h"
 #include "SlidingBlock.h"
 #include "MovementComponent.h"
 #include <algorithm>
+#include "Command.h"
 
 dae::GridSystem::GridSystem(int rows, int cols, std::string& filePath, std::shared_ptr<Scene> scene) :m_Rows(rows), m_Columns(cols), m_FilePath(filePath), m_Scene(scene), m_numObservers(0)
 {
@@ -23,6 +24,7 @@ dae::GridSystem::GridSystem(int rows, int cols, std::string& filePath, std::shar
 	m_P1File = "DigDug1.png";
 	m_P2File = "DigDug2.png";
 	m_PVSFile = "DigDugVS.png";
+	m_ResetCounter = 0;
 
 	m_GridDefinition.resize(m_Rows);
 	for (int i = 0; i < m_Rows; i++)
@@ -54,6 +56,10 @@ void dae::GridSystem::Update()
 	{
 		element->Update();
 	}
+	for (std::shared_ptr<Character> element : m_pEnemies)
+	{
+		element->Update();
+	}
 	UpdateSlidingBlocks();
 }
 
@@ -82,13 +88,28 @@ void dae::GridSystem::Draw() const
 void dae::GridSystem::Reset()
 {
 	m_ResetCounter++;
-	GetPlayer("Player1")->SetPosition(m_Player1StartPos);
-	GetPlayer("Player2")->SetPosition(m_Player2StartPos);
-	if (m_ResetCounter == 3)
+	for (const std::shared_ptr<Character> element : m_pPlayers)
 	{
-		Restart();
+		element->SetCharacterState(CharacterState::Idle);
+		if (!element->GetName().compare("Player1"))
+		{
+			element->SetPosition(m_Player1StartPos);
+		}
+		else if (!element->GetName().compare("Player2"))
+		{
+			element->SetPosition(m_Player2StartPos);
+		}
+		else if (!element->GetName().compare("PlayerVS"))
+		{
+			element->SetPosition(m_PlayerVSStartPos);
+		}
+		if (m_ResetCounter == 3)
+		{
+			auto&sceneMan = SceneManager::GetInstance();
+			auto scene = std::dynamic_pointer_cast<LevelScene>(sceneMan.GetActiveScene());
+			std::make_shared<ResetCommand>(element, scene)->AddToCommandStream();
+		}
 	}
-	//DefineMap();
 }
 
 void dae::GridSystem::Restart()
@@ -115,6 +136,11 @@ void dae::GridSystem::Restart()
 		}
 	}
 	RemoveFromScene(m_pGridSystem);
+
+	if (m_ResetCounter == 3)
+	{
+		SceneManager::GetInstance().SetActiveScene("Menu");
+	}
 }
 
 void dae::GridSystem::AddToScene(std::shared_ptr<GameObject> object)const
@@ -363,13 +389,22 @@ bool dae::GridSystem::DestroyCell(int row, int col)
 	return m_pBlocks[row][col]->Destroy();
 }
 
-void dae::GridSystem::SpawnCharacter(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly)
+void dae::GridSystem::SpawnPlayer(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly)
 {
 	std::shared_ptr<Character> character = std::make_shared<Character>(name, file, 4, 4);
 	character->Init();
 	character->SetPosition(pos);
 	character->SetIsFriendly(isFriendly);
 	m_pPlayers.push_back(character);
+}
+
+void dae::GridSystem::SpawnEnemy(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly)
+{
+	std::shared_ptr<Character> character = std::make_shared<Character>(name, file, 4, 4);
+	character->Init();
+	character->SetPosition(pos);
+	character->SetIsFriendly(isFriendly);
+	m_pEnemies.push_back(character);
 }
 
 bool dae::GridSystem::DestroyBlock(int row, int col)
@@ -521,6 +556,19 @@ void dae::GridSystem::CheckForCollision()
 			}
 		}
 	}*/
+	for (const std::shared_ptr<Character> element : m_pPlayers)
+	{
+		auto playerCollider = element->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
+		for (const std::shared_ptr<Character> enemy : m_pEnemies)
+		{
+			auto enemyCollider = enemy->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
+			if (SDL_HasIntersection(&playerCollider, &enemyCollider))
+			{
+				element->Die();
+				Reset();
+			}
+		}
+	}
 
 	/*auto collider = m_pPlayers[0]->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
 	auto gridPos = GetCellData(m_pPlayers[0]->GetCharacter()->GetPosition());
@@ -528,25 +576,6 @@ void dae::GridSystem::CheckForCollision()
 	{
 		m_pBlocks[gridPos.first][gridPos.second]->Destroy();
 		m_Grid[gridPos.first][gridPos.second] = false;
-	}*/
-	/*else if (gridPos.first - 1 >= 0 && gridPos.first + 1 < m_Rows && gridPos.first - 1 >= 0 && gridPos.first + 1 < m_Columns)
-	{
-		if (m_pBlocks[gridPos.first + 1][gridPos.second]->CheckIfColliding(collider))
-		{
-			m_pBlocks[gridPos.first + 1][gridPos.second]->Destroy();
-		}
-		else if (m_pBlocks[gridPos.first - 1][gridPos.second]->CheckIfColliding(collider))
-		{
-			m_pBlocks[gridPos.first - 1][gridPos.second]->Destroy();
-		}
-		else if (m_pBlocks[gridPos.first][gridPos.second + 1]->CheckIfColliding(collider))
-		{
-			m_pBlocks[gridPos.first][gridPos.second + 1]->Destroy();
-		}
-		else if (m_pBlocks[gridPos.first][gridPos.second - 1]->CheckIfColliding(collider))
-		{
-			m_pBlocks[gridPos.first][gridPos.second - 1]->Destroy();
-		}
 	}*/
 }
 
@@ -602,24 +631,26 @@ void dae::GridSystem::DefineMap()
 
 				m_Player1StartPos = pos;
 
-				SpawnCharacter(m_Player1StartPos, m_P1Name, m_P1File, true);
+				SpawnPlayer(m_Player1StartPos, m_P1Name, m_P1File, true);
 				break;
 			case CellDefinition::Player2:
 				DestroyCell(i, j);
 
 				m_Player2StartPos = pos;
 
-				SpawnCharacter(m_Player2StartPos, m_P2Name, m_P2File, true);
+				SpawnPlayer(m_Player2StartPos, m_P2Name, m_P2File, true);
 				break;
 			case CellDefinition::VSPlayer2:
 				DestroyCell(i, j);
 
-				SpawnCharacter(pos, m_PVSName, m_PVSFile, true);
+				m_PlayerVSStartPos = pos;
+
+				SpawnPlayer(pos, m_PVSName, m_PVSFile, false);
 				break;
 			case CellDefinition::SnoBee:
 				DestroyCell(i, j);
 
-				SpawnCharacter(pos, m_PVSFile, m_PVSFile, true);
+				SpawnEnemy(pos, m_PVSFile, m_PVSFile, false);
 				break;
 			case CellDefinition::Egg:
 				m_pBlocks[i][j]->SetBlockColor(BlockColor::Egg);
@@ -646,12 +677,12 @@ void dae::GridSystem::AddGridToScene()
 			AddToScene(m_pBlocks[i][j]->GetBlock());
 		}
 	}
-	for (std::shared_ptr<Character> element : m_pEnemies)
+	for (const std::shared_ptr<Character> element : m_pEnemies)
 	{
 		AddToScene(element->GetCharacter());
 	}
 
-	for (std::shared_ptr<Character> element : m_pPlayers)
+	for (const std::shared_ptr<Character> element : m_pPlayers)
 	{
 		AddToScene(element->GetCharacter());
 	}

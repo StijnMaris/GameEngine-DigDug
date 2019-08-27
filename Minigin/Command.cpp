@@ -67,7 +67,7 @@ bool dae::ActionCommand::execute()
 {
 	//std::cout << "Action" << "\n";
 	m_pCharacter->SetCharacterState(CharacterState::Action);
-	m_pCharacter->GetCharacter()->GetComponent<ActionComponent>()->DoAction(m_pLevel->GetGridSystem(), m_pCharacter->GetMovementDirection());
+	m_pCharacter->GetCharacter()->GetComponent<ActionComponent>()->DoAction(m_pLevel, m_pCharacter->GetMovementDirection());
 	return true;
 }
 

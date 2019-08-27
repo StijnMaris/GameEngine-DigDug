@@ -17,51 +17,51 @@ dae::MovementComponent::MovementComponent(std::shared_ptr<Transform> transform, 
 	m_StartPos = glm::vec3{};
 }
 
-void dae::MovementComponent::MoveUp(std::shared_ptr<GridSystem> level->GetGridSystem())
+void dae::MovementComponent::MoveUp(std::shared_ptr<GridSystem> grid)
 {
-	if (level->GetGridSystem()->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Up)
+	if (grid->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Up)
 		&& static_cast<int> (m_pTransform->GetPosition().x + m_Rect.w / 2) % m_GridMovConstraintW == 0)
 	{
 		m_StartPos = m_pTransform->GetPosition();
-		std::pair<int, int> gridPos = level->GetGridSystem()->GetCellData(m_pTransform->GetPosition());
-		m_Destination = level->GetGridSystem()->GetCellPosition(--gridPos.first, gridPos.second);
+		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
+		m_Destination = grid->GetCellPosition(--gridPos.first, gridPos.second);
 	}
 }
 
-void dae::MovementComponent::MoveDown(std::shared_ptr<GridSystem> level->GetGridSystem())
+void dae::MovementComponent::MoveDown(std::shared_ptr<GridSystem> grid)
 {
 	float pos = m_pTransform->GetPosition().x + m_Rect.w / 2;
 	int mod = static_cast<int> (pos) % m_GridMovConstraintW;
-	if (level->GetGridSystem()->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Down) && mod == 0)
+	if (grid->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Down) && mod == 0)
 	{
 		//m_pTransform->SetPosition(m_pTransform->GetPosition().x, m_pTransform->GetPosition().y + 32, m_pTransform->GetPosition().z);
 		m_StartPos = m_pTransform->GetPosition();
-		std::pair<int, int> gridPos = level->GetGridSystem()->GetCellData(m_pTransform->GetPosition());
-		m_Destination = level->GetGridSystem()->GetCellPosition(++gridPos.first, gridPos.second);
+		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
+		m_Destination = grid->GetCellPosition(++gridPos.first, gridPos.second);
 	}
 }
 
-void dae::MovementComponent::MoveLeft(std::shared_ptr<GridSystem> level->GetGridSystem())
+void dae::MovementComponent::MoveLeft(std::shared_ptr<GridSystem> grid)
 {
-	if (level->GetGridSystem()->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Left)
+	if (grid->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Left)
 		&& static_cast<int> (m_pTransform->GetPosition().y + m_Rect.h / 2) % m_GridMovConstraintH == 0)
 	{
 		//m_pTransform->SetPosition(m_pTransform->GetPosition().x - 32, m_pTransform->GetPosition().y, m_pTransform->GetPosition().z);
 		m_StartPos = m_pTransform->GetPosition();
-		std::pair<int, int> gridPos = level->GetGridSystem()->GetCellData(m_pTransform->GetPosition());
-		m_Destination = level->GetGridSystem()->GetCellPosition(gridPos.first, --gridPos.second);
+		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
+		m_Destination = grid->GetCellPosition(gridPos.first, --gridPos.second);
 	}
 }
 
-void dae::MovementComponent::MoveRight(std::shared_ptr<GridSystem> level->GetGridSystem())
+void dae::MovementComponent::MoveRight(std::shared_ptr<GridSystem> grid)
 {
-	if (level->GetGridSystem()->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Right)
+	if (grid->CanMoveInDirection(m_pTransform->GetPosition(), MovementDirection::Right)
 		&& static_cast<int> (m_pTransform->GetPosition().y + m_Rect.h / 2) % m_GridMovConstraintH == 0)
 	{
 		//m_pTransform->SetPosition(m_pTransform->GetPosition().x + 32, m_pTransform->GetPosition().y, m_pTransform->GetPosition().z);
 		m_StartPos = m_pTransform->GetPosition();
-		std::pair<int, int> gridPos = level->GetGridSystem()->GetCellData(m_pTransform->GetPosition());
-		m_Destination = level->GetGridSystem()->GetCellPosition(gridPos.first, ++gridPos.second);
+		std::pair<int, int> gridPos = grid->GetCellData(m_pTransform->GetPosition());
+		m_Destination = grid->GetCellPosition(gridPos.first, ++gridPos.second);
 	}
 }
 

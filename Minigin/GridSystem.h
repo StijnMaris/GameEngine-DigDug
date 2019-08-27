@@ -112,7 +112,8 @@ namespace  dae {
 		void LoadMap(std::string& path);
 		bool DestroyCell(int row, int col);
 
-		void SpawnCharacter(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly);
+		void SpawnPlayer(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly);
+		void SpawnEnemy(glm::vec3& pos, std::string& name, std::string& file, bool isFriendly);
 
 		std::shared_ptr<GameObject> m_pGridSystem;
 		std::vector<std::shared_ptr<Character>>  m_pPlayers;
@@ -128,6 +129,7 @@ namespace  dae {
 		glm::vec3 m_GridStartPos{};
 		glm::vec3 m_Player1StartPos{};
 		glm::vec3 m_Player2StartPos{};
+		glm::vec3 m_PlayerVSStartPos{};
 		int m_CellSize = 32;
 		int m_Rows = 0;
 		int m_Columns = 0;
