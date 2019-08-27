@@ -99,6 +99,11 @@ namespace dae
 		void MapInput(InputAction button, std::shared_ptr<Command> command);
 		void RefreshInput();
 
+		void SetNrOfPlayers(int nr)
+		{
+			m_NrPlayers = nr;
+		}
+
 	private:
 		bool InitGamepads();
 		void ProcessKeyboardInput();

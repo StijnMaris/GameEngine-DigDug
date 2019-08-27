@@ -17,6 +17,7 @@ namespace dae {
 		void Render() const override;
 
 		void InitPlayer1Controles(std::shared_ptr<Character> gameObject);
+		void InitPlayer2Controles(std::shared_ptr<Character> gameObject);
 
 		void Reset()const;
 		void Restart();
@@ -31,5 +32,7 @@ namespace dae {
 		std::shared_ptr<GameObject> m_pFPS, m_pFPSText, m_pScore, m_pTitle;
 		//std::shared_ptr<dae::Score> m_ScoreObserver;
 		std::string m_FilePath;
+
+		bool m_IsMultyPlayer;
 	};
 }

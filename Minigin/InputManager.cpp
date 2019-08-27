@@ -52,19 +52,14 @@ bool dae::InputManager::InitGamepads()
 	{
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
 
-		if (XInputGetState(i, &state) == ERROR_SUCCESS)
+		if (XInputGetState(i, &state) == ERROR_SUCCESS) {
 			playerID = i;
+			m_pGamePads.push_back(std::make_shared<Gamepad>(playerID));
+		}
 	}
 
-	if (playerID != -1)
-	{
-		m_pGamePads.push_back(std::make_shared<Gamepad>(playerID));
-	}
 	//Set number of gamepads
 	m_NrGamepads = (unsigned int)m_pGamePads.size();
-	//Does every player have a gamepad?
-	if (m_NrGamepads != m_NrPlayers)
-		return false;
 
 	// select current player
 	m_CurrentlyActivePlayer = 0;
@@ -104,7 +99,7 @@ void dae::InputManager::HandleInput()
 		currAction->m_IsTriggered = false;
 
 		//GAMEPAD
-		if (m_UseGamepad && currAction->m_GamepadButtonCode != 0)
+		if (m_UseGamepad && currAction->m_GamepadButtonCode != 0 && m_NrGamepads >= m_NrPlayers)
 		{
 			if (m_pGamePads[static_cast<int>(currAction->m_PlayerIndex)])
 			{

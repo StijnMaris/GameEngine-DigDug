@@ -606,7 +606,7 @@ void dae::GridSystem::DefineMap()
 				player2 = std::make_shared<Character>(m_P2Name, m_P2File, 4, 4);
 				player2->Init();
 				player2->SetPosition(m_Player2StartPos);
-				m_pPlayers.push_back(player1);
+				m_pPlayers.push_back(player2);
 				break;
 			case CellDefinition::VSPlayer2:
 				DestroyCell(i, j);
