@@ -569,6 +569,23 @@ void dae::GridSystem::CheckForCollision()
 			}
 		}
 	}
+	std::shared_ptr<Character> dest;
+	for (const std::shared_ptr<SlidingBlock> block : m_pSlidingBlocks)
+	{
+		for (const std::shared_ptr<Character> element : m_pEnemies)
+		{
+			auto enemyCollider = element->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
+			if (block->CheckIfColliding(enemyCollider))
+			{
+				notify(Event::EnemyDestroyed);
+				element->Die();
+				RemoveFromScene(element->GetCharacter());
+				dest = element;
+			}
+		}
+	}
+
+	m_pEnemies.erase(std::remove(m_pEnemies.begin(), m_pEnemies.end(), dest), m_pEnemies.end());
 
 	/*auto collider = m_pPlayers[0]->GetCharacter()->GetComponent<ColliderComponent>()->GetCollider();
 	auto gridPos = GetCellData(m_pPlayers[0]->GetCharacter()->GetPosition());
