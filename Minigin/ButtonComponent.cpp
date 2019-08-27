@@ -24,4 +24,5 @@ void dae::ButtonComponent::OnClick(std::string levelName)
 {
 	auto&sceneMan = SceneManager::GetInstance();
 	sceneMan.SetActiveScene(levelName);
+	std::dynamic_pointer_cast<LevelScene>(sceneMan.GetActiveScene())->Init();
 }

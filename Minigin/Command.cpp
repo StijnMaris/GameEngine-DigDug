@@ -89,15 +89,9 @@ bool dae::ExitCommand::execute()
 	return false;
 }
 
-dae::MenuCommand::MenuCommand(std::vector<std::shared_ptr<MenuButton>> menuButtons) : m_pMenuButtons(menuButtons)
+dae::MenuCommand::MenuCommand(std::shared_ptr<GameObject> menu, std::vector<std::shared_ptr<MenuButton>> menuButtons) : Command(menu), m_pMenuButtons(menuButtons)
 {
-	for (std::shared_ptr<MenuButton> element : m_pMenuButtons)
-	{
-		if (element->GetButtonState() == ButtonState::Highlighted)
-		{
-			m_pOwner = element->GetButton();
-		}
-	}
+	m_CurIndex = 0;
 }
 
 //Menu
@@ -116,33 +110,42 @@ bool dae::MenuButtonPress::execute()
 
 bool dae::MenuButtonUp::execute()
 {
-	for (size_t i = 0; i < m_pMenuButtons.size(); ++i)
+	for (int i = 0; i < static_cast<int>(m_pMenuButtons.size()); ++i)
 	{
 		if (m_pMenuButtons.at(i)->GetButtonState() == ButtonState::Highlighted)
 		{
-			if (--i > -1)
+			m_CurIndex = i;
+			if ((m_CurIndex - 1) > -1)
 			{
 				m_pMenuButtons.at(i)->SetButtonState(ButtonState::Idle);
-				m_pMenuButtons.at(--i)->SetButtonState(ButtonState::Highlighted);
+				m_pMenuButtons.at(m_CurIndex - 1)->SetButtonState(ButtonState::Highlighted);
+				return true;
 			}
+			m_pMenuButtons.at(i)->SetButtonState(ButtonState::Idle);
+			m_pMenuButtons.at(m_pMenuButtons.size() - 1)->SetButtonState(ButtonState::Highlighted);
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
 bool dae::MenuButtonDown::execute()
 {
-	for (size_t i = 0; i < m_pMenuButtons.size(); ++i)
+	for (int i = 0; i < static_cast<int>(m_pMenuButtons.size()); ++i)
 	{
 		if (m_pMenuButtons.at(i)->GetButtonState() == ButtonState::Highlighted)
 		{
-			if (++i < m_pMenuButtons.size() - 1)
+			m_CurIndex = i;
+			if (m_CurIndex + 1 < m_pMenuButtons.size())
 			{
-				m_pMenuButtons.at(--i)->SetButtonState(ButtonState::Idle);
-				m_pMenuButtons.at(++i)->SetButtonState(ButtonState::Highlighted);
-				m_pOwner = m_pMenuButtons.at(i)->GetButton();
+				m_pMenuButtons.at(i)->SetButtonState(ButtonState::Idle);
+				m_pMenuButtons.at(m_CurIndex + 1)->SetButtonState(ButtonState::Highlighted);
+				return true;
 			}
+			m_pMenuButtons.at(i)->SetButtonState(ButtonState::Idle);
+			m_pMenuButtons.at(0)->SetButtonState(ButtonState::Highlighted);
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
