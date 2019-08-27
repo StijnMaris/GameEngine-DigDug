@@ -17,6 +17,8 @@
 dae::GridSystem::GridSystem(int rows, int cols, std::string& filePath, std::shared_ptr<Scene> scene) :m_Rows(rows), m_Columns(cols), m_FilePath(filePath), m_Scene(scene), m_numObservers(0)
 {
 	m_pGridSystem = std::make_shared<GameObject>("GridSystem");
+	m_P1Name = "Player1";
+	m_P1File = "DigDug2.png";
 }
 
 void dae::GridSystem::Init()
@@ -548,7 +550,8 @@ void dae::GridSystem::DefineMap()
 				pos.x += 16;
 				pos.y += 16;
 				m_Player1StartPos = pos;
-				m_pPlayer1 = std::make_shared<Character>("Player1", "DigDug2.png", 4, 4);
+
+				m_pPlayer1 = std::make_shared<Character>(m_P1Name, m_P1File, 4, 4);
 				m_pPlayer1->Init();
 				m_pPlayer1->SetPosition(m_Player1StartPos);
 				break;

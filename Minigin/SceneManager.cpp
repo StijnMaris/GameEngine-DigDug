@@ -20,8 +20,10 @@ void dae::SceneManager::Render()
 
 void dae::SceneManager::SetActiveScene(const std::string& name)
 {
+	std::string current{};
 	for (const auto scene : m_pActiveScenes)
 	{
+		current = scene->GetSceneName();
 		if (scene->GetSceneName() == name)
 		{
 			return;
@@ -32,6 +34,7 @@ void dae::SceneManager::SetActiveScene(const std::string& name)
 	{
 		if (scene->GetSceneName() == name)
 		{
+			DisableScene(current);
 			m_pActiveScenes.push_back(scene);
 			return;
 		}

@@ -138,5 +138,7 @@ namespace  dae {
 		int m_numObservers;
 
 		std::string m_FilePath;
+		std::string m_P1Name;
+		std::string m_P1File;
 	};
 }

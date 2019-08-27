@@ -43,7 +43,11 @@ void dae::Minigin::Initialize()
 void dae::Minigin::LoadGame() const
 {
 	auto&sceneMan = SceneManager::GetInstance();
-	const std::shared_ptr<Scene> level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level", "../Data/GridLevel.txt"));
+	std::shared_ptr<Scene> level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level1SP", "../Data/Level1SP.txt"));
+	std::dynamic_pointer_cast<LevelScene>(level)->Init();
+	level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level1MP", "../Data/Level1MP.txt"));
+	std::dynamic_pointer_cast<LevelScene>(level)->Init();
+	level = sceneMan.CreateScene(std::make_shared<LevelScene>("Level1VSP", "../Data/Level1VSP.txt"));
 	std::dynamic_pointer_cast<LevelScene>(level)->Init();
 	//sceneMan.SetActiveScene("Level");
 

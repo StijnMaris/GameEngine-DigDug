@@ -9,6 +9,7 @@
 #include "ColliderComponent.h"
 #include "MovementComponent.h"
 #include "ActionComponent.h"
+#include "ButtonComponent.h"
 
 dae::GameObject::~GameObject() = default;
 
@@ -49,11 +50,10 @@ void dae::GameObject::Update()
 {
 	for (auto component : m_pComponents)
 	{
-		/*std::shared_ptr<BaseComponent> comp = component.lock();
-		if (comp)
+		if (m_pComponents.size() == 8)
 		{
-			comp->Update();
-		}*/
+			component->Update();
+		}
 
 		component->Update();
 	}
@@ -72,6 +72,7 @@ void dae::GameObject::Render() const
 	auto rend6 = GetComponent<SpriteComponent>();
 	auto rend8 = GetComponent<MovementComponent>();
 	auto rend9 = GetComponent<ActionComponent>();
+	auto rend10 = GetComponent<ButtonComponent>();
 	auto pos = GetComponent<Transform>();
 }
 

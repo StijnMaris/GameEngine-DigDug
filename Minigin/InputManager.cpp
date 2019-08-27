@@ -103,7 +103,7 @@ void dae::InputManager::HandleInput()
 		currAction->m_IsTriggered = false;
 
 		//GAMEPAD
-		if (m_UseGamepad && currAction->m_GamepadButtonCode != 0)
+		if (m_UseGamepad && currAction->m_GamepadButtonCode != 0 && currAction->m_PlayerIndex != GamepadIndex::Menu)
 		{
 			if (m_pGamePads[static_cast<int>(currAction->m_PlayerIndex)])
 			{

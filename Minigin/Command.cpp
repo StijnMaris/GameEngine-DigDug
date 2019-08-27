@@ -8,7 +8,8 @@
 #include "ActionComponent.h"
 #include "Character.h"
 #include "LevelScene.h"
-//#include "Locator.h"
+#include "MenuButton.h"
+#include "ButtonComponent.h"
 
 void dae::Command::AddToCommandStream()
 {
@@ -85,6 +86,63 @@ bool dae::ResetCommand::execute()
 bool dae::ExitCommand::execute()
 {
 	Minigin::m_DoContinue = false;
-	std::cout << "Exit" << "\n";
 	return false;
+}
+
+dae::MenuCommand::MenuCommand(std::vector<std::shared_ptr<MenuButton>> menuButtons) : m_pMenuButtons(menuButtons)
+{
+	for (std::shared_ptr<MenuButton> element : m_pMenuButtons)
+	{
+		if (element->GetButtonState() == ButtonState::Highlighted)
+		{
+			m_pOwner = element->GetButton();
+		}
+	}
+}
+
+//Menu
+bool dae::MenuButtonPress::execute()
+{
+	for (std::shared_ptr<MenuButton> element : m_pMenuButtons)
+	{
+		if (element->GetButtonState() == ButtonState::Highlighted)
+		{
+			element->SetButtonState(ButtonState::Pressed);
+			element->GetButton()->GetComponent<ButtonComponent>()->OnClick(element->GetLevelPath());
+		}
+	}
+	return true;
+}
+
+bool dae::MenuButtonUp::execute()
+{
+	for (size_t i = 0; i < m_pMenuButtons.size(); ++i)
+	{
+		if (m_pMenuButtons.at(i)->GetButtonState() == ButtonState::Highlighted)
+		{
+			if (--i > -1)
+			{
+				m_pMenuButtons.at(i)->SetButtonState(ButtonState::Idle);
+				m_pMenuButtons.at(--i)->SetButtonState(ButtonState::Highlighted);
+			}
+		}
+	}
+	return true;
+}
+
+bool dae::MenuButtonDown::execute()
+{
+	for (size_t i = 0; i < m_pMenuButtons.size(); ++i)
+	{
+		if (m_pMenuButtons.at(i)->GetButtonState() == ButtonState::Highlighted)
+		{
+			if (++i < m_pMenuButtons.size() - 1)
+			{
+				m_pMenuButtons.at(--i)->SetButtonState(ButtonState::Idle);
+				m_pMenuButtons.at(++i)->SetButtonState(ButtonState::Highlighted);
+				m_pOwner = m_pMenuButtons.at(i)->GetButton();
+			}
+		}
+	}
+	return true;
 }

@@ -22,7 +22,7 @@ namespace dae {
 	class Character
 	{
 	public:
-		Character(std::string name, std::string imagePath, int rows, int cols, int startRow = 0);
+		Character(std::string& name, std::string& imagePath, int rows, int cols, int startRow = 0);
 		~Character() = default;
 
 		void Init();

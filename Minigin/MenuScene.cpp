@@ -3,14 +3,23 @@
 #include "TextureComponent.h"
 #include "RenderComponent.h"
 #include "GameObject.h"
-#include "ResourceManager.h"
-#include "TextComponent.h"
+#include "MenuButton.h"
 #include "InputManager.h"
 
 dae::MenuScene::MenuScene(const std::string& name) :Scene(name)
 {
 	m_BackGroundPos = { 224,288 };
 	m_ButtonPos = { 75,550 };
+	m_NeedsUpdate = false;
+	m_Names.push_back("BSinglePlayer");
+	m_Names.push_back("MenuButtonSP.png");
+	m_Names.push_back("Level1SP");
+	m_Names.push_back("BMultyPlayer");
+	m_Names.push_back("MenuButtonMP.png");
+	m_Names.push_back("Level1MP");
+	m_Names.push_back("BVSPlayer");
+	m_Names.push_back("MenuButtonVSP.png");
+	m_Names.push_back("Level1VSP");
 }
 
 void dae::MenuScene::Init()
@@ -24,32 +33,29 @@ void dae::MenuScene::Init()
 	go->SetPosition(m_BackGroundPos.x* 1.4f, m_BackGroundPos.y + 10);
 	AddGameObject(go);
 
-	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<GameObject>("Single Player");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("PRESS 1 FOR SINGLE PLAYER", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(m_ButtonPos.x, m_ButtonPos.y);
-	AddGameObject(to);
+	for (int i = 0; i < m_Names.size() / 3.f; ++i)
+	{
+		auto button = std::make_shared<MenuButton>(m_Names[i * 3], m_Names[i * 3 + 1], m_Names[i * 3 + 2]);
+		button->Init();
+		button->GetButton()->SetPosition(m_BackGroundPos.x + m_BackGroundPos.x / 2.5f, m_BackGroundPos.y * (2.f + i * 0.25f));
+		if (i == 0)
+		{
+			button->SetButtonState(ButtonState::Highlighted);
+		}
+		m_pButtons.push_back(button);
+		AddGameObject(button->GetButton());
+	}
 
-	to = std::make_shared<GameObject>("Two Player");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("PRESS 2 FOR TWO PLAYERS", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(m_ButtonPos.x, m_ButtonPos.y + m_ButtonPos.x);
-	AddGameObject(to);
-
-	to = std::make_shared<GameObject>("VS Player");
-	to->Init();
-	to->AddComponent(std::make_shared<TextComponent>("PRESS 3 FOR VS PLAYER", font));
-	to->AddComponent(std::make_shared<RenderComponent>(to->GetComponent<TextComponent>()->GetTextureComponent()));
-	to->SetPosition(m_ButtonPos.x, m_ButtonPos.y + m_ButtonPos.x * 2);
-	AddGameObject(to);
+	InitMenuControls();
 }
 
 void dae::MenuScene::Update()
 {
 	Scene::Update();
+	for (std::shared_ptr<MenuButton> element : m_pButtons)
+	{
+		element->Update();
+	}
 }
 
 void dae::MenuScene::Render() const
@@ -59,29 +65,14 @@ void dae::MenuScene::Render() const
 
 void dae::MenuScene::InitMenuControls()
 {
-	/*auto& input = InputManager::GetInstance();
-	std::string name = "P1LeftRun";
-	const InputAction LeftRun = { name,InputTriggerState::Down,SDL_SCANCODE_LEFT,-1,XINPUT_GAMEPAD_DPAD_LEFT };
-	input.MapInput(LeftRun, std::make_shared<RunLeftCommand>(gameObject, shared_from_this()));
-	name = "P1RightRun";
-	const InputAction RightRun = { name,InputTriggerState::Down,SDL_SCANCODE_RIGHT,-1,XINPUT_GAMEPAD_DPAD_RIGHT };
-	input.MapInput(RightRun, std::make_shared<RunRightCommand>(gameObject, shared_from_this()));
-	name = "P1UpRun";
-	const InputAction UpRun = { name,InputTriggerState::Down,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP };
-	input.MapInput(UpRun, std::make_shared<RunUpCommand>(gameObject, shared_from_this()));
-	name = "P1DownRun";
-	const InputAction DownRun = { name,InputTriggerState::Down,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN };
-	input.MapInput(DownRun, std::make_shared<RunDownCommand>(gameObject, shared_from_this()));
-
-	name = "P1Action";
-	const InputAction Push = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A };
-	input.MapInput(Push, std::make_shared<ActionCommand>(gameObject, shared_from_this()));
-
-	name = "P1Restart";
-	InputAction Restart = { name,InputTriggerState::Pressed,SDL_SCANCODE_R,-1,XINPUT_GAMEPAD_BACK };
-	input.MapInput(Restart, std::make_shared<ResetCommand>(gameObject, shared_from_this()));
-
-	name = "P1Exit";
-	const InputAction Exit = { name,InputTriggerState::Pressed,SDL_SCANCODE_ESCAPE,-1,XINPUT_GAMEPAD_START };
-	input.MapInput(Exit, std::make_shared<ExitCommand>(gameObject, shared_from_this()));*/
+	auto& input = InputManager::GetInstance();
+	std::string name = "MenuButtonUp";
+	const InputAction ButtonUp = { name,InputTriggerState::Pressed,SDL_SCANCODE_UP,-1,XINPUT_GAMEPAD_DPAD_UP ,GamepadIndex::Menu };
+	input.MapInput(ButtonUp, std::make_shared<MenuButtonUp>(m_pButtons));
+	name = "MenuButtonDown";
+	const InputAction ButtonDown = { name,InputTriggerState::Pressed,SDL_SCANCODE_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::Menu };
+	input.MapInput(ButtonDown, std::make_shared<MenuButtonDown>(m_pButtons));
+	name = "MenuButtonSelect";
+	const InputAction MenuButtonSelect = { name,InputTriggerState::Pressed,SDL_SCANCODE_SPACE,-1,XINPUT_GAMEPAD_A ,GamepadIndex::Menu };
+	input.MapInput(MenuButtonSelect, std::make_shared<MenuButtonPress>(m_pButtons/*, shared_from_this()*/));
 }

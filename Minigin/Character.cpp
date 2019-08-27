@@ -9,7 +9,7 @@
 #include "MovementComponent.h"
 #include "ActionComponent.h"
 
-dae::Character::Character(std::string name, std::string imagePath, int rows, int cols, int startRow) :
+dae::Character::Character(std::string& name, std::string& imagePath, int rows, int cols, int startRow) :
 	m_Name(name), m_PathName(imagePath), m_Rows(rows), m_Cols(cols), m_StartRow(startRow)
 {
 	m_pCharacter = std::make_shared<GameObject>(m_Name);
