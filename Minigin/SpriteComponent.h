@@ -9,7 +9,7 @@ namespace dae {
 	{
 	public:
 		SpriteComponent(std::shared_ptr<TextureComponent>  textureComp, int rows, int cols, int startRow = 0, bool isAnimated = false, int speed = 0);
-		virtual ~SpriteComponent() = default;
+		virtual ~SpriteComponent();
 
 		void Update() override;
 

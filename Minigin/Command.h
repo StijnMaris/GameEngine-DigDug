@@ -90,17 +90,17 @@ namespace dae {
 	class MenuCommand : public Command
 	{
 	public:
-		MenuCommand(std::shared_ptr<GameObject> menu, std::vector<std::shared_ptr<MenuButton>> menuButtons);
+		MenuCommand(std::vector<std::shared_ptr<MenuButton>> menuButtons);
 		virtual bool execute() = 0;
 	protected:
 		std::vector<std::shared_ptr<MenuButton>> m_pMenuButtons;
-		int m_CurIndex;
+		//std::shared_ptr<LevelScene> m_pLevel;
 	};
 
 	class MenuButtonPress : public MenuCommand
 	{
 	public:
-		MenuButtonPress(std::shared_ptr<GameObject> menu, std::vector<std::shared_ptr<MenuButton>> menuButtons) : MenuCommand(menu, menuButtons) {};
+		MenuButtonPress(std::vector<std::shared_ptr<MenuButton>> menuButtons) : MenuCommand(menuButtons) {};
 
 		bool execute() override;
 	};
@@ -108,14 +108,14 @@ namespace dae {
 	class MenuButtonUp : public MenuCommand
 	{
 	public:
-		MenuButtonUp(std::shared_ptr<GameObject> menu, std::vector<std::shared_ptr<MenuButton>> menuButtons) : MenuCommand(menu, menuButtons) {};
+		MenuButtonUp(std::vector<std::shared_ptr<MenuButton>> menuButtons) : MenuCommand(menuButtons) {};
 		bool execute() override;
 	};
 
 	class MenuButtonDown : public MenuCommand
 	{
 	public:
-		MenuButtonDown(std::shared_ptr<GameObject> menu, std::vector<std::shared_ptr<MenuButton>> menuButtons) : MenuCommand(menu, menuButtons) {};
+		MenuButtonDown(std::vector<std::shared_ptr<MenuButton>> menuButtons) : MenuCommand(menuButtons) {};
 		bool execute() override;
 	};
 }

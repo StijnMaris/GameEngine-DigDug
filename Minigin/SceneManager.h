@@ -24,11 +24,6 @@ namespace dae
 			m_pActiveScenes.clear();
 		}
 
-		std::shared_ptr<Scene>GetActiveScene()
-		{
-			return m_pActiveScenes.at(0);
-		}
-
 	private:
 		std::vector<std::shared_ptr<Scene>> m_pScenes;
 		std::vector<std::shared_ptr<Scene>> m_pActiveScenes;

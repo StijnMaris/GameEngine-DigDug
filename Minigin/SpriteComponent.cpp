@@ -22,6 +22,10 @@ dae::SpriteComponent::SpriteComponent(std::shared_ptr<TextureComponent> textureC
 	m_RectToDraw.h = static_cast<int>(m_SpriteHeight);
 }
 
+dae::SpriteComponent::~SpriteComponent()
+{
+}
+
 void dae::SpriteComponent::Update()
 {
 	if (m_IsAnimated)
