@@ -162,6 +162,7 @@ void dae::LevelScene::Restart()
 
 dae::LevelScene::LevelScene(const std::string& name, const std::string& LevelFile) :Scene(name), m_FilePath(LevelFile)
 {
+	m_IsMultyPlayer = false;
 }
 
 dae::LevelScene::~LevelScene() = default;
